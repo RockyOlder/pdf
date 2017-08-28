@@ -1,0 +1,211 @@
+    <div class="main">
+        <div class="wrap">
+            <div class="add_banner" style="display:none;"><a href="/Home/Products/ConversionFeeDetail"><img src="__IMAGES__banner-1.2_03.jpg" alt=""></a><i class="icon icon-close"></i></div>
+            <if condition="$ACTIVITY_OPEN  neq 1">
+                <div class="activity_banner">
+                    <img src="__IMAGES__images/1_03.jpg" alt="" />
+                    <div class="content">
+                       <a href="{:U('Home/Index/YearMiddlePage')}">
+                        <div class="left">
+                            <img src="__IMAGES__images/txt.png" alt="" />                       
+                        </div>
+                        <div class="count_down right">
+                            <h3>距离<span class="end_date"></span>活动截止还剩</h3>
+                            <p><span class="day"></span><span class="time"></span></p>
+                            <span class="details">活动详情</span>
+                        </div>
+                        </a>
+                        <div class="linkbox">
+                            <a href="{:U('Home/Index/YearMiddlePage#01')}" class="first">买一个月送5次转换</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#02')}">买一年送3个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#03')}">买二年送6个月</a>
+                        </div>
+                    </div>
+                </div>
+            </if>
+
+            <include file="$Boot_page" />
+            <div class="main_main">
+                <div class="choose_file_box">
+                    <div class="choose_file">
+                        <div class="div_usehover">                        
+                            <a href="javascript:;" class="btn_file">
+                                <input id="fileupload"  type="file" name="files[]" multiple="">选择文件
+                                <div class="bubble_promet">
+                                    <i class="arrow_up2"></i>
+                                    <p>主人，登录才可享受限量<br>PDF文档<span class="strong">免费转换~</span></p>                           
+                                    <div class="login_weixin">微信登录</div>
+                                </div>                           
+                            </a>
+                        </div>
+                        <br>
+                        <label class="label checked"><i class="icon"></i>请确保上传的文档没有违法内容并且不涉及到版权</label>
+                    </div>
+                    <div class="sendfor_email clearfix">
+                        <span class="promet">您还可将文档拖拽至页面空白处上传<i class="icon icon-promet"></i></span>
+                        <label class="label <if condition="$ary_member.m_email neq '' ">checked </if>"><i class="icon"></i>您可以将转换后的文档发送至邮箱</label>
+                        <div class="email_div">
+                            <input type="text" class="email" id="email" name="email" value='{$ary_member.m_email}'  placeholder="请务必填写正确的邮件地址" autocomplete="off" />
+                            <i class="icon2"></i>
+                        </div>
+                    </div>
+                    <div id="myp"></div>
+                </div>
+                <div class="upload_file">
+                    <table class="table" cellpadding="0" cellspacing="0">
+                        <thead>
+                            <tr>
+                            <th width="80">选择</th>
+                            <th>文件名</th>
+                            <th width="80">总页数</th>
+                            <th width="110">文件类型</th>
+                            <th></th>
+                            <th width="140">转换格式</th>
+                            <th width="140">状态</th>
+                            <th>操作</th>
+                            <th width="80">删除</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                                   
+                        </tbody>
+                    </table>
+                <input type="hidden" id="fileVal" value="" />
+		<input type="hidden" id="delFile" value="" />
+                <input type="hidden" id="pdf_authorization" value="0" />
+                    <div class="file_operation">
+                        <div class="all_choose">全选</div>
+                        <div class="in_turn">反选</div>
+                        <div class="batch_conversion" onclick="conversion.batchConversion()" ><img src="__IMAGES__icon_1.png" alt=""  />批量转换</div>
+                        <div class="batch_delete" onclick="conversion.batch_delete()"><i class="icon"></i>批量删除</div>
+                    </div>
+                </div>                
+            </div>
+            <div class="main_footer">
+                <if condition="$pdf_type eq 0 "> 
+                            <h3>在线PDF转Word功能说明</h3>
+                            <p>1、每天赠送一次转换50页以内PDF文档的特权，文档超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>
+                            <p>2、转换出来的Word文档能最大限度的保留原文档的内容和布局。</p>
+                            <p>3、若PDF文档是通过扫描后生成的图片型PDF文档，转换后的图片还是不能编辑。</p>
+                            <p>4、加密的PDF文档需要先去除密码后，再进行转换，悦书PDF阅读器可以快速去除文档密码。</p>
+                            <p>5、转换后的Word文档格式为docx，请使用Office或WPS进行阅读和编辑。</p>
+                   <elseif condition="$pdf_type eq 1" />
+                            <h3>在线PDF转Excel功能说明</h3>
+                            <p>1、每天赠送一次转换50页以内PDF文档的特权，文档超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>
+                            <p>2、转换出来的Excel文档能最大限度的保留原Excel文档格式的内容和布局。</p>
+                            <p>3、若PDF文档是通过扫描后生成的图片型PDF文档，转换后的图片还是不能编辑。</p>
+                            <p>4、加密的PDF文档需要先去除密码后，再进行转换，悦书PDF阅读器可以快速去除文档密码。</p>
+                            <p>5、转换后的Excel文档格式为xlsx，请使用Office或WPS进行阅读和编辑。</p>
+                   <elseif condition="$pdf_type eq 2" />
+                            <h3>在线PDF转PPT功能说明</h3>
+                            <p>1、每天赠送一次转换50页以内PDF文档的特权，文档超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>
+                            <p>2、转换出来的PPT文档能最大限度的保留原PPT文档格式的内容和布局。</p>
+                            <p>3、若PDF文档是通过扫描后生成的图片型PDF文档，转换后的图片还是不能编辑。</p>
+                            <p>4、加密的PDF文档需要先去除密码后，再进行转换，悦书PDF阅读器可以快速去除文档密码。</p>
+                            <p>5、转换后的PPT文档格式为pptx，请使用Office或WPS进行阅读和编辑。</p>
+                   <elseif condition="$pdf_type eq 3" />
+                            <h3>在线Word转PDF功能说明</h3>
+                            <p>1、可免费无限量使用Word转PDF功能，超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>                            
+                            <p>2、支持2种格式的Word文档转换，可以完美的将doc，docx格式转换成PDF文档。</p> 
+                            <p>3、通过Word转换生成的PDF文档，还可以进行高亮，批注，注释等操作。</p> 
+                            <p>4、若要生成加密的PDF文档，转换成功后使用悦书PDF阅读器可以快速的为PDF文档增加打开密码和权限密码。</p> 
+                            <p>5、转换后的文档格式为PDF，请使用悦书PDF阅读器进行阅读和注释。</p> 
+
+                   <elseif condition="$pdf_type eq 4" />
+                            <h3>在线Excel转PDF功能说明</h3>
+                            <p>1、可免费无限量使用Excel转PDF功能，超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>
+                            <p>2、支持2种格式的Excel文档转换，可以完美的将xls，xlsx格式转换成PDF文档。</p>
+                            <p>3、通过Excel转换生成的PDF文档，还可以进行高亮，批注，注释等操作。</p>
+                            <p>4、若要生成加密的PDF文档，转换成功后使用悦书PDF阅读器可以快速的为PDF文档增加打开密码和权限密码。</p>
+                            <p>5、转换后的文档格式为PDF，请使用悦书PDF阅读器进行阅读和注释。</p>
+
+
+                   <elseif condition="$pdf_type eq 5" />
+                            <h3>在线PPT转PDF功能说明</h3>
+                            <p>1、可免费无限量使用PPT转PDF功能，超过20M推荐您使用人工 VIP服务或无大小限制的客户端转换。</p>
+                            <p>2、支持2种格式的PPT文档转换，可以完美的将ppt，pptx格式转换成PDF文档。</p>
+                            <p>3、通过PPT转换生成的PDF文档，还可以进行高亮，批注，注释等操作。</p>
+                            <p>4、若要生成加密的PDF文档，转换成功后使用悦书PDF阅读器可以快速的为PDF文档增加打开密码和权限密码。</p>
+                            <p>5、转换后的文档格式为PDF，请使用悦书PDF阅读器进行阅读和注释。</p> 
+                </if>
+
+            </div>
+        </div>
+    </div>
+ <div class="popup popup_weixin" >
+
+</div>
+    <!-- 各种状态的弹窗 -->
+    <div class="popup popup_other">
+        <div class="content" name="content_whycansel">
+            <div class="icon close"></div>
+            <form action="">
+                 <h4>亲，为何要取消支付呢？</h4>
+                 <ul class="choose_reason">
+                     <li>选错啦</li>
+                     <li>价格小贵，我再想想</li>
+                     <li>转换质量有待提高</li>
+                 </ul>
+                 <textarea class="other_resson" maxlength="200"></textarea>
+                <div class="bottom">
+                    <a href="javascript:;" class="btn btn_contain_pay">返回支付</a>
+                    <a href="javascript:;" class="btn btn_submit">提交</a>
+                </div> 
+             </form>
+        </div>
+        <div class="content" name="content_start">
+            <div class="icon close"></div>
+                <h4>文档开始转换~</h4>
+                 <div class="txt">
+                     <p>普通用户每天仅可免费转换一份PDF文档</p>
+                     <p>升级VIP享更多超值特权</p>
+                     <p>多样套餐随心选，包月套餐现仅需<span class="strong">10元</span></p>
+                 </div>
+                <div class="bottom">
+                    <a href="#" class="btn btn_recharge">立即充值</a>
+                </div> 
+        </div>
+        <div class="content" name="content_success">
+            <div class="icon close"></div>
+                <h4>文档转换成功！</h4>
+                 <div class="txt">
+                     <p>普通用户每天仅可免费转换一份PDF文档</p>
+                     <p>升级VIP享更多超值特权</p>
+                     <p>多样套餐随心选，包月套餐现仅需<span class="strong">10元</span></p>
+                 </div>
+                <div class="bottom">
+                    <a href="#" class="btn btn_recharge">立即充值</a>
+                </div> 
+        </div>
+        <div class="content" name="content_split">
+            <div class="icon close"></div>
+                 <div class="txt">
+                     <p>非常抱歉，您购买的单次/多次套餐仅支持500页内的PDF文档转换。</p>
+                     <p>升级月度或更长时限套餐即可享超大文档任性转，<i style="color:red">速来抢购！</i></p>
+                     <!-- <p>多样套餐随心选，包月套餐现仅需<span class="strong">10元</span></p> -->
+                 </div>
+                <div class="bottom">
+                    <a href="####" class="btn btn_recharge">立即升级</a>
+                </div> 
+        </div>
+        <div class="content" name="content_overflow">
+            <div class="icon close"></div>
+                 <div class="txt">
+                     <p>非常抱歉，你上传的文档大于50页，已超过免费转换范围。</p>
+                     <p></p>
+                     <p>充值体验悦书超值会员行业最低价，包月套餐现仅需<span class="strong">10元</span></p>
+                 </div>
+                <div class="bottom">
+                    <a href="####" class="btn btn_only_change">只转50页</a>
+                    <a href="#" class="btn btn_recharge">立即充值</a>
+                </div> 
+        </div>          
+    </div>
+    <input type="hidden" id="year" value="{$year}" />
+    <input type="hidden" id="month" value="{$month}" />
+    <input type="hidden" id="day" value="{$day}" />
+<input type="hidden" id="start_time" value="{$start_time}" />
+<input type="hidden" id="halfMonther" value="{$halfMonther}" />
+<!--<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>-->
+<script type="text/javascript" src="/Public/Tpl/v78/{$view}/js/require.js" data-main="/Public/Tpl/v78/{$view}/js/main"  defer async="true" ></script>
+

@@ -1,0 +1,204 @@
+<style>
+ .orange{cursor: pointer;background:#FF8B2F;color:white;padding:2px 4px;border-radius:7px}
+</style>
+<div class="warp">
+    <div class="head">
+        <p>订单详情</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+    </div>
+
+    <div class="body">
+        <div class="order-info-box info-tb">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">订单编号：</div>
+                <div class="tb-cont">{$ary_orders.o_id}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">订单状态：</div>
+				<input type="hidden" name="str_pay_status" value="{$ary_orders.str_pay_status}">
+                <input type="hidden" name="deliver_status" value="{$ary_orders.deliver_status}">
+                <div class="tb-cont"> <span class="status">{$ary_orders.str_status} <if condition="$ary_orders['o_status'] eq '1'">{$ary_orders.str_pay_status}</if>  {$ary_orders.refund_goods_status} {$ary_orders.refund_status} {$ary_orders.str_auto_status} <if condition="$ary_orders['o_status'] eq '1'">{$ary_orders.deliver_status}</if><br>
+				<if condition="(($ary_orders['o_pay_status'] neq '1') and ($ary_orders['o_status'] eq '1')) and ($ary_orders['o_payment'] neq '24' and $ary_orders['o_payment'] neq '20') ">
+				<neq name="ary_orders.o_payment" value="6">
+						<if condition="$ary_orders['str_pay_status'] eq '已支付'">
+						<elseif condition="($ary_orders['oi_type'] eq '5') and ($ary_orders['str_pay_status'] eq '部分支付')" />
+							<a href='{:U("Wap/Orders/OrderSuccess/","oid=$ary_orders[o_id]")}' class="orange">支付尾款</a>
+						<else />
+							<a href='{:U("Wap/Orders/OrderSuccess/","oid=$ary_orders[o_id]")}' class="orange">付款</a>
+						</if>  
+				</neq>
+				<elseif condition="$ary_orders['o_payment'] eq '20' or $ary_orders['o_payment'] eq '24'"/> 
+					<a href='{:U("Wap/Orders/paymentPage/","oid=$ary_orders[o_id]")}' class="orange">提醒发货</a>
+				<elseif condition="$ary_orders['o_status'] eq '1' && $ary_orders['refund_type'] eq '1' && ($ary_orders['o_audit'] neq '1' OR $ALLOW_REFUND_APPLY.sc_value eq 1)"  />
+					<empty name="refund_num">
+						<if condition="$ary_orders.oi_type neq 9">
+							<a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=1")}' class="orange">退 款</a>
+						</if>
+					</empty>
+				<elseif condition="$ary_orders['o_status'] eq '1' && $ary_orders['refund_type'] eq '2'" />   
+					<!--<a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type= 2")}' class="brown">退  货</a>-->
+				<elseif condition="($ary_orders['o_status'] eq '1' && $ary_orders['o_audit'] neq '1') or ($ary_orders['str_status'] eq '已确认' && $ary_orders['refund_status'] neq '退款中' && $ary_orders['refund_goods_status'] neq '退货中' && $ary_orders['refund_goods_status'] neq '退款成功' && $ary_orders['refund_goods_status'] neq '退货成功')"/>
+					<if condition="$ary_orders.oi_type neq 9">
+						<a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=2")}' class="orange">申请售后</a>
+					</if>
+					<if condition="$ary_orders.oi_type eq 9">
+						<a href='{:U("Wap/Try/pageAdd/","oid=$ary_orders[o_id]")}' class="orange">填写试用报告</a>
+					</if>
+					<!-- <a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=1")}' class="brown">退 款</a> -->
+				</if> 
+				<if condition="$ary_orders['deliver_status'] eq '已发货' and $ary_orders['o_status'] eq '1'">
+					<if condition="$ary_orders['is_pay'] eq '1' and $ary_orders['o_payment'] eq '2' and $ary_orders['o_payment'] eq '4' and $ary_orders['o_payment'] eq '5'">
+							<a href='{:U("Wap/Ucenter/OrderConfirmation/","oid=$ary_orders[o_id]")}' class="orange">确认收货 </a>
+						<else />
+							<a href='{:U("Wap/Ucenter/OrderConfirmation/","oid=$ary_orders[o_id]")}' class="orange">确认收货 </a>
+					</if>
+				</if> 
+				</span> </div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">订单总金额：</div>
+                <div class="tb-cont"> <span class="price">￥{$ary_orders.o_all_price|default="0"}</span> </div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">下单日期：</div>
+                <div class="tb-cont">{$ary_orders.o_create_time}</div>
+            </div>
+        </div>
+
+        <div class="tb-title">收货信息</div>
+        <div class="order-info-box info-tb">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">收货人：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_name}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">地址：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_state}{$ary_orders.o_receiver_city}{$ary_orders.o_receiver_county}{$ary_orders.o_receiver_address}</div>
+            </div>
+            <notempty name="ary_orders.o_receiver_telphone">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">固定电话：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_telphone}</div>
+            </div>
+            </notempty>
+            <notempty name="ary_orders.o_receiver_mobile">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">手机号码：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_mobile} </div>
+            </div>
+            </notempty>
+            <notempty name="ary_orders.o_receiver_email">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">电子邮件：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_email}</div>
+            </div>
+            </notempty>
+            <notempty  name="ary_orders.o_buyer_comments">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">订单备注：</div>
+                <div class="tb-cont">{$ary_orders.o_buyer_comments}</div>
+            </div>
+            </notempty>
+            <notempty  name="ary_orders.o_receiver_remarks">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">发货备注：</div>
+                <div class="tb-cont">
+                <if condition="$ary_orders['o_shipping_remarks'] eq '1'"> 发货先发，缺货后发
+                <elseif condition="$ary_orders['o_shipping_remarks'] eq '2'"/> 等缺货一起发
+                <elseif condition="$ary_orders['o_shipping_remarks'] eq '3'"/> 修改订单，删除缺货商品 
+                </if> 
+                </div>
+            </div>
+            </notempty>
+            <notempty  name="ary_orders.o_receiver_time">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">发货时间：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_time}</div>
+            </div>
+            </notempty>
+        </div>
+
+        <div class="tb-title">物流信息</div>
+        <div class="order-info-box info-tb">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">收货地址：</div>
+                <div class="tb-cont">{$ary_orders.o_receiver_state}{$ary_orders.o_receiver_city}{$ary_orders.o_receiver_county}{$ary_orders.o_receiver_address},{$ary_orders.o_receiver_telphone}</div>
+            </div>
+            <notempty  name="ary_delivery['delivery']['od_logi_name']">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">物流公司：</div>
+                <div class="tb-cont">{$ary_delivery['delivery']['od_logi_name']}</div>
+            </div>
+            </notempty>
+            <notempty  name="ary_delivery['delivery']['od_logi_no']">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">运单号：</div>
+                <div class="tb-cont"> {$ary_delivery['delivery']['od_logi_no']}</div>
+            </div>
+            </notempty>
+        </div>
+
+        <div class="tb-title">支付及配送方式</div>
+        <div class="order-info-box info-tb">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">支付方式：</div>
+                <div class="tb-cont">{$ary_orders.payment_name}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">配送方式：</div>
+                <div class="tb-cont">{$ary_orders.str_logistic}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">运费：</div>
+                <div class="tb-cont"><span class="price">￥{$ary_orders.o_cost_freight|default="0"}</span></div>
+            </div>
+        </div>
+
+        <div class="tb-title">购物清单</div>
+        <div class="order-info-box proList orderShowList">
+            <ul id="productList">
+                <volist name="orders_goods_info" id="goods_info">
+                <li class="clearfix">
+                    <if condition="$goods_info.oi_type neq '2'">
+                    <input type="hidden" id="cart{$goods_info.pdt_id}" name="cart[{$goods_info.pdt_id}]" class="inputNum" value="{$goods_info.oi_nums}" >
+                    </if>
+                    <a href="{:U("/Wap/Products/detail","gid=$goods_info[g_id]")}" class="img"> <img src="{$goods_info.g_picture|default="__PUBLIC__/Ucenter/images/pdtDefault.jpg"}" width="100" height="100"> </a>
+                    <div class="proM">
+                        <a href='{:U("/Wap/Products/detail","gid=$goods_info[g_id]")}' title="{$goods_info.oi_g_name}" class="proN">{$goods_info.oi_g_name}</a>
+                        <p>{$goods_info.pdt_spec}</p>
+                        <div class="pro-list-price"><strong>￥{$goods_info.oi_price}</strong> <em>X{$goods_info.oi_nums}</em></div>
+                    </div>
+                </li>
+                </volist>
+            </ul>
+            <div id="loading" class=" clearfix" style="display: none;">正在加载...</div>
+        </div>
+
+        <div class="tb-title">价格清单</div>
+        <div class="order-info-box info-tb">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">商品金额：</div>
+                <div class="tb-cont">￥{$ary_orders.o_goods_all_price|default="0"}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">+ 运费金额：</div>
+                <div class="tb-cont">￥{$ary_orders.o_cost_freight|default="0"}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">- 优&#12288;&#12288;惠：</div>
+                <div class="tb-cont">￥{$ary_orders.o_discount|default="0"}</div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">- 优惠券金额：</div>
+                <div class="tb-cont">￥{$ary_orders.o_coupon_menoy|default="0"}</div>
+            </div>
+            <div class="tb-item total-item clearfix">
+                <div class="tb-lab">订单总金额：</div>
+                <div class="tb-cont">￥{$ary_orders['o_all_price']}</div>
+            </div>
+        </div>
+
+    </div>
+</div>

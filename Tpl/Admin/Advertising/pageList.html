@@ -1,0 +1,39 @@
+<div class="rightInner">
+    <table width="100%" class="tbList">
+        <thead>
+            <tr class="title">
+                <th colspan="99"><a href="{:U('Admin/Advertising/pageAdd')}" class="btnG ico_add">新增广告</a></th>
+            </tr>
+            <tr>
+				<th width="120">操作</th>
+				<th>广告名称</th>
+				<th width="200">广告图片</th>
+				<th width="120">显示顺序</th>
+            </tr>
+        </thead>
+        <tbody>
+           	<volist name="list" id="link">
+              <tr>
+                  <td width="120">
+                   <a href='{:U("Admin/Advertising/pageEdit","ulid=$link[s_id]")}'>编辑</a>|
+				<a href='{:U("Admin/Advertising/doDel","s_id=$link[s_id]")}'>删除</a>
+				</td>
+				<td>{$link.s_name}</td>
+				<td width="120">
+					<if condition="$link[s_image_path]">
+					<img src="{$Think.config.DOMAIN_HOST}{$link.s_image_path}" width="120" height="50"/>				
+					<else />
+					</if>
+				</td>
+			
+				<td width="120">{$link.s_order}</td>
+              </tr>
+              </volist>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="99">{$page}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

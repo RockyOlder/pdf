@@ -1,0 +1,61 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*收货地址列表   开始*/
+.deliverList { width:100%;}
+.deliverList p.tongyongP { padding-top:10px;}
+.deliverList table.deliverTable { width:100%; border:1px solid #d7d7d7; background:#F2F2F2;}
+.deliverList table.deliverTable td { padding:5px 0px; color:#333; font-family:Arial}
+.deliverList table.deliverTable td i.red { color:red; position:relative; font-style:normal; top:2px;}
+.deliverList table.deliverTable td input.input01 { border:1px solid #d7d7d7; width:160px; height:23px; padding-left:5px; line-height:23px; margin-right:20px;}
+.deliverList table.deliverTable td input.input02 { border:1px solid #d7d7d7; width:60px; height:23px; padding-left:5px; line-height:23px;}
+.deliverList table.deliverTable td input.input03 { border:1px solid #d7d7d7; width:90px; height:23px; padding-left:5px; line-height:23px;}
+.deliverList table.deliverTable td select { border:1px solid #d7d7d7; margin-right:10px;}
+.deliverList table.deliverTable td span.gray { color:#999; margin-left:10px;}
+
+/*收货地址列表   结束*/
+
+/*我的资料页   开始*/
+.myDate { width:958px; border:1px solid #d7d7d7; height:53px; background:url('../images/myDatepbj.jpg') repeat-x; line-height:53px; margin:20px 0px 10px; color:#333;}
+.myDate b { color:#F37511;}
+.myDate span.span01 { margin-left:10px;}
+.myDate span.span02 { margin-left:68px;}
+.myDate span.span03 { margin-left:86px;}
+
+input.radio { position:relative; margin-right:3px; position:relative; top:2px;}
+.myDa table.deliverTable td input.input01 { width:180px}
+.myDa label.boy { margin-right:10px;}
+/*我的资料页   结束*/
+
+.changePass { width:100%;}
+.changePass table { width:100%; margin-top:10px;}
+.changePass table td { padding:5px 0px; color:#333;}
+.changePass table td i.red { color:red; font-style:normal; position:relative; top:2px;}
+.changePass table td input { border:1px solid #d7d7d7; width:180px; height:23px; padding-left:5px; line-height:23px; color:#999;}
+.changePass p { width:100%; text-align:center; padding:20px 0px;}
+
+.member_editpass {height: 45px;border: 1px solid #E5D2B0;background-color: #FFF9EB;padding-left: 10px;line-height: 45px;position: relative;margin-bottom: 20px;margin-top: 20px;}
+.member_editpass2 {font-size: 14px;margin-bottom: 25px;height: 45px;line-height: 45px;padding-left: 15px;}
+
+.changePass table.addTable{width:51%;}
+.addTable tr{line-height: 32px;}
+
+span.tipmsg {
+    color: #666;
+    display: inline-block;
+    margin-left: 5px;
+    padding-left: 10px;
+}
+.star-ico {width:200px;height:20px;background-image:url(../images/star_ico.png);background-repeat:no-repeat;}
+.level0 {background-position:0 0;} 
+.level1 {background-position:0 -22px;} 
+.level2 {background-position:0 -44px;} 
+.level3 {background-position:0 -66px;} 
+.level4 {background-position:0 -88px;}
+.level5 {background-position:0 -110px;} 
+
+
+
+
+
+

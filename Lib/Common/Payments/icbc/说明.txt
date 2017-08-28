@@ -1,0 +1,9 @@
+工行注册dll
+1、将ASP\ICBCEBankUtil.dll和LIB\windows\WIN32\infosecapi.dll两个dll文件拷贝到系统system32目录下；
+2、打开DOS窗口，进入system32目录；
+3、运行“regsvr32 ICBCEBankUtil.dll”命令注册控件；
+
+商户证书（pfx格式）ganso.pfx
+银行测试证书路径 ebb2cpublic.crt
+商户公钥文件 ganso.crt
+商户私钥文件 ganso.key

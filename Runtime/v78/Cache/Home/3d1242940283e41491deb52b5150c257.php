@@ -1,0 +1,55 @@
+<?php if (!defined('THINK_PATH')) exit();?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>取消支付</title>
+<link rel="stylesheet" type="text/css" href="__CSS__clientstyle.css"/>
+<script src="__JS__jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+ <!-- 各种状态的弹窗 -->
+    <div class="popup popup_other">
+        <div class="content" name="content_whycansel">
+            <form id='submitSkipFrom' name="submitSkipFrom" method="post" action="/Home/Products/send_order_feedback">
+                 <h4>亲，为何要取消支付呢？</h4>
+                 <ul class="choose_reason">
+                     <li  data="0">选错啦</li>
+                     <li  data="1">价格小贵，我再想想</li>
+                     <li  data="2">转换质量有待提高</li>
+                 </ul>
+                 <textarea class="other_resson" maxlength="100" name='content' placeholder="其他内容"></textarea>
+                <div class="bottom">
+                    <div class="btn btn_contain_pay" onclick="history.back()">返回支付</div>
+                    <button tppe="submit" class="btn btn_submit">提交</button>
+                </div> 
+                <input type="hidden" id="o_id" value="<?php echo ($o_id); ?>" name='o_id' />
+                <input type="hidden" id="token" value="<?php echo ($token); ?>" name='token' />
+                <input type="hidden" id="state" value="0" name='state' />
+             </form>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $('.choose_reason li').click(function(){
+        $("#state").val($(this).attr('data'));
+        $('.btn_submit').attr('name','submit');
+        $(this).addClass('on').siblings().removeClass('on');
+        $('.btn_submit').addClass('on');
+    })
+    $('.other_resson').keyup(function(event) {
+         var val = $('.other_resson').val();
+         var len = val.toString().length;
+         if(len>2){
+            $('.btn_submit').attr('name','submit');
+            $('.btn_submit').addClass('on');
+         }else{
+            $('.btn_submit').removeAttr('name');
+         };
+    });
+    //生成支付宝订单
+   $(document).on('click','.btn_submit[name="submit"]',function(){
+         $("#submitSkipFrom").submit();
+    })
+</script>
+</body>
+</html>

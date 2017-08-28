@@ -1,0 +1,151 @@
+<script src="__PUBLIC__/Wap/js/passport.js"></script>
+<div class="warp">
+    <div class="head">
+        <p>收货地址管理</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+    </div>
+    <div class="member_editpass" style="display: none;">
+        <b></b>
+    </div>
+    <div class="eAddress">
+    <form action="#" method="post" id="edit_deliverTable">
+        <ul>
+            <li><span>收货人：</span><input type="text" value="{$edit_city.ra_name}" id="ra_name" name="ra_name" validate="{ required:true,isCheck:true,maxlength:20,messages:{required:'收货人不能为空',isCheck:'包含非法字符，请重新输入',maxlength:'收货人姓名不能超过20个字符'}}"><p class="red"></p></li>
+            <li><span>手机号码：</span><input type="text" class="input" id="ra_mobile_phone" value="{$edit_city.ra_mobile_phone}" name="ra_mobile_phone" validate="{ required:true,rangelength:[11,11],isPhone:true,messages:{required:'手机号码不能为空',rangelength:'手机号码至少11位'}}"><p class="red"></p></li>
+            <li class="lis" <if condition="$zt eq '1'"> style="display:none;" </if>><span>固定电话：</span>
+                <input type="text" class="area" id="isMobile" name="isMobile" value="{$edit_city['mobile'].0}">
+                -
+                <input type="text" id="isMobile_2" name="isMobile_2" value="{$edit_city['mobile'].1}" style="width: 110px;">
+                <!--~
+                <input type="text" class="turn" validate="{ number:true}" id="isMobile_3" name="isMobile_3" value="{$edit_city['mobile'].2}">--><p class="red"></p></li>
+            <li <if condition="$zt eq '1'"> style="display:none;" </if>><span>省：</span>
+                <select id="province" name="province" onchange="initSelectCityRegion();selectCityRegion(this, 'city','');" validate="{ required:true}">
+                    <option value="0" selected="selected">请选择</option>
+                    <foreach name="citys" item="vo">
+                        <option value="{$vo.cr_id}">{$vo.cr_name}</option>
+                    </foreach>
+                </select>
+                <p class="red"></p></li>
+            <li <if condition="$zt eq '1'"> style="display:none;" </if>><span>市：</span>
+                <select id="city" name="city" onchange="selectCityRegion(this, 'region','');" validate="{ required:true}">
+                    <option value="0" selected="selected">请选择</option>
+                </select>
+            <p class="red"></p></li>
+            <li <if condition="$zt eq '1'"> style="display:none;" </if>><span>区：</span>
+                <select id="region" name="region" validate="{ required:true}">
+                    <option value="0" selected="selected">请选择</option>
+                </select>
+                <p class="red"></p></li>
+            <li <if condition="$zt eq '1'"> style="display:none;" </if>><span>详细地址：</span><input type="text" class="input01" style="width: 280px;" id="ra_detail" value="{$edit_city.ra_detail}" name="ra_detail" validate="{ required:true,isCheck:true,messages:{required:'详细地址不能为空',isCheck:'包含非法字符，请重新输入'}}"><p class="red"></p></li>
+            <li <if condition="$zt eq '1'"> style="display:none;" </if>><span>邮政编码：</span><input type="text" class="input01" id="ra_post_code" name="ra_post_code" value="{$edit_city.ra_post_code}" validate="{ isZipCode:true,messages:{isZipCode:'请输入合法的邮编'}}"><p class="red"></p></li>
+            <li><input type="checkbox" <if condition="$edit_city.ra_is_default eq 1">checked</if> id="ra_is_default" name="ra_is_default" value="1" >是</li>
+        </ul>
+        <input type="hidden" name="raid" id="raid" value="{$raid}">
+        <input type="hidden" name="m_id" id="m_id" value="{$member.m_id}">
+		<input type="hidden" name="pids" id="pids" value="{$pids}">
+		<input type="hidden" name="zt" id="zt" value="{$zt}">
+        <button class="blue" type="button" id="ajax_pageDeliver" style="color: #fff;">确 定</button>
+        <!--<table class="deliverTable">
+            <tr><td colspan="2"></td></tr>
+            <tr>
+                <td width="88" align="right"><i class="red">*</i> 收货人：</td>
+                <td><input type="text" value="{$edit_city.ra_name}" id="ra_name" name="ra_name" validate="{ required:true,isCheck:true,messages:{required:'收货人不能为空',isCheck:'包含非法字符，请重新输入'}}"><span class="spanWrong"></span></td>
+            </tr>
+            <tr>
+                <td align="right"><i class="red">*</i> 地区：</td>
+                <td>
+                    <select id="province" name="province" onchange="initSelectCityRegion();selectCityRegion(this, 'city','');" validate="{ required:true}">
+                        <option value="0" selected="selected">请选择</option>
+                        <foreach name="citys" item="vo">
+                            <option value="{$vo.cr_id}">{$vo.cr_name}</option>
+                        </foreach>
+                    </select>
+                    <select id="city" name="city" onchange="selectCityRegion(this, 'region','');" validate="{ required:true}">
+                        <option value="0" selected="selected">请选择</option>
+                    </select>
+                    <select id="region" name="region" validate="{ required:true}">
+                        <option value="0" selected="selected">请选择</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><i class="red">*</i> 详细地址：</td>
+                <td>
+                    <input type="text" class="input01" style="width: 280px;" id="ra_detail" value="{$edit_city.ra_detail}" name="ra_detail" validate="{ required:true,isCheck:true,messages:{required:'详细地址不能为空',isCheck:'包含非法字符，请重新输入'}}">
+                    <span class="spanWrong"></span>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><i class="red">*</i> 手机号：</td>
+                <td>
+                    <input type="text" class="input" id="ra_mobile_phone" value="{$edit_city.ra_mobile_phone}" name="ra_mobile_phone" validate="{ required:true,rangelength:[11,11],isPhone:true,messages:{required:'手机号码不能为空',rangelength:'手机号码至少11位'}}">
+                    固定电话：
+                    <input type="text" class="input02" id="isMobile" name="isMobile" value="{$edit_city['mobile'].0}">
+                    ~
+                    <input type="text" class="input03" id="isMobile_2" name="isMobile_2" value="{$edit_city['mobile'].1}">
+                    ~
+                    <input type="text" class="input02" validate="{ number:true}" id="isMobile_3" name="isMobile_3" value="{$edit_city['mobile'].2}">
+                    <span class="spanWrong"></span>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">邮编：</td>
+                <td>
+                    <input type="text" class="input01" id="ra_post_code" name="ra_post_code" value="{$edit_city.ra_post_code}" validate="{ isZipCode:true,messages:{isZipCode:'请输入合法的邮编'}}">
+                    <span class="spanWrong"></span>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">默认：</td>
+                <td>
+                    <input type="checkbox" <if condition="$edit_city.ra_is_default eq 1">checked</if> id="ra_is_default" name="ra_is_default" value="1" >是
+                    <span class="spanWrong"></span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="hidden" name="raid" id="raid" value="{$raid}">
+                    <input type="hidden" name="m_id" id="m_id" value="{$member.m_id}">
+                    <button class="blue" type="button" id="ajax_pageDeliver" style="color: #fff;">确 定</button>
+                </td>
+            </tr>
+            <tr><td colspan="2"></td></tr>
+        </table>-->
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    function selectCityRegion(obj, item, default_value) {
+        var value = obj.value;
+        if (!value) {
+            value = obj;
+        }
+		if (value == 0) {
+            $('#region').html('<option value="0">请选择</option>');
+            return false;
+        }
+        var url = '/Wap/Address/getCityRegion/';
+        $('#'+item).load(url, {
+            'parent': value,
+			'item': item ,
+            'default_value':default_value
+        }, function(msgObj){
+			if(msgObj == ''){
+                $("#"+item).css("display","none");
+            }else{
+                $("#"+item).css("display","");
+                if ('' != default_value) {
+                	this.value = default_value;
+                }
+            }
+        });
+
+    }
+    function initSelectCityRegion() {
+        $('#city').html('<option value="0">请选择</option>');
+        $('#region').html('<option value="0">请选择</option>');
+    }
+</script>
+<if condition="$raid gt 0 ">
+    {$js_city}
+</if>

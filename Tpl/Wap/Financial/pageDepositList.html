@@ -1,0 +1,111 @@
+<div class="warp">
+    <div class="head">
+        <p>收支明细</p>
+        <a href="javascript:void(0);" class="gob" onclick="window.history.back();"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+    </div>
+
+    <div class="show-money">
+        <span>预存款余额：</span>
+        <strong>￥{$member['m_balance'] |default="0"}</strong>
+    </div>
+    <p class="repeat_x"></p>
+
+    <div class="tab-container">
+        <div class="tab-header">
+            <ul class="tab-wrap clearfix">
+                <li class="active" data-id="allList"><a href="javascript:void(0);">全部</a></li>
+                <li data-id="incomeList"><a href="javascript:void(0);">收入</a></li>
+                <li data-id="payList"><a href="javascript:void(0);">支出</a></li>
+            </ul>
+        </div>
+
+        <!-- 全部 -->
+        <div id="allList" class="tab-panel tab-in">
+            <table class="order-tb">
+                <thead>
+                <tr>
+                    <th class="col-1"> <div class="tb-cell">单据编号</div> </th>
+                    <th class="col-2"> <div class="tb-cell">日期</div> </th>
+                    <th class="col-3"> <div class="tb-cell">收入</div> </th>
+                    <th class="col-4"> <div class="tb-cell">支出</div> </th>
+                    <th class="col-5"> <div class="tb-cell">备注</div> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="datalist" id="ra">
+                <tr>
+                    <td> <div class="tb-cell">{$ra.bi_sn}</div> </td>
+                    <td> <div class="tb-cell">{$ra.bi_create_time}</div> </td>
+                    <td> <div class="tb-cell color-income"><if condition="$ra.bt_id eq 3 || $ra.bt_id eq 2">{$ra.bi_money}</if></div> </td>
+                    <td> <div class="tb-cell color-pay"><if condition="$ra.bt_id eq 1 || $ra.bt_id eq 4">{$ra.bi_money}</if></div></td>
+                    <td> <div class="tb-cell">{$ra.bi_desc}</div> </td>
+                </tr>
+                </volist>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 收入 -->
+        <div id="incomeList" class="tab-panel">
+            <table class="order-tb">
+                <thead>
+                <tr>
+                    <th class="col-1"> <div class="tb-cell">单据编号</div> </th>
+                    <th class="col-2"> <div class="tb-cell">日期</div> </th>
+                    <th class="col-3"> <div class="tb-cell">收入</div> </th>
+                    <th class="col-4"> <div class="tb-cell">支出</div> </th>
+                    <th class="col-5"> <div class="tb-cell">备注</div> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="ary_income" id="ra">
+                <tr>
+                    <td> <div class="tb-cell">{$ra.bi_sn}</div> </td>
+                    <td> <div class="tb-cell">{$ra.bi_create_time}</div> </td>
+                    <td> <div class="tb-cell color-income">{$ra.bi_money}</div> </td>
+                    <td> <div class="tb-cell color-pay"></div></td>
+                    <td> <div class="tb-cell">{$ra.bi_desc}</div> </td>
+                </tr>
+                </volist>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 支出 -->
+        <div id="payList" class="tab-panel">
+            <table class="order-tb">
+                <thead>
+                <tr>
+                    <th class="col-1"> <div class="tb-cell">单据编号</div> </th>
+                    <th class="col-2"> <div class="tb-cell">日期</div> </th>
+                    <th class="col-3"> <div class="tb-cell">收入</div> </th>
+                    <th class="col-4"> <div class="tb-cell">支出</div> </th>
+                    <th class="col-5"> <div class="tb-cell">备注</div> </th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="ary_pay" id="ra">
+                <tr>
+                    <td> <div class="tb-cell">{$ra.bi_sn}</div> </td>
+                    <td> <div class="tb-cell">{$ra.bi_create_time}</div> </td>
+                    <td> <div class="tb-cell color-income"></div> </td>
+                    <td> <div class="tb-cell color-pay">{$ra.bi_money}</div></td>
+                    <td> <div class="tb-cell">{$ra.bi_desc}</div> </td>
+                </tr>
+                </volist>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $(function () {
+                $('.tab-wrap').find('li').click(function () {
+                    var id = $(this).data('id');
+                    $(this).addClass('active').siblings().removeClass('active');
+                    $('#' + id).addClass('tab-in').siblings().removeClass('tab-in');
+                });
+            });
+        </script>
+    </div>
+</div>

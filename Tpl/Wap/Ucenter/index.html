@@ -1,0 +1,66 @@
+<script src="__PUBLIC__/Wap/js/jquery.form.js"></script>
+<div class="warp">
+	<div class="head">
+    	<p>会员中心</p>
+        <a href="{:U('Wap/Index/index')}" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/mySelf')}"  class="shezhi"></a>
+    </div>
+    <div class="uCenter"><!--uCenter 开始-->
+    	<!--<div class="uCO"><img src="__IMAGES__img03.png" /><i></i></div>-->
+        <div class="uCO"><img src="__IMAGES__img03.png" /><a href="{:U('Wap/Ucenter/mySelf')}">{$info.m_name}</a>
+		<volist name="ary_extend_data" id="data">
+		<if condition="$data.fields_type eq 'file'">
+            <img src="{$data.content|default='__PUBLIC__/Wap/images/bj01.png'}" class="touxiang" id="headerImg"/>
+		</if>
+		</volist>
+            <form id='headImg' target="iframe" name="headImg" enctype='multipart/form-data' method="post" action="{:U('Wap/Ucenter/upLoadFile')}">
+                <input type="file" onchange="uploadImg();" name="headPortrait" id="headPortrait"/>
+            </form>
+            <iframe id="iframe"  name="iframe" style="display: none;"></iframe>
+        </div>
+        <div class="uCT clearfix">
+            <!--<span><img src="__PUBLIC__/Wap/images/bj01.png" style="width: 71px;height: 102px;"/></span>-->
+        	<span><strong>{$info.order_count}</strong><label>所有订单</label></span>
+            <span><strong>{$info.total_point}</strong><label>积分</label></span>
+            <span><strong>{$info.m_balance|sprintf='%.2f',###}</strong><label>可用余额</label></span>
+            <span><strong>{$info.collect_count}</strong><label>所有收藏</label></span>
+        </div>
+        <div class="uCTh">
+        	<ul>
+            	<li><a href="{:U('Wap/Orders/orderList')}" ><img src="__IMAGES__a01.png" /><p>全部订单</p></a></li>
+                <li><a href="{:U('Wap/Collect/pageList')}" ><img src="__IMAGES__a02.png" /><p>我的收藏</p></a></li>
+                <li><a href="{:U('Wap/PointLog/pageList')}" ><img src="__IMAGES__a03.png" /><p>我的积分</p></a></li>
+				<!--
+                <li><a href="javascript:void(0);" ><img src="__IMAGES__a04.png" /><p>物流信息</p></a></li>-->
+            </ul>
+            <ul>
+                <li><a href="{:U('Wap/Financial/index')}" ><img src="__IMAGES__a05.png" /><p>收支明细</p></a></li>
+                <li><a href="{:U('Wap/Coupon/couponList')}" ><img src="__IMAGES__one04.png" /><p>我的优惠券</p></a></li>
+               <!-- <li><a href="javascript:void(0);" ><img src="__IMAGES__a07.png" /><p>我的留言</p></a></li>-->
+                <li><a href="{:U('Wap/Message/pageMailBox')}" ><img src="__IMAGES__a08.png" /><p>站内信</p></a></li>
+            </ul>
+        </div>
+    </div><!--uCenter 结束-->
+	
+</div>
+<script type="text/javascript">
+    function uploadImg() {
+        $("#headImg").submit();
+    }
+    function callback(jsonData) {
+        if(jsonData.result === true){
+            $.ThinkBox.success(jsonData.msg);
+            $('#headerImg').attr('src',jsonData.img_src);
+        }else{
+            $.ThinkBox.error(jsonData.msg);
+        }
+    }
+    /*$("#headImg").submit(function(){
+        $(this).ajaxForm({
+            success: function(msgObj){
+                console.log(msgObj);
+            }
+        });
+        return false;
+    });*/
+</script>

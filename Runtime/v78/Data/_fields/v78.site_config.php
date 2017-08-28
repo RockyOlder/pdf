@@ -1,0 +1,1 @@
+<?php	return array ( 0 => 'sc_id', 1 => 'sc_title', 2 => 'sc_memo', 3 => 'sc_module', 4 => 'sc_create_time', 5 => 'sc_update_time', '_autoinc' => true, '_pk' => 'sc_id', '_type' => array ( 'sc_id' => 'int(11)', 'sc_title' => 'varchar(100)', 'sc_memo' => 'text', 'sc_module' => 'varchar(50)', 'sc_create_time' => 'timestamp', 'sc_update_time' => 'timestamp', ), );?>

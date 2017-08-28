@@ -1,0 +1,150 @@
+<script type="text/javascript" src="/Public/Tpl/v78/{$view}/js/require.js" data-main="/Public/Tpl/v78/{$view}/js/common" defer async="true" ></script>
+<div class="main">
+        <div class="wrap">
+            <div class="add_banner" style="display:none;"><a href="/Home/Products/ConversionFeeDetail"><img src="__IMAGES__banner-1.2_03.jpg" alt=""></a><i class="icon icon-close"></i></div>
+            <if condition="$ACTIVITY_OPEN  neq 1">
+                <div class="activity_banner">
+                    <img src="__IMAGES__images/1_03.jpg" alt="" />
+                    <div class="content">
+                       <a href="{:U('Home/Index/YearMiddlePage')}">
+                        <div class="left">
+                            <img src="__IMAGES__images/txt.png" alt="" />                       
+                        </div>
+                        <div class="count_down right">
+                            <h3>距离<span class="end_date"></span>活动截止还剩</h3>
+                            <p><span class="day"></span><span class="time"></span></p>
+                            <span class="details">活动详情</span>
+                        </div>
+                        </a>
+                        <div class="linkbox">
+                            <a href="{:U('Home/Index/YearMiddlePage#01')}" class="first">买一个月送5次转换</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#02')}">买一年送3个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#03')}">买二年送6个月</a>
+                        </div>
+                    </div>
+                </div>
+            </if>
+            <input type="hidden" id="year" value="{$year}" />
+            <input type="hidden" id="month" value="{$month}" />
+            <input type="hidden" id="day" value="{$day}" />
+            <input type="hidden" id="start_time" value="{$start_time}" />
+            <input type="hidden" id="halfMonther" value="{$halfMonther}" />
+            <include file="$Boot_page" />
+            <div class="main_main">                
+                <div class="record_box">
+                     <div class="list_title">
+                         <ul>
+                             <li data-id="xf_record" <if condition="$record eq 'Prepaidrecords' "> class="active" </if>><a href="{:U('Home/Index/informationRecords',array('record'=>Prepaidrecords))}">充值记录</a></li>
+                         <li data-id="zh_record" <if condition="$record eq 'Conversionrecord' "> class="active" </if>><a href="{:U('Home/Index/informationRecords',array('record'=>Conversionrecord))}" >转换记录</a></li>
+                         </ul>
+                     </div>
+                     <div class="list_box">
+                         <div class="list_con" id="xf_record"  <if condition="$record eq 'Prepaidrecords' "> style="display:block;"</if>>
+                             <table cellpadding="0" cellspacing="0" class="table_xf_record">
+                                 <thead>
+                                        <th class="first">时间</th>
+                                        <th class="two">充值金额</th>
+                                        <th class="three">状态</th>
+                                 </thead>
+                                 <tbody>
+                                 <volist name="ary_article_list" id="PaymentSeriallist" key="k">
+                                    <tr>
+                                         <td class="first">{$PaymentSeriallist.ps_create_time} </td>
+                                         <if condition="$PaymentSeriallist['ps_buy_type'] eq 1 "> 
+                                                    <td>{$PaymentSeriallist.ps_money}元（{$PaymentSeriallist.ps_buy_nunmber}次）</td>
+                                                <else />   
+                                                <td>{$PaymentSeriallist.ps_money}元（{$PaymentSeriallist.ps_buy_nunmber}个月）</td>
+                                          </if>   
+                                             <if condition="$PaymentSeriallist['ps_status'] eq 0"> 
+                                                  <td><span class="not_pay">已过期</span></td>
+                                               <elseif condition="$PaymentSeriallist['ps_status'] eq 1" />
+                                                <td><span class="success">支付成功</span></td>
+                                               <elseif condition="$PaymentSeriallist['ps_status'] eq 4" />
+                                                 <td><span class="failure">已失效</span></td>
+                                             </if>
+                                     </tr>
+                                     
+                                 </volist>
+                                 </tbody>
+                             </table>
+                             <div class="pagination">
+                                 {$page}
+<!--                                 <a href="#">首页</a>
+                                 <a href="javascript:;" class="prev">上一页</a>
+                                 <a href="javascript:;" class="next">下一页</a>
+                                 <a href="#">尾页</a>-->
+                             </div>
+                             <empty name="ary_article_list" >
+                                    <div class="noinfo">
+                                         <img src="__IMAGES__pic-nozh.png" alt="" />
+                                         <p>您暂时还没有充值记录哦</p>
+                                    </div>
+                             </empty>
+                         </div>
+                         <div class="list_con" id="zh_record" <if condition="$record eq 'Conversionrecord' "> style="display:block;" </if>>
+                             <div class="promet">请您在24小时之内进行下载，超过24小时下载链接将失效！</div>
+                              <table cellpadding="0" cellspacing="0" class="table_zh_record">
+                                 <thead>
+                                        <th class="first">时间</th>
+                                        <th class="two">文件名</th>
+                                        <th class="three">状态</th>
+                                        <th class="four">转换方式</th>
+                                        <th class="five">下载链接</th>
+                                 </thead>
+                                 <tbody>
+                                     <volist name="PdfListSelect" id="PdfListSelectlist" key="k">
+                                     <tr>
+                                         <td class="first">{$PdfListSelectlist[crate_time]}</td>
+                                         <td class="file_name"><p>{$PdfListSelectlist[fname]}</p></td>
+                                        <if condition=" $PdfListSelectlist['cstate'] eq 1 "> 
+                                                 <td><span class="success">转换成功</span></td>
+                                               <elseif condition="$PdfListSelectlist['cstate'] eq 2" />
+                                                 <td><span class="failure">转换失败</span></td>
+                                               <elseif condition="$PdfListSelectlist['fstate'] neq 1 and $PdfListSelectlist['cstate'] neq 1 and $PdfListSelectlist['fdown'] neq 1" />
+                                                <td><span class="failure">上传失败</span></td>
+                                             </if>
+                                              <if condition="$PdfListSelectlist['conversion_type'] eq 1 "> 
+                                                     <td>次数</td>
+                                                  <elseif condition="$PdfListSelectlist['conversion_type'] eq 2 " />
+                                                     <td>月份</td>
+                                                   <else />  
+                                                     <td>免费</td>
+                                             </if>
+                                         <td>
+                                               <if condition=" $PdfListSelectlist['cstate'] eq 1 "> 
+                                                   <if condition=" $PdfListSelectlist['lastDown'] eq 1 "> 
+                                                         <a href="javascript:void(0)" class="not_pay" >已过期</a>
+                                                       <else />
+                                                       <a href="javascript:void(0)" class="success"  onclick="getFileDownload('{$PdfListSelectlist.m_id}','{$PdfListSelectlist.id}')">点击下载</a>
+                                                    </if>
+                                                    
+                                                     
+                                               <elseif condition="$PdfListSelectlist['cstate'] eq 2 " />
+                                                  <a href="{:U('Home/Index/artificialvip')}" class="success">人工vip
+                                                     </a>
+                                               <elseif condition="$PdfListSelectlist['fstate'] neq 1 and $PdfListSelectlist['cstate'] neq 1 and $PdfListSelectlist['fdown'] neq 1" />
+                                                   <a href="http://file1.cqttech.com/soft/Yueshu/YueShuPDF_setup.exe" class="success">客户端转换
+                                                     </a>
+                                             </if>
+                                    
+                                         </td>
+                                     </tr>
+                                     </volist>
+                                 </tbody>
+                             </table>
+                             <div class="pagination">
+                                   {$pdf_page}
+                             </div>
+                             <empty name="PdfListSelect" >
+                                    <div class="noinfo">
+                                         <img src="__IMAGES__pic-noswith.png" alt="" />
+                                         <p>您暂时还没有转换记录哦</p>
+                                    </div>
+                             </empty>
+
+                         </div>
+                     </div>
+                </div>                
+            </div>
+        </div>
+    </div>

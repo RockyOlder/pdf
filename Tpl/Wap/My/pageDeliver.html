@@ -1,0 +1,123 @@
+<script src="__PUBLIC__/Wap/js/passport.js"></script>
+<div class="warp">
+    <div class="head">
+        <p>收货地址管理</p>
+		<if condition="$pids neq ''">
+			<if condition="$zt neq ''">
+				<a href="{:U("Wap/Orders/addOrderPage",array('pid'=>$pids,'zt'=>1))}" class="gob"><span>返回</span></a>
+			<else/>
+				<a href="{:U("Wap/Orders/addOrderPage",array('pid'=>$pids))}" class="gob"><span>返回</span></a>
+			</if>
+		<else/>
+			<a href="{:U('Wap/Ucenter/mySelf')}" class="gob"><span>返回</span></a>
+		</if>
+		<if condition="$zt neq ''">
+			<a href="{:U('Wap/ReceiveAddress/addAddressPage',array('pid'=>$pids,'zt'=>1))}" class="regi">新增</a>
+		<else/>
+			<a href="{:U('Wap/ReceiveAddress/addAddressPage',array('pid'=>$pids))}" class="regi">新增</a>
+		</if>
+    </div>
+    <div class="deliverList myOrder"><!--deliverList  start-->
+        <p class="tongyongP"><span>已保存的有效地址</span><label class="yellow">最多保存20个有效地址</label></p>
+        <table class="tableCon">
+            <thead>
+                <tr>
+                    <td width="10%">收货人</td>
+                    <td width="40%">所在地区</td>
+                    <td width="20%">街道地址</td>
+                    <!--<td width="102">邮编</td>-->
+                    <td width="15%">电话/手机</td>
+					<!--<td width="5%" >是否默认</td>-->
+                    <td width="15%">操作</td>
+                </tr>
+            </thead>
+            <tbody>
+            <volist name="deliver" id="dev" empty="$empty">
+                <tr id="list_{$dev.ra_id}" <if condition="$dev.ra_is_default eq 1"> class="default" <else /> class=""</if> >
+                    <td width="10%" <if condition="$pids neq ''"> onclick="returnback({$dev.ra_id},'{$pids}')" <else/> onclick="returnback({$dev.ra_id})" </if>>{$dev.ra_name}</td>
+                    <td width="40%" <if condition="$pids neq ''"> onclick="returnback({$dev.ra_id},'{$pids}')" <else/> onclick="returnback({$dev.ra_id})" </if>>{$dev.address}</td>
+                    <td width="25%" <if condition="$pids neq ''"> onclick="returnback({$dev.ra_id},'{$pids}')" <else/> onclick="returnback({$dev.ra_id})" </if>>{$dev.ra_detail}</td>
+                    <!--<td width="102">{$dev.ra_post_code}</td>-->
+                    <td width="15%" <if condition="$pids neq ''"> onclick="returnback({$dev.ra_id},'{$pids}')" <else/> onclick="returnback({$dev.ra_id})" </if>>
+						<if condition="$dev['ra_mobile_phone'] neq ''">
+							{$dev.ra_mobile_phone}
+						<elseif condition="$dev['ra_phone'] neq ''">
+							<p>{$dev.ra_phone}</p>
+						<else/>{$dev.ra_mobile_phone}</if>
+					</td>
+					<!--<td width="5%" <if condition="$pids neq ''"> onclick="returnback({$dev.ra_id},{$pids})" <else/> onclick="returnback({$dev.ra_id})" </if>><if condition="$dev.ra_is_default eq 1">是<else />否</if></td>-->
+                    <td width="10%" >
+                        
+						<if condition="$zt neq ''">
+							<input type="hidden" name="is_zt" value="{$zt}" id="is_zt">
+							<a href='{:U("Wap/My/editDeliver",array('raid'=>$dev[ra_id],'pids'=>$pids,'zt'=>$zt))}' class="wordBlue" ra_id="{$dev.ra_id}">修改</a>
+						<else/>
+							<a href='{:U("Wap/My/editDeliver",array('raid'=>$dev[ra_id],'pids'=>$pids))}' class="wordBlue" ra_id="{$dev.ra_id}">修改</a>
+						</if>
+                        <a href="javascript:void(0);" class="wordBlue del_deliver" ra_id="{$dev.ra_id}" pids="{$pids}" >删除</a>
+                    </td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+<div id="pro_diglog" style="display: none;">
+    <div id="tip_div">您确定要删除吗?</div>
+</div>
+</div>
+<script type="text/javascript">
+
+	function returnback(raid,pids){
+	
+		if(pids == '' || pids == undefined ){
+			window.location.href = "/Wap/My/pageDeliver";
+		}else{
+			var zt_url='';
+			if ( $("#is_zt").length > 0 ) {
+				zt_url ='/zt/1';
+			}
+			//秒杀
+			if(pids == 'spike'){
+				window.location.href = "/Wap/Orders/pageSpikeAdd/"+'/raid/'+raid + zt_url;
+			}else{
+				if(pids == 'bulk'){
+					window.location.href = "/Wap/Orders/pageBulkAdd/pid/" + pids+'/raid/'+raid + zt_url;
+				}else{
+					window.location.href = "/Wap/Orders/addOrderPage/pid/" + pids+'/raid/'+raid + zt_url;
+				}
+			}
+		}
+	}
+
+    function initSelectCityRegion() {
+        $('#city').html('<option value="0">请选择</option>');
+        $('#region').html('<option value="0">请选择</option>');
+    }
+
+    $(document).ready(function(){
+        $(".del_deliver").click(function(){
+            var ra_id = $(this).attr("ra_id");
+			var pids = $(this).attr("pids");
+            $("#tip_div").dialog({
+                width:330,
+                height:170,
+                modal:true,
+                title:'提示信息',
+                buttons:{
+                    '确定':function(){
+                        $("#tip_div").dialog('destroy');
+                        $('#pro_diglog').append($('#tip_div'));
+                        mDialogCallback(ra_id,pids);
+                    },
+                    "取消": function() {
+                        $("#tip_div").dialog('destroy');
+                        $('#pro_diglog').append($('#tip_div'));
+                    }
+                }
+            });
+        });
+    });
+</script>
+<if condition="$raid gt 0 ">
+    {$js_city}
+</if>

@@ -1,0 +1,64 @@
+<div class="warp">
+    <div class="head">
+        <p>站内信</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+    </div>
+    <div class="myOrder mailBox"><!--myOrder mailBox  start-->
+        <form id="sendForm" method="post" action='/' >
+                <div id="con_choose_1" class="SendMessage"><!--chooseDiv  start-->
+                    <div class="mialConBot"><!--mialConBot   start-->
+                        <table class="tableTop">
+                            <tr>
+                                <td align="right"><i class="red">*</i> 收件人：</td>
+                                <td>
+                                    <input name="to_name" type="text" class="input01" value="" validate="{ required:true,remote:'__APP__/Wap/Message/getMember',isCheck:true,messages:{required:'收件人不能为空',isCheck:'包含非法字符，请重新输入'}}">
+                                    <span class="spanWrong"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right"><i class="red">*</i> 标题：</td>
+                                <td>
+                                    <input name="title" type="text" class="input01" value="" validate="{ required:true,isCheck:true,messages:{required:'主题不能为空',isCheck:'包含非法字符，请重新输入'}}"><span class="spanWrong"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" valign="top"><i class="red">*</i> 内容：</td>
+                                <td>
+                                    <textarea name="content" validate="{ required:true,isCheck:true,messages:{required:'内容不能为空',isCheck:'包含非法字符，请重新输入'}}"></textarea>
+                                    <span class="spanWrong"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><input onclick="subit();" class="blue" value="发 送" style="color: #fff;"/><!--  <button id="btnSendMsg" class="blue"> 发 送 </button>--></td>
+                            </tr>
+                        </table>
+                    </div><!--mialConBot   end-->
+                </div><!--chooseDiv  end-->
+        </form>
+    </div><!--myOrder mailBox   end-->
+</div><!--contentRightBox  end-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#sendForm').validate();
+    });
+    function subit(){
+        var url = "{:U('Wap/Message/doSend')}";
+        var sendForm = $('#sendForm').serialize();
+        $.ajax({
+            url : url,
+            data : sendForm,
+            dataType:"json",
+            type:"post",
+            success:function(msgObj){
+                if(msgObj.status == 1){
+                    $.ThinkBox.success(msgObj.info);
+                    window.location.href = msgObj.url;
+                }else{
+                    $.ThinkBox.error(msgObj.info);
+                    return false;
+                }
+            }
+        })
+    }
+</script>

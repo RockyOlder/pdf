@@ -1,0 +1,83 @@
+<div class="warp" style="z-index:2">
+    <form id="orders_form" method="get" action='{:U("/Wap/Orders/orderList")}' >
+        <input type='hidden' name='status' id='status' value='0' /> 
+	<div class="head">
+        <div class="userD" id='curr_order_status'>
+            {$str_orders_status}<i style="display:none;"></i>
+            <div class="zhuangtai" id='zhuangtai' style="display:none;">
+            <a href="#" value="0" type='status'><span>全部订单</span><em>{$status_count.os_0}</em></a>
+            <a href="#" value="3" type='status'><span>待付款</span><em>{$status_count.os_3}</em></a>
+            <a href="#" value="1" type='status' ><span>待发货</span><em>{$status_count.os_1}</em></a>
+            <a href="#" value="2" type='status'><span>待收货</span><em>{$status_count.os_2}</em></a>
+            <a href="#" value="7" type='status'><span>待评价</span><em>{$status_count.os_7}</em></a>
+            <a href="#" value="5" type='status'><span>三个月内订单</span><em>{$status_count.os_5}</em></a>
+            <a href="#" value="6" type='status'><span>三个月前订单</span><em>{$status_count.os_6}</em></a>
+            <a href="#" value="4" type='status'><span>退款/退货中</span><em>{$status_count.os_4}</em></a>
+            </div>
+        </div>
+        <a href="{:U('/Wap/Ucenter/index')}" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+        <script>
+            function doFilter(){
+                $("#orders_form").submit();
+                return false;
+            }
+            $(function(){
+                $("#zhuangtai").find("a[type='status']").click(function(){
+                    var o_status = $(this).attr("value");
+                    $("#status").val(o_status);
+                    $("#orders_form").submit();
+                    return false;
+                });
+                $("#curr_order_status").click(function(){
+                    $("#zhuangtai").toggle();
+                });
+            });
+        </script>
+    </div>
+    </form>    
+    <div class="order"><!--order 开始-->
+        <if condition="$orders_info NEQ ''">
+            <volist name="orders_info" id="orders">
+            <div class="orderC"><!--orderC 开始-->
+                <h3>订单：<label><a href="{:U('Wap/Orders/orderDetail')}?oid={$orders.o_id}">{$orders.o_id}</a></label><span class="st1">{$orders.str_status}</span>
+                    <if condition="$orders[str_status] eq '' ">
+                        <span class="st1">{$orders.str_pay_status}</span> 
+                        <span class="st1">{$orders.refund_status}</span> 
+                        <span class="st1">{$orders.deliver_status}</span>
+                    </if>
+                    <if condition="$orders[refund_goods_status] neq '' ">
+                        <span class="st1">{$orders.refund_goods_status}</span> 
+                    </if>
+                    <if condition="$orders[o_audit] eq 1">&nbsp;&nbsp;<span class="st1">已审核</span></if>
+                    </h3>
+                <div class="orderL">
+                    <ul>
+                        <php>$order_items = $orders['items'];</php>
+                        <notempty name='order_items'>
+                            <volist name='order_items' id='item'>
+                            <li>
+                                <a href="{:U('Wap/Products/detail')}?gid={$item.g_id}" class="orderImg"><img src="{$item['g_picture']['g_picture']}" /></a>
+                                <div class="orderR">
+                                    <a href="{:U('Wap/Products/detail')}?gid={$item.g_id}" class="proN">{$item.oi_g_name}</a>
+                                    <p><span>单价:</span>&yen;{$item.oi_price|sprintf='%.2f',###}  ×  {$item.oi_nums} </p>
+                                    <p><span>总价:</span>&yen;<php>echo sprintf("%10.2f",$item['oi_price']*$item['oi_nums']);</php></p>
+                                </div>
+                            </li>
+                            </volist>
+                        </notempty>
+                        
+                    </ul>
+                </div>
+            </div><!--orderC 结束-->
+            </volist>
+        <else />
+            <div class="orderC"><!--orderC 开始-->没有符合条件的记录！</div><!--orderC 结束-->
+        </if>
+        <div class="fenye">
+            {$page}
+        </div>
+    </div><!--order 结束-->
+	
+</div>

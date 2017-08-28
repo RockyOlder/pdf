@@ -1,0 +1,213 @@
+<div class="warp">
+    <div class="head">
+        <p>订单详情</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+    </div>
+
+    <div class="orderD"><!--orderD 开始-->
+    	<div class="orderO"><!--orderO 开始-->
+        	<div class="orderOT">
+                <form id="orders_goods_form" name="orders_goods_form" method="post" >
+            	<ul>
+                    <volist name="orders_goods_info" id="goods_info">
+                    <li>
+                        <if condition="$goods_info.oi_type neq '2'">
+                            <input type="hidden" id="cart{$goods_info.pdt_id}" name="cart[{$goods_info.pdt_id}]" class="inputNum" value="{$goods_info.oi_nums}" >
+
+                        </if>
+                    	<a href='{:U("/Wap/Products/detail","gid=$goods_info[g_id]")}'  class="proPic"><img src='{$goods_info.g_picture|default="__PUBLIC__/Ucenter/images/pdtDefault.jpg"}' /></a>
+                        <div class="orderDR">
+                        	<a href='{:U("/Wap/Products/detail","gid=$goods_info[g_id]")}'  class="proN">{$goods_info.oi_g_name}</a>
+                            <p>{$goods_info.pdt_spec}</p>
+                        </div>
+                        <span>&yen;{$goods_info.oi_price|sprintf='%.2f',###}<br/>X{$goods_info.oi_nums}<!--<br/><a href="javascript:void(0);" >退款</a></span>-->
+                    </li>
+                    </volist>
+                </ul>
+                </form>
+            </div>
+            <div class="orderOB">
+            	<ul>
+                    <li><p>&yen;{$ary_orders.o_goods_all_price|default="0"|sprintf='%.2f',###}</p><span>商品总金额：</span></li>
+                    <li><p>&yen;{$ary_orders.o_cost_freight|default="0"|sprintf='%.2f',###}</p><span>运费金额：</span></li>
+                    <li><p>{$ary_orders.o_reward_point|default="0"}分</p><span>可获积分：</span></li>
+                    <li><p>{$ary_orders.o_freeze_point|default="0"}分</p><span>花费积分总计：</span></li>
+                    <li><p>&yen;{$ary_orders.o_discount|default="0"|sprintf='%.2f',###}</p><span>促销优惠金额：</span></li>
+                    <li><p>&yen;{$ary_orders.o_point_money|default="0"|sprintf='%.2f',###}</p><span>积分抵扣金额：</span></li>
+                    <li><p>&yen;{$ary_orders.o_coupon_menoy|default="0"|sprintf='%.2f',###}</p><span>优惠券金额：</span></li>
+                    <li><p>&yen;{$ary_orders.m_balance|default="0"|sprintf='%.2f',###}</p><span>余额：</span></li>
+                    <li><p>&yen;{$ary_orders['o_all_price']|sprintf='%.2f',###}</p><span>订单总金额：</span></li>
+                </ul>
+            </div>
+            <p class="p01 box">
+
+            <if condition="(($ary_orders['o_pay_status'] neq '1') and ($ary_orders['o_status'] eq '1')) and ($ary_orders['o_payment'] neq '24' and $ary_orders['o_payment'] neq '20') ">
+						<neq name="ary_orders.o_payment" value="6">
+                            <if condition="$ary_orders['str_pay_status'] eq '已支付'">
+
+                            <elseif condition="($ary_orders['oi_type'] eq '5') and ($ary_orders['str_pay_status'] eq '部分支付')" />
+                                <a href='{:U("Wap/Orders/OrderSuccess/","oid=$ary_orders[o_id]")}' class="blue" >支付尾款</a>
+                            <else />
+                                <a id="payTheOrder" href='{:U("Wap/Orders/OrderSuccess/","oid=$ary_orders[o_id]")}' class="blue" >付款</a>
+                            </if>
+
+                       </neq>
+						
+                        <elseif condition="$ary_orders['o_payment'] eq '20' or $ary_orders['o_payment'] eq '24'"/>
+                            <a href='{:U("Wap/Ucenter/paymentPage/","oid=$ary_orders[o_id]")}' class="brown">提醒发货</a>
+                        <elseif condition="$ary_orders['o_status'] eq '1' && $ary_orders['refund_type'] eq '1' && ($ary_orders['o_audit'] neq '1' OR $ALLOW_REFUND_APPLY.sc_value eq 1)"  />
+                            <empty name="refund_num">
+                            <a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=1")}' class="brown">退 款</a>
+                           </empty>
+                        <elseif condition="$ary_orders['o_status'] eq '1' && $ary_orders['refund_type'] eq '2'" />
+                            <!--<a href='{:U("Ucenter/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type= 2")}' class="brown">退  货</a>-->
+                        <elseif condition="($ary_orders['o_status'] eq '1' && $ary_orders['o_audit'] neq '1') or ($ary_orders['str_status'] eq '已确认' && $ary_orders['refund_status'] neq '退款中' && $ary_orders['refund_goods_status'] neq '退货中')"/>
+                            <a href='{:U("Wap/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=2")}' class="brown">申请售后</a>
+                            <!-- <a href='{:U("Ucenter/Aftersale/pageAdd/","oid=$ary_orders[o_id]&refund_type=1")}' class="brown">退 款</a> -->
+                        </if>
+                        <if condition="($ary_orders['str_pay_status'] eq '已支付' and $ary_orders['payment_name'] neq $pay_name and $ary_orders['deliver_status'] eq '已发货' and $ary_orders['o_status'] eq '1')">
+                            <if condition="$ary_orders['is_pay'] eq '1' and $ary_orders['o_payment'] eq '2' and $ary_orders['o_payment'] eq '4' and $ary_orders['o_payment'] eq '5'">
+                                    <a href='{:U("Wap/Ucenter/OrderConfirmation/","oid=$ary_orders[o_id]")}' class="brown">确认收货 </a>
+                                <else />
+                                    <a href='{:U("Wap/Ucenter/OrderConfirmation/","oid=$ary_orders[o_id]")}' class="brown">确认收货 </a>
+                            </if>
+                        </if>
+                        <if condition="$ary_orders['payment_name'] eq $pay_name && $ary_orders['deliver_status'] eq '已发货'">
+                            <if condition="$ary_orders['str_status'] neq '已确认'">
+                                <a href='{:U("Wap/Ucenter/OrderConfirmation/","oid=$ary_orders[o_id]")}' class="brown">确认收货 </a>
+                            </if>
+                        </if>
+                        <if condition="$ary_orders.oi_type neq 5">
+                        <a href="javascript:void(0);" id="invalidOrder" onclick ="againOrdres();" o_id ="{$ary_orders.o_id}" class="repeat a01">照此单重新下单</a>
+                        </if>
+                        <if condition="$ary_orders.o_pay_status eq 0">
+							<a href="javascript:void(0);" id="invalid" <if condition="$ary_orders['str_status'] eq '作废'">style="display:none"</if> o_id ="{$ary_orders.o_id}" <if condition="$ary_orders.oi_type eq 5"> class="repeat a01"<else/>class="a01"</if>>作废此订单</a>
+                        </if>
+                        <!--<a href="javascript:void(0);" >查看物流</a>-->
+                <if condition="($ary_orders['is_evaluate'] neq '1') and ($ary_orders['o_status'] eq '5')">
+                    <a href='{:U("Wap/Orders/addMemberEvaluate","oid=$ary_orders[o_id]")}' class="repeat">去评价</a>
+                </if>
+            </p>
+
+        </div><!--orderO 结束-->
+        <p class="repeat_x"></p>
+        <div class="orderT">
+        	<ul>
+            	<li><span>订单编号:</span><p>{$ary_orders.o_id}</p></li>
+                <input type="hidden" name="str_pay_status" value="{$ary_orders.str_pay_status}">
+                <input type="hidden" name="deliver_status" value="{$ary_orders.deliver_status}">
+                <li><span>订单总金额:</span><p>&yen;{$ary_orders.o_all_price|default="0"|sprintf='%.2f',###}</p></li>
+                <li><span>下单日期:</span><p>{$ary_orders.o_create_time}</p></li>
+                <li><span>订单状态:</span><p>{$ary_orders.str_status} <if condition="$ary_orders['o_status'] eq '1'">{$ary_orders.str_pay_status}</if>  {$ary_orders.refund_goods_status} {$ary_orders.refund_status} {$ary_orders.str_auto_status} <if condition="$ary_orders['o_status'] eq '1'">{$ary_orders.deliver_status}</if></p></li>
+            </ul>
+        	<i></i>
+        </div>
+        <div class="orderT">
+        	<ul>
+            	<li><label>{$ary_orders.o_receiver_name}</label></li>
+                <li><address>{$ary_orders.o_receiver_state}{$ary_orders.o_receiver_city}{$ary_orders.o_receiver_county}{$ary_orders.o_receiver_address},{$ary_orders.o_receiver_telphone}</address></li>
+                <li><span>物流公司:{$ary_delivery['delivery']['od_logi_name']}</span></li>
+                <li><span>运单号:{$ary_delivery['delivery']['od_logi_no']}</span></li>
+				<li><span>手机号码:{$ary_orders.o_receiver_mobile}</span></li>
+				<if condition="$is_zt == '1'">
+					<li><span>提货时间:{$ary_orders.o_receiver_time}</span></li>
+				</if>
+                <li><h4>支付及配送方式</h4></li>
+                <li><span>支付方式:</span><p>{$ary_orders.payment_name}</p></li>
+                <li><span>配送方式:</span><p>{$ary_orders.str_logistic}</p></li>
+                <li><span>运费:</span><p>&yen;{$ary_orders.o_cost_freight|default="0"|sprintf='%.2f',###}</p></li>
+            </ul>
+        	<i></i>
+        </div>
+    </div><!--orderD 结束-->
+    <div id="invalidOrder_div"  style="display: none"><!--弹框  开始-->
+        <table class="alertTable">
+           <tr>
+                <td align="right" width="75" valign="top">作废类型：</td>
+                <td>
+                    <select name="cacelType" id="cacelType" >
+                        <option value="0">选择类型</option>
+                        <option value="1">不想买了</option>
+                        <option value="2">别家更便宜</option>
+                        <option value="3">重新拍</option>
+                        <option value="4">其他原因</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div><!--弹框  结束-->
+<script type="text/javascript">
+	$(function(){
+		$(".userD").hover(function(){
+			$(this).children("i").show();
+			$(".zhuangtai").show();
+		},function(){
+			$(this).children("i").hide();
+			$(".zhuangtai").hide();
+		})
+	})
+    //照此单下单
+    function againOrdres(){
+        var data = $("#orders_goods_form").serialize();
+        ajaxReturn('/Wap/Cart/doAdd',data,'post');
+    }
+    //作废订单操作
+    $("#invalid").click(function(){
+        var o_id = $(this).attr("o_id");
+        var url = '/Wap/Orders/ajaxInvalidOrder';
+        var str_pay_status = $("input[name='str_pay_status']").val();
+        var deliver_status = $("input[name='deliver_status']").val();
+        if(str_pay_status != "未支付" || deliver_status != "未发货") {
+            $.ThinkBox.error("此订单不能作废");
+            return false;
+        }
+        $("#invalidOrder_div").dialog({
+            width:367,
+            height:215,
+            modal:true,
+            title:"作废订单",
+            buttons:[
+                {
+                    text:"确定",
+                    click:function() {
+                        if($("#cacelType").val() == '0'){
+                            $.ThinkBox.error("作废类型不能为空！");
+                            $(this).dialog("close");
+                            return false;
+                        }
+                        var cacel_type = $("#cacelType").val();
+                        $.ajax({
+                            url:url,
+                            data:{"oid":o_id,"cacel_type":cacel_type,"trigger":"click"},
+                            type:"post",
+                            dataType:"json",
+                            success:function(msgobj) {
+                                if(msgobj.status == 1) {
+                                    $.ThinkBox.success(msgobj.info);
+                                    $("#invalidOrder_div").dialog("close");
+                                    $("#cacelType").val("");
+                                    location.replace(location)
+                                }else{
+                                    $.ThinkBox.error(msgobj.info);
+                                }
+                            }
+                        });
+                    }
+                },
+                {
+                    text:"取消",
+                    click:function() {
+                        $(this).dialog("close");
+                        $("#cacelType").val("");
+                    }
+                }
+            ],
+            close:function() {
+                $("#cacelType").val("");
+            }
+        });
+    });
+</script>
+</div>

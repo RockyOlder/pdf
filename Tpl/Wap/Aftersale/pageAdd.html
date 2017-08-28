@@ -1,0 +1,231 @@
+<link href="__PUBLIC__/Ucenter/css/Aftersale.css" rel="stylesheet">
+<script type="text/javascript" charset="utf-8">
+    window.UEDITOR_HOME_URL = "__PUBLIC__/Lib/ueditor/";
+</script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Lib/ueditor/editor_config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Lib/ueditor/editor_all.js"></script>
+<script src="__PUBLIC__/Lib/jquery/js/jquery.form.js"></script>
+<script src="__PUBLIC__/Ucenter/js/aftersale.js?adsd=111"></script>
+<!-- 中间内容开始 -->
+<div class="warp">
+    <div class="head">
+        <p>售后申请表</p>
+        <a href="javascript:void(0);" class="gob" onclick="window.history.back();"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+    </div>
+
+    <div class="body">
+        <if condition="($data.value eq '1') OR ($data.value eq '')">
+        <div class="tb-title">申请<if condition="$refund_type eq '1'">退款<elseif condition="$refund_type eq '2'" />退货</if>的商品</div>
+        <form class="info-tb form-tb" id="aftersale_form" name="aftersale_form" method="post" action='{:U("/Wap/Aftersale/doAdd")}' enctype="multipart/form-data" >
+        <div class="order-info-box proList orderShowList">
+            <ul id="productList">
+                <volist name="products_info" id="products">
+                <li id="products_tr_{$products.oi_id}" class="clearfix">
+					<if condition="$refund_type eq '2'">
+                    <input type="checkbox"checked="checked" class="list-check checkSon" name="checkSon[]" value={$products.oi_id} class="checkSon" pdt_id="{$products.oi_id}" promotion_price="{$products.promotion_price}" oi_price="{$products.oi_price|sprintf='%.3f',###}" id="checkSon_{$products.oi_id}" />
+                    <else/>
+                      <input type="hidden" name="checkSon[]" value="{$products.oi_id}" checked>
+                    </if>
+                      <input type="hidden" name="inputNum[{$products.oi_id}]" id="refund_products_{$products.oi_id}" value="{$products.oi_nums}">
+                    <a class="img" href='{:U("/Wap/Products/detail")}?gid={$products.g_id}' target="_blank"><img src='{$Think.config.DOMAIN_HOST}{$products.g_picture|default="__PUBLIC__/Ucenter/images/pdtDefault.jpg"}' width="100" height="100"></a>
+                    <div class="proM">
+                        <a class="proN" title="{$products.oi_g_name}" href='{:U("/Wap/Products/detail")}?gid={$products.g_id}' target="_blank">{$products.oi_g_name}</a>
+                        <p>商品编号：{$products.g_sn}</p>
+                        <notempty name="products[pdt_spec]">
+                        <p>规格：{$products.pdt_spec}</p>
+                        </notempty>
+                        <div class="pro-list-price"><strong>￥{$products.pdt_sale_price}</strong> <em>X{$products.oi_nums}</em></div>
+                    </div>
+                </li>
+                </volist>
+				<if condition="$ary_orders.allow_refund_delivery eq '1'">
+					<input type="hidden" name="allow_refund_delivery" id="allow_refund_delivery" value="{$ary_orders.o_cost_freight}" checked>
+				</if>
+            </ul>
+            <div id="loading" class=" clearfix" style="display: none;">正在加载...</div>
+        </div>
+
+        <div class="tb-title">申请售后的详细原因</div>
+            <if condition="$refund_type eq '2'">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">是否收到货：</div>
+                <div class="tb-cont">
+                    <label class="checkbox"><input type="radio" value="1" name="sh_radio" checked/>已收到货</label>
+                </div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">是否退货：</div>
+                <div class="tb-cont">
+                    <label class="checkbox"><input type="radio" id="th_whea01" name="th_radio" value="1" checked/>需要退货</label>
+                    <label class="checkbox"><input type="radio" id="th_whea02" name="th_radio" value="0"/>无需退货</label>
+                </div>
+            </div>
+            </if>
+            <div class="tb-item clearfix">
+                <div class="tb-lab"><if condition="$refund_type eq '1'">退款<elseif condition="$refund_type eq '2'" />退货</if>原因：</div>
+                <div class="tb-cont">
+                    <select name="ary_reason" id="ary_reason">
+                        <option value="">请选择原因</option>
+                        <volist name="ary_reason" id="reason" >
+                            <option value="{$reason}">{$reason}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">申请退款金额：</div>
+                <div class="tb-cont">
+                    <input type="text" id="application_money" name="application_money" money="{$ary_orders.refund_pay|sprintf='%.2f',###}" value="0" class="text" />
+                    <span class="info-tips">元（金额不得高于<em id="max_price">{$ary_orders.refund_pay|sprintf='%.2f',###}</em>元）</span>
+                    <p class="error-tips">请填写与客服协商一致的金额，否则可能导致申请被驳回！</p>
+                </div>
+            </div>
+            <if condition="$refund_type eq '2'">
+            <div class="tb-item clearfix" id="logi_no_tr">
+                <div class="tb-lab">退货物流单号：</div>
+                <div class="tb-cont">
+                    <input class="text" type="text" id="od_logi_no" name="od_logi_no" value="">
+                </div>
+            </div>
+            </if>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">备注：</div>
+                <div class="tb-cont">
+                    <input id="or_buyer_memo" name="or_buyer_memo" class="text" type="text"/>
+                    <input type="hidden" id="or_refund_type" name="or_refund_type" value="{$refund_type}"/>
+                </div>
+            </div>
+            <if condition="$refund_type eq '2'">
+            <div class="tb-item clearfix">
+                <div class="tb-lab">&nbsp;</div>
+                <div class="tb-cont">
+                    <label for="fileBox" class="file-box" >
+                        <img src="" class="upload_file_img" id="upload_file_img"/>
+                        <input type="file" value="上传图片" name="upload_file_0" id="upload_file_0" class="uplod_file" onchange="uploadImg();" />
+                        <input type="hidden" name="extend_field_0" id="extend_field_0" value=''/>
+                    </label>
+                    <p class="info-tips">图片不超过5M，支持GIF，JPG，JPEG，PNG，BMP，格式</p>
+                </div>
+            </div>
+            </if>
+			<volist name="ary_extend_data" id="data">
+				 <div class="tb-item clearfix">
+					<div class="tb-lab">{$data.gs_name}：</div>
+					<div class="tb-cont">
+						<if condition="$data.gs_input_type eq 1">
+							<input name="extend_field_{$data.gs_id}" type="text"  value=""  />
+						</if>
+						<if condition="$data.gs_input_type eq 2">
+							<input type="file" value="上传图片" name="upload_file_{$data.gs_id}"/>
+							<p class="wordGray">上传大小不超过5M，请打包上传,支持格式rar,zip</p>
+						</if>
+						<if condition="$data.gs_input_type eq 3">
+							 <textarea name="extend_field_{$data.gs_id}"></textarea>
+						</if>	
+					</div>
+				</div> 
+			</volist>
+            <div class="tb-item clearfix">
+                <div class="tb-lab">&nbsp;</div>
+                <div class="tb-cont">
+                    <input type="hidden" id="o_id" name="o_id" value="{$ary_orders.o_id}"/>
+                    <input id="refer" type="submit" class="fm-btn btn-primary" value="提交申请"/>
+                    <input type="reset" class="fm-btn" value="取消"/>
+                </div>
+            </div>
+        </form>
+        </if>
+
+    </div>
+</div>
+<script type="text/javascript">
+$("#application_money").blur(function(){
+    var money = $(this).attr('money');
+    if((money-this.value)<0){
+        $(this).val(money);
+    }
+});
+<if condition="$refund_type eq '2'">
+function uploadImg() {
+    $("#aftersale_form").ajaxSubmit({
+            url:"{:U('Wap/Aftersale/upLoadFile')}",
+            dataType:"json",
+            type:"post",
+            success:function(msgObj){
+                if(msgObj.status == 1){
+                    $("#upload_file_img").attr('src',msgObj.img_src);
+                    $("#extend_field_0").val(msgObj.img_src);
+                }else{
+                   alert(msgObj.info);
+                   return false;
+                }
+            },
+            resetForm: false,
+            clearForm: false
+        });
+}
+
+$(function(){
+  //是否退货按钮响应
+  $("input[name='th_radio']").click(function(){
+            if($(this).val() == 0){
+                $('#od_logi_no').val('');
+                $('#logi_no_tr').hide();
+                $('#logu_money_tr_why').html("申请退款金额：");
+                $("tbody tr.products_tr").each(function(){
+                    var _this = $(this);
+				        _this.find('.refund_products_nums').attr('disabled',false);
+                        _this.find('.checkSon').attr('disabled',false);
+                });
+                $('#ckeckAll').attr('disabled',true);
+                $("#refund_td").html('退款原因：');
+            }
+			else{
+			    $('#logi_no_tr').show();
+                $('#logu_money_tr_why').html("申请退货金额：");
+                if($('#ckeckAll').attr('disabled')){
+                    $("tbody tr.products_tr").each(function(){
+                    var _this = $(this);
+				        _this.find('.refund_products_nums').attr('disabled',false);
+                        _this.find('.checkSon').attr('disabled',false);
+                    });
+                }
+                $("#refund_td").html('退货原因：');
+			}
+  });
+  //是否已收货按钮响应
+  $("input[name='sh_radio']").click(function(){
+        //$('#ckeckAll').attr('disabled')
+          if($(this).val() == 0){
+                $('#od_logi_no').val('');
+                $('#logi_no_tr').hide();
+                $('#logi_no_tr').hide();
+                $('#th_tr').hide();//隐藏退货一行
+                $("tbody tr.products_tr").each(function(){
+                    var _this = $(this);
+				        _this.find('.refund_products_nums').attr('disabled',true);
+                        _this.find('.checkSon').attr('disabled',true);
+                });
+                $('#ckeckAll').attr('disabled',true);
+                $("#refund_td").html('退款原因：');
+            }
+			else{
+			    $('#logi_no_tr').show();
+                $('#th_tr').show();//显示退货一行
+                if($('#ckeckAll').attr('disabled') && $("input[name='th_radio']:checked").val()==1){
+                    $("tbody tr.products_tr").each(function(){
+                    var _this = $(this);
+				        _this.find('.refund_products_nums').attr('disabled',false);
+                        _this.find('.checkSon').attr('disabled',false);
+                    });
+                    $('#ckeckAll').attr('disabled',false);
+                    $("#refund_td").html('退货原因：');
+                }
+			}
+    
+  });
+});
+</if>
+</script>

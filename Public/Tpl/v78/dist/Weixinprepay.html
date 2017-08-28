@@ -1,0 +1,11 @@
+{__NOLAYOUT__}       
+<if condition="$getSysconfigActivity eq 1">
+      <input type="hidden" id="getSysconfigActivity" value="2" />
+    <else />
+        <div id="weixin_ifram">
+                        <h3>微信扫一扫完成支付</h3>
+                        <img alt="微信扫码支付" src="__APP__/Home/User/qrcode?data={$Weixinprepay.code_url}" style="width:180px;height:180px;"/>
+                        <div class="weixin_pay">应付金额：<span>&yen;<span id="priceSpanWeixin">{$Weixinprepay.o_all_price}</span></span></div>
+                          <input type="hidden" value="{$Weixinprepay.o_id}" name="order_no" id="order_no" />
+        </div>
+</if>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{$page_title}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta name="keywords" content="{$page_keywords}">
+        <meta name="description" content="{$page_description}">
+        <link rel="shortcut icon" href="__TPL__/images/favicon.ico"  type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/{$view}/css/webuploader.css">
+	<link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/{$view}/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/{$view}/css/loaders.css"/>
+	<link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/{$view}/css/xcConfirm.css"/>
+        <link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/{$view}/css/jquery.fileupload.css"/>
+
+    </head>
+	<body id="goTop"  ><!--      -->
+
+	    <include file="$headerTpl" />
+	    {__CONTENT__}
+        <php>if(TPL!='sky'){</php>
+	    <include file="Common:incOnline" />
+        <php>}</php>
+	    <include file="$footerTpl" />
+		<php> if($_SESSION['OSS']['GY_OSS_ON'] == '1'){</php>
+			<input type="hidden" value="1" id="oss_id" />
+		<php>}else{</php>
+			<input type="hidden" value="0" id="oss_id" />
+		<php>}</php>
+		<php> if($ary_request[index]== true){</php>
+		<input type="hidden" id="is_index" value="1" />
+		<php>}else{</php>	
+		<input type="hidden" id="is_index" value="0" />
+		<php>}</php>
+	    <!-- 是否有统计代码,有则显示  Start-->
+		<present name="shop_code">
+	    <noempty name="shop_code">
+	    	<div class="statistics">{$shop_code}</div>
+	    </noempty>
+		</present>
+	    <!-- 是否有统计代码，有则显示 End-->
+	</body>
+</html>

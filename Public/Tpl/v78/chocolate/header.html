@@ -1,0 +1,40 @@
+    <div class="header">
+        <div class="wrap clearfix">
+            <a href="{:U('Home/Index/CoreBusiness')}" class="brand"><img src="__IMAGES__brand.png"  alt="pdf在线转换器" /></a>
+            <ul class="nav">
+                <li <if condition="$header_tag_highlighted eq 3 ">class="current"</if>><a href="/">首页</a></li>
+                <li <if condition="$header_tag_highlighted eq 4 ">class="current"</if>><a href="{:U('Home/Index/CoreBusiness')}">开始转换</a></li>
+                <li <if condition="$header_tag_highlighted eq 1 ">class="current"</if>><a href="{:U('Home/Index/artificialvip')}">人工VIP</a></li>
+                <li <if condition="$header_tag_highlighted eq 2 ">class="current"</if>><a href="{:U('Home/Index/informationRecords')}">信息记录</a></li>
+                <li>联系我们
+                    <div class="info">
+                        <i class="arrow_up"></i>
+                        <p><i class="icon icon_qq"></i>官方QQ群<a href="http://shang.qq.com/wpa/qunwpa?idkey=5b012a15f072526bb9334848d8f60dbcaf7c8e2f7023f3378e1655ddd364dd00" target="_blank">(点击加入)</a></p>
+                        <p><i class="icon icon_qq"></i>QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes" target="_blank">3004137938</a></p>
+                        <p><i class="icon icon_phone"></i>0755-86952275</p>
+                        <div class="work_time">周一至周五 09:00-18:00</div>                        
+                    </div>
+                </li>
+            </ul>
+            <div class="login">
+            <empty name="Think.session.Members.m_name">
+                <a href="javascript:return false;" id="login_weixin" class="login_weixin">登录</a><!-- {:U('Home/Index/weixin_login')} -->
+            </empty>
+                <notempty name="Think.session.Members.m_name">
+                    <div class="user">
+                     <div class="name">你好，{$Think.session.Members.m_name}</div>
+                     <div class="info" id="appendHtml">
+                         <include file="Index:getHeaderData" />                   
+                     </div>
+                 </div>
+                </notempty>
+
+                <div class="recharge_box">&nbsp;&nbsp;│&nbsp;&nbsp;<a href="{:U('Home/Products/ConversionFeeDetail')}" class="recharge">充值</a></div>
+                <input type="hidden" value="{$Think.session.Members.m_id}" name ="gy_member_open" id="gy_member_open"/>
+                <input type="hidden" value="{$redirect}" name ="redirect" id="redirect"/>
+                <input type="hidden" id="Authorizationtype" value="{$ary_member.conversion_type}" />
+                <input type="hidden" id="Free_authorization" value="{$ary_member.Free_authorization}" />
+                <input type="hidden" id="ACTIVITY_OPEN" value="{$ACTIVITY_OPEN}" />
+            </div>
+        </div>
+    </div>

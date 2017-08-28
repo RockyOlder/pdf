@@ -1,0 +1,25 @@
+{__NOLAYOUT__}
+<div class="content content_two">
+    <div class="icon close"></div>
+    <div class="popup_content" id="wx_login" >
+         
+        <img src="__IMAGES__ewm_wx.jpg" />
+       
+    </div>
+    <h3>使用微信扫描上方二维码登录</h3>
+</div>
+<eq name="wxloginstatus" value="1">
+
+<script>
+
+	var obj = new WxLogin({
+	  id:"wx_login", 
+	  appid: "{$wxid}", 
+	  scope: "snsapi_login", 
+	  redirect_uri: "{$wx_redirect_uri}",
+	  state: "{$wxrand}",
+	  style: "white", //可选值：black,white
+	  href: ""
+	});
+</script>
+</eq>

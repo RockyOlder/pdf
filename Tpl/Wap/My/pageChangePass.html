@@ -1,0 +1,36 @@
+<script src="__PUBLIC__/Wap/js/passport.js"></script>
+<div class="warp">
+    <div class="head">
+        <p>修改密码</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+    </div>
+    <div class="member_editpass" style="display: none;">
+        <b>原密码不正确！</b>
+    </div>
+    <div class="changePass">
+        <form method="post" action="#" id="edit_changePass">
+            <table>
+                <tr>
+                    <td align="right"><i class="red">*</i> 当前登录密码：</td>
+                                        <td><input type="password" value="" name="m_password" id="m_password" validate="{ required:true,rangelength:[4,16],messages:{required:'密码不能为空',rangelength:'密码至少4位且不能多于16位'}}"></td>
+                    <td><span class="spanWrong"></span></td>
+                </tr>
+                <tr>
+                    <td align="right"><i class="red">*</i> 新登录密码：</td>
+                    <td><input type="password" id="new_m_password" name="new_m_password" validate="{ required:true,rangelength:[4,16],messages:{required:'新密码不能为空',rangelength:'密码至少4位'}}"></td>
+                    <td><span class="spanWrong"></span></td>
+                </tr>
+                <tr>
+                    <td align="right"><i class="red">*</i> 确认新登录密码：</td>
+                    <td><input type="password" id="confirmPassword" name="confirmPassword" validate="{ required:true,rangelength:[4,16],equalTo:new_m_password,messages:{required:'确认密码不能为空',rangelength:'密码至少4位',equalTo:'两次密码不一致'}}"></td>
+                    <td><span class="spanWrong"></span></td>
+                </tr>
+            </table>
+            <p>
+                <input type="hidden" name="m_id" value="{$member.m_id}" id="m_id">
+                <input type="hidden" name="m_name" value="{$member.m_name}" id="m_name">
+                <button class="blue" type="button" id="ajax_changePass" style="color: #fff;">确 定</button>
+            </p>
+        </form>
+    </div>
+</div>

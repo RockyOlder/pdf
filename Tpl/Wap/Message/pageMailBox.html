@@ -1,0 +1,104 @@
+<div class="warp">
+    <form id="orders_form" method="get" action='{:U("/Wap/Message/pageMailBox")}' >
+        <input type='hidden' name='status' id='status' value='0' />
+            <div class="head">
+            <div class="userD" id='curr_order_status'>
+                站内信
+                <if condition="$list neq '' ">
+                <i style="display:none;"></i>
+                <div class="zhuangtai" id='zhuangtai' style="display:none;">
+                    <a href="#" value="0" type='status'><span>全部邮件</span><em>{$status_count.os_0}</em></a>
+                    <a href="#" value="1" type='status'><span>三个月内邮件</span><em>{$status_count.os_1}</em></a>
+                    <a href="#" value="2" type='status'><span>三个月前邮件</span><em>{$status_count.os_2}</em></a>
+                    <a href="#" value="4" type='status'><span>发件箱</span><em>{$to_count}</em></a>
+                </div>
+                 </if>
+            </div>
+            <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+            <a class="regi" href="{:U('Wap/Message/pageSend')}">写信</a>
+        </div>
+    </form>
+    <div class="myOrder mailBox"><!--myOrder mailBox  start-->
+        <div class="chooseProCon"><!--chooseProCon  start-->
+            <div id="con_choose_1" class="chooseDiv"><!--chooseDiv  start-->
+                <div class="mailCon01"><!--mailCon01   start-->
+                    <table class="tableCon">
+                        <thead>
+                        <tr>
+                            <td width="40"></td>
+                            <td width="132">发信人</td>
+                            <td width="291">标题</td>
+                            <td width="242">时间</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="list" id="msg">
+                            <tr>
+                                <td width="40"><input name="chkItem" id="check_{$msg.sl_id}" type="checkbox" value="{$msg.sl_id}"></td>
+                                <td width="132"><if condition="$msg['from_name'] neq '' ">{$msg.from_name}<else/>{$msg.to_name}</if></td>
+                                <td width="291"><span class="wordBlue"><a href='{:U("Wap/Message/pageRead","mid=$msg[sl_id]&type=to")}' class="wordBlue">{$msg.sl_title}</a></span></td>
+                                <td width="242">{$msg.sl_create_time}</td>
+                            </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                    <div class="myOderBot"><!--myOderBot  start-->
+                        <div class="myOderBotLeft" style="width:26%"><!--myOderBotLeft  start-->
+                            <input type="checkbox" class="che" id="che" name="checkAll"> <label for="che"></label>
+                            <a href="javascript:void(0);" class="wordBlue J_allDel">批量删除</a>
+                        </div><!--myOderBotLeft  end-->
+                        <div class="myOderBotRight" style="width:74%"><!--myOderBotRight  start-->
+                            <div class="fenye">
+                                {$page}
+                            </div>
+                        </div><!--myOderBotRight  end-->
+                    </div><!--myOderBot  end-->
+                </div><!--mailCon01   end-->
+            </div><!--chooseDiv  end-->
+        </div><!--chooseProCon  end-->
+    </div><!--myOrder mailBox   end-->
+</div><!--contentRightBox  end-->
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.J_allDel').click(function(){
+            var chkItem = $("input[name='chkItem']").val();
+            if($("#che").attr("checked")=='checked'){
+                if( $('#check_'+chkItem).attr('checked')=='checked'){
+                    if(confirm('是否删除站内信')){
+                        var strVal = [];
+                        $("[name=chkItem]:checked").each(function(){
+                            strVal.push($(this).val());
+                        });
+                        var data = 'slid=' + strVal + "&type=0";
+                        ajaxReturn('{:U("Wap/Message/doDelete")}',data,'post');
+                    }
+                }
+            }
+            return false;
+        });
+        $("#che").click(function(){
+            if($("#che").attr("checked")=='checked'){
+                $("[name = chkItem]:checkbox").attr("checked", true);
+            }else{
+                $("[name = chkItem]:checkbox").attr("checked", false);
+            }
+        });
+    });
+</script>
+<script>
+    function doFilter(){
+        $("#orders_form").submit();
+        return false;
+    }
+    $(function(){
+        $("#zhuangtai").find("a[type='status']").click(function(){
+            var o_status = $(this).attr("value");
+            $("#status").val(o_status);
+            $("#orders_form").submit();
+            return false;
+        });
+        $("#curr_order_status").click(function(){
+            $("#zhuangtai").toggle();
+        });
+    });
+</script>

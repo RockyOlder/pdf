@@ -1,0 +1,1 @@
+require.config({paths:{payment:"payment/payment"}}),require(["jquery","payment","common","xcConfirm","tool"],function(t,i,n,e,m){i.init(),m.ActivityStatistics()});

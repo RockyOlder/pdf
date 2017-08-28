@@ -1,0 +1,94 @@
+{__NOLAYOUT__}
+<tr style='border:1px solid gray;text-align:center;' class='searchGoods'>
+    <td style='border:1px solid gray;'>{$data.g_name}</td>
+    <td style='border:1px solid gray;' class='pdt_sn_search'>{$data.pdt_sn}
+        <input type='hidden' name='pro_g_id' value='{$data.g_id}'>
+        <input type='hidden' name='pro_pdt_sn' value='{$data.pdt_sn}'>
+        <input type='hidden' name='pro_pdt_id' value='{$data.pdt_id}'>
+        <input type='hidden' name='pro_have_sku' value='<if condition="$data['products'] eq ''">1</if>'>
+    <input type='hidden' name='com_id' value="{$data.g_id}">	        	
+</td>
+<td style='border:1px solid gray;'>
+    {$data.g_stock}
+</td>
+<td style='border:1px solid gray;'>{$data.g_price}</td>
+<!--    <td style='border:1px solid gray;'>
+        <input type='text' class='small not_null input_number' value="{$data.g_price}"  />
+    </td>-->
+<td style='border:1px solid gray;'><a href='javascript:void(0);' onclick='deleteProduct(this);'>删除</a>
+<noempty name="data.products">
+    <a href='javascript:void(0);' onclick='hideProduct("{$data.g_id}");' class="hp{$data.g_id}">隐藏</a>
+    <a href='javascript:void(0);' onclick='showProduct("{$data.g_id}");' class="sp{$data.g_id}" style="display:none;">展开</a>
+</notempty>
+</td>
+</tr>
+<noempty name="data.products">
+    <if condition="$data['products'] neq ''">
+        <tr style="border:1px solid gray;text-align:center;background:#DDDDDD;" class="hideTr{$data.g_id}">
+            <td style="border:1px solid gray;" width="150px;">规格</td>
+            <td style="border:1px solid gray;" width="300px;">商品规格</td>
+            <td style="border:1px solid gray;" width="150px;">库存数</td>
+            <td style="border:1px solid gray;" width="150px;">销售价</td>
+            <td style="border:1px solid gray;" ></td>
+        </tr>
+    </if>
+    <volist name="data.products" id="data_info">
+        <tr style='border:1px solid gray;text-align:center;background:#DDDDDD;' class='searchGoods hideTr{$data.g_id}'>
+            <td style='border:1px solid gray;'>{$data_info.specName}</td>
+            <td style='border:1px solid gray;'>{$data_info.pdt_sn}
+                <input type='hidden' name='pro_g_id' value='{$data_info.g_id}'>
+                <input type='hidden' name='pro_pdt_sn' value='{$data_info.pdt_sn}'>
+                <input type='hidden' name='pro_pdt_id' value='{$data_info.pdt_id}'>
+            </td>
+            </td>
+            <td style='border:1px solid gray;'>
+                {$data_info.pdt_stock}
+            </td>
+            <td style='border:1px solid gray;'>{$data_info.pdt_sale_price}</td>
+            <td style='border:1px solid gray;' >
+                    <a onclick="delGoods($(this));" href="javascript:void(0);">删除</a>
+                  <a href="javascript:void(0);" onclick="expansion({$data_info.g_id})">收起</a>
+            </td>
+
+        </tr>
+    </volist>
+</noempty>
+<script type="text/javascript">
+     /*批量删除*/
+    function batchDelGoods(){
+        $("input[name='ra_gid[]']").each(function(){
+            if($(this).prop("checked")== true){
+               
+                $(this).parent('td').parent('tr').remove();
+                $("#selected_goods_products_tr_"+$(this).attr('g_id')).remove();
+            }
+        })
+    }
+    /*
+     * 展开操作
+     */
+    function expansion(gid){
+        var display_val = $("#selected_goods_products_tr_"+gid).css('display');
+        if(display_val == 'none'){
+            //$(".tbody_products_"+gid).css({'display':''});
+            $("#selected_goods_products_tr_"+gid).show();
+        }else {
+            $("#selected_goods_products_tr_"+gid).hide();
+            //$(".tbody_products_"+gid).css({'display':'none'});
+        }
+    }
+     /*删除商品*/
+    function delGoods(obj,gid){
+        obj.parent('td').parent('tr').remove();
+        $(".tbody_products_"+gid).remove();
+        //console.log("selected_goods_products_tr_"+gid);
+        $("#selected_goods_products_tr_"+gid).remove();
+    }
+    function checkAll(){
+        if($('.checkAll_tr').attr('checked')=='checked'){
+            $('.checkSon_tr').attr('checked','checked');
+        }else{
+            $('.checkSon_tr').removeAttr('checked');
+        }
+    }
+</script>

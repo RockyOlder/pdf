@@ -1,0 +1,75 @@
+ <style type="text/css">
+.redbanner { background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/RedPackets_02.jpg) no-repeat; min-width:1200px; height:392px;}
+.redconbox{ background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/RedPackets_03.jpg); height:532px;min-width:1200px; }
+.redwarp{ width:800px; margin:0 auto; padding-top:18px;}
+.redwarp .text{ background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/redtext.png) no-repeat; height:317px; position:relative;}
+.redwarp .text .but01{ position:absolute;bottom:33px;left:260px;}
+.redwarp .text .but02{position:absolute;bottom:33px;left:230px;}
+.redwarp .process{ background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/redprocesst.png) no-repeat; height:112px;margin-top:25px;}
+.qualitybox02{ background:#e3e1e1; height:78px; min-width:1200px;}
+.qualitybox02 ul{}
+.qualitybox02 li{ font-family:Microsoft YaHei; font-size:14px; color:#333; float:left; margin-left:180px;background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/icon_quality.png) no-repeat 5px 17px; padding:28px 0 13px 55px;}
+.qualitybox02 li.icon02{background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/icon_quality.png) no-repeat 0 -48px;}
+.qualitybox02 li.icon03{background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/icon_quality.png) no-repeat 0 -112px;}
+.qualitybox02 li.icon04{background:url(__PUBLIC__/Tpl/v78/chocolate/images/ztimg/icon_quality.png) no-repeat 0 -183px;}
+.qualitybox02 li:first-child{ margin-left:60px;}
+        </style>
+
+<div class="redbanner"></div>
+<div class="redconbox">
+<div class="redwarp">
+<div class="text">
+    <if condition="$check eq 2">
+        <div class="but02"><a href="{:U('Ucenter/Userhome/pageCouponList')}"><img src="__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/redbut_received.png" alt="已发送红包，查看优惠券"></a></div>
+     <else />
+        <div class="but01" ><a href="{:U('Ucenter/Attest/index')}"><img src="__PUBLIC__/Tpl/v78/chocolate/images/ztimg/redpackets/redbut_until.png" alt="认证享红包" ></a></div>
+    </if>
+</div>
+<div class="process"></div>
+</div>
+</div>
+<div class="qualitybox02">
+    <ul class="warp clearfix">
+        <li>100%正品保证</li>
+        <li class="icon02">贴心极速物流</li>
+        <li class="icon03">订单闪电发货</li>
+        <li class="icon04">品牌防伪码</li>
+    </ul>
+</div>
+<!--底部 -->
+<div class="footer clearfix">
+    <div class="warp clearfix">
+        <div class="left">
+            <Gyfx:articlecate name="artcat" num="6" recommend="1" is_show="1">
+                <volist name="artcat" key="keys" id="arts">
+                    <div class="ctl">
+                        <ul class="top">
+                            <li>{$arts.cat_name}</li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <volist name="arts.list" key="k" id="artinfo">
+                                    <if condition="$artinfo['a_link']"><a href="{$artinfo['a_link']}">{$artinfo.a_title}</a><else/>
+                                    <a href="{:U('/Home/Index/article_show?aid='.$artinfo['a_id'])}">{$artinfo.a_title}</a><br>
+                                    </if>
+                                </volist>
+                            </li>
+                        </ul>
+                    </div>
+                </volist>
+            </Gyfx:articlecate>
+        </div>
+
+        <div class="right">
+<p><img src="__PUBLIC__/Tpl/v78/chocolate/images/down_appnew.png"> </p>
+        </div>
+
+    </div>
+    <div class="copyright">
+        版权所有 深圳市天行云供应链有限公司 粤ICP备15060915号-1 行云全球汇<br> Copyright © 2015 - 2020. xyb2b.com. All Rights Reserved.
+    </div>
+</div>
+
+
+    <input type="hidden" name="add_coupon" value="{$caid}" id="add_coupon" />
+<script src="__JS__receive-coupon.js"></script>

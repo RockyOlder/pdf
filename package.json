@@ -1,0 +1,28 @@
+{
+  "name": "gulp-study",
+  "version": "1.0.0",
+  "description": "gulp study",
+  "main": "gulpfile.js",
+  "keywords": [
+    "gulp"
+  ],
+  "author": "xiaomeng",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cache": "^0.4.5",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.11",
+    "gulp-htmlmin": "^2.0.0",
+    "gulp-imagemin": "^3.0.2",
+    "gulp-jshint": "^2.0.1",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-rev": "^7.1.0",
+    "gulp-rev-append": "^0.1.8",
+    "gulp-rev-collector": "^1.0.5",
+    "gulp-sequence": "^0.4.5",
+    "gulp-uglify": "^1.5.4",
+    "imagemin-pngquant": "^5.0.0",
+    "jshint": "^2.9.2"
+  }
+}

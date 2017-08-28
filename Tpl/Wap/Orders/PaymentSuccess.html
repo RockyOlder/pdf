@@ -1,0 +1,27 @@
+<div class="warp">
+	<div class="head">
+    	<p>收银台</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Index/index')}" class="regi">关闭</a>
+    </div>
+    
+    <div class="shopcartS"><!--shopcartS 开始-->
+    	<div class="scSO">
+        	<p class="p01"><span class="zhifu">订单支付成功!</span></p>
+        </div>
+        <div class="scST">
+        	<div class="scSTcon">
+            	<ul>
+                	<li><span>订单号：</span><p>{$o_id}</p></li>
+                    <li><span>支付金额：</span><p>¥ {$payment_price|sprintf="%.2f",###}</p></li>
+                    <li><span>用户余额：</span><p>{$balance}</p></li>
+                    
+                </ul>
+                <i></i>
+            </div>
+            <a href="{:U('Wap/Index/index')}" class="tag2">继续购物</a>
+            <a href="{:U('Wap/Orders/orderDetail')}/oid/{$o_id}" class="tag3">查看订单详情</a>
+        </div>
+    </div><!--shopcartS 结束-->
+   
+</div>

@@ -1,0 +1,122 @@
+<div class="warp">
+    <div class="head">
+        <p>我的收藏夹</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+        <a href="{:U('Wap/Ucenter/index')}" class="gwc1"></a>
+        <a href="{:U('Wap/Index/index')}" class="gwc2"></a>
+    </div>
+    <div class="proList">
+        <ul id="productList">
+            <volist name="ary_goodinfo" id="goods_info">
+                <li class="clearfix" style="background-color: #fff;border-top: 2px solid #ccc;">
+                    <span>商品编码：{$goods_info.g_sn}</span>
+                    <a href="{:U('Wap/Products/detail','gid='.$goods_info['g_id'])}" class="img"><img src="<php>$goods_info['g_picture'] = '/'.ltrim($goods_info['g_picture'],'/');</php>{$goods_info.g_picture|showImage=###,100,100}" width="100" height="100" /></a>
+                    <div class="proM">
+                        <a href="{:U('Wap/Products/detail','gid='.$goods_info['g_id'])}"  title="{$goods_info.g_name}" class="proN">{$goods_info.g_name}</a>
+                        <p><i>&yen;</i><strong>{$goods_info.g_price|sprintf='%.2f',###}</strong></p>
+                    </div>
+                    <a href="{:U('/Wap/Products/detail','gid='.$goods_info['g_id'])}" class="favorite" target="_blank">
+                        <span class="jie" style="cursor:pointer;">购买商品</span>
+                    </a>
+                    <a href="javascript:void(0);" class="delete favorite" id="del_{$goods_info.g_id}" gname="{$goods_info.g_name}" onclick="delCollect('{$goods_info.g_id}');">
+                        {$Think.lang.DELETE}
+                    </a>
+                </li>
+            </volist>
+
+        </ul>
+        <div id="loading" class=" clearfix" style="display: none;">正在加载...</div>
+    </div>
+</div>
+<script type="text/javascript">
+    //监听滚动条
+   var range = 150;             //距下边界长度/单位px
+    var can_ajax = true;
+    var end_product_list = false;
+    $(window).scroll(function(){
+        if(end_product_list){
+            return ;
+        }
+        var windowHeight=$(window).height();//浏览器窗口高度
+        var scrollTopHeight=$(window).scrollTop();//滚动条顶部距离窗口顶部的高度（页面超出窗口的高度）
+        var winAndScrollHeight=windowHeight+scrollTopHeight;//浏览器窗口高度加上滚动条顶部高度
+        var contentHeight=$("body").height();//内容高度
+        if(winAndScrollHeight >= (contentHeight - range)) { //当相等时代表已经到了页面最底部
+
+            loadproducts();
+        }
+
+    });*/
+    function loadproducts(){
+        if(!can_ajax){
+            return ;
+        }
+        if((window.location.href.indexOf('?') + 1) == 0){
+            var query_string = 'r='+(Math.floor(Math.random()*10000)+1);
+        }else{
+            var query_string = window.location.href.slice(window.location.href.indexOf('?') + 1);
+        }
+
+        var startNum = parseInt($("#startNum").val());
+        $.ajax({
+            url: "/Wap/Collect/pageList",
+            type : 'GET',
+            data: query_string+"&start="+startNum,
+            beforeSend: function(){
+                can_ajax = false;
+                $("#loading").show();
+                // Handle the beforeSend event
+            },
+            complete : function(Jdata){
+                can_ajax = true;
+                $("#loading").hide();
+//                    console.log(jQuery.parseJSON(Jdata.responseText).data.html);return;
+                if(Jdata.status){
+                    if(jQuery.parseJSON(Jdata.responseText).data.html){
+                        $("#productList").append(jQuery.parseJSON(Jdata.responseText).data.html);
+                        $("#startNum").val(startNum += 1);
+                    }else{
+                        end_product_list = true;
+                    }
+                }else{
+
+                }
+            },
+            dataType : "json"
+        });
+    }
+
+    function delCollect(gid){
+        var gname = $("#del_"+gid).attr("gname");
+        if(gid <= 0){
+            $.ThinkBox.error('商品不存在或者已下架');
+            return false;
+        }
+        var box = $.ThinkBox.confirm(
+                '确定取消对商品 ：<font color="red">'+gname+'</font>&nbsp;收藏吗？',
+                {
+                    'title' : '取消商品收藏',
+                    'ok' : function(){
+                        box.hide();
+                        $.post(
+                                '{:U("Wap/Collect/doDelCollect")}',
+                                {gid:gid},
+                                function(msgObj){
+                                    if(msgObj.status){
+                                        $("#list_"+gid).remove();
+                                        $.ThinkBox.success("取消收藏成功");
+                                        window.location = "{:U('Wap/Collect/pageList')}";
+                                    }else{
+                                        $.ThinkBox.error(msgObj.info);
+                                    }
+                                },
+                                'json'
+                        );
+                    },
+                    'drag' : false,
+                    'unload'	: true,
+                    'cancel' : function(){box.hide();}
+                }
+        );
+    }
+</script>

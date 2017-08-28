@@ -1,0 +1,154 @@
+1电商平台卖家 2线下个体店铺  3个人微商 4. 微商平台  5. 自营B2C平台  6分销平台  7商超百货消 8贸易公司 9.待定
+
+
+
+电商平台卖家表：type=1 需要传的字段
+
+            run_body //经营主体（1，个人 2，企业）
+            sale_table_id//销售平台id（关联到第三方店铺分类表fx_sale_table）
+            shop_name//店铺名
+            shop_url//店铺网址
+            month_sale_count//月销量（单位：万）
+            user_com_name//店主或企业名称（主体为个人则表示店主名称，为企业则代表企业名称
+            run_goods_cate//经营品类
+            ident_num//身份证号码
+            ident_picture_front//身份证正面
+            ident_picture_back//身份证反面
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+
+	    audit_notice 审核备注
+
+	
+
+线下个体店铺表：type=2 需要传的字段
+
+            run_body //经营主体（1，个人 2，企业）
+
+            month_sale_count//月销量（单位：万）
+            run_goods_cate//经营品类
+            ident_num//身份证号码
+            company_name//公司名称
+            shop_name  店铺名称
+            shop_addr_full 店铺详细地址
+            shop_address 店铺地址（中文省市区）
+
+            shop_picture_head 店铺门头照片
+            shop_picture_scene  店铺门景照片
+            ident_picture_front 身份证或营业执照正面照片（个人-身份证，企业-执照）
+            ident_picture_back 身份证或营业执照反面照片（个人-身份证，企业-执照）
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+            province_id 
+            city_id
+            distract_id
+	    audit_notice 审核备注
+
+
+
+
+个人微商表：type=3 需要传的字段
+
+
+            run_body //经营主体（1，个人 2，企业）
+
+            month_sale_count//月销量（单位：万）
+  	    run_type  经营方式   微信、有赞、朋友圈、微博等
+  	    user_name  店主姓名
+  	    ident_run_num 身份证或营业执照号码（个人-身份证，企业-营业执照）
+            ident_picture_front 身份证或营业执照正面照片（个人-身份证，企业-执照）
+            ident_picture_back 身份证或营业执照反面照片（个人-身份证，企业-执照）
+
+  	    audit_notice 审核备注
+ 
+
+
+微商平台表：type=4 需要传的字段
+
+ 	    run_body //经营主体（1，个人 2，企业）
+	    run_type  经营方式   微信、有赞、朋友圈、微博等
+	    month_sale_count//月销量（单位：万）
+  	    unity_name  微商名称  
+  	    unity_count 微商用户数
+	    run_goods_cate 经营品类
+  	    month_sale_count 月销量（单位：万）
+  	    com_name 企业名称
+  	    run_picture_front 营业执照正面照片
+  	    run_picture_back 营业执照背面照片
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+  	    audit_notice 审核备注
+  	    
+
+
+
+自营B2C平台表：type=5 需要传的字段
+
+  	    table_type 平台类型（1，自营B2C平台 2，分销平台）
+  	    run_body //经营主体（1，个人 2，企业）
+  	    table_name 平台名称
+  	    table_url 平台网址
+ 	    run_goods_cate 经营品类
+  	    month_sale_count 月销量（单位：万）
+  	    com_name 企业名称
+  	    run_picture_front 营业执照正面照片
+  	    run_picture_back 营业执照背面照片
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+  	    audit_notice 审核备注
+  	   
+
+
+分销平台表：type=6 需要传的字段
+
+  	    table_type 平台类型（1，自营B2C平台 2，分销平台）
+  	    run_body //经营主体（1，个人 2，企业）
+  	    table_name 平台名称
+  	    table_url 平台网址
+ 	    run_goods_cate 经营品类
+  	    month_sale_count 月销量（单位：万）
+  	    com_name 企业名称
+  	    run_picture_front 营业执照正面照片
+  	    run_picture_back 营业执照背面照片
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+  	    audit_notice 审核备注
+  	   
+
+
+商超百货表：type=7 需要传的字段
+
+            run_body //经营主体（1，个人 2，企业）
+  	    son_shop_count 分店数量
+            month_sale_count//月销量（单位：万）
+            run_goods_cate//经营品类
+            com_name//公司名称
+            shop_name  店铺名称
+            shop_addr_full 店铺详细地址
+            shop_address 店铺地址（中文省市区）
+            shop_picture_head 店铺门头照片
+            shop_picture_scene  店铺门景照片
+  	    run_picture_front 营业执照正面照片
+  	    run_picture_back 营业执照背面照片
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+            province_id 
+            city_id
+            distract_id
+	    audit_notice 审核备注
+
+  
+  
+贸易公司表：type=8 需要传的字段
+
+            run_body //经营主体（1，个人 2，企业）
+            month_sale_count//月销量（单位：万）
+            run_goods_cate//经营品类
+            com_name//公司名称
+  	    run_picture_front 营业执照正面照片
+	    legal_picture_front 企业法人身份证正面照片
+            legal_picture_back 企业法人身份证反面照片
+	    audit_notice 审核备注
+
+
+  

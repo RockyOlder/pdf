@@ -1,0 +1,87 @@
+
+<div class="rightInner" id="con_tabListP_1"><!--rightInner  start-->
+    <table width="100%" class="tbList">
+        <thead>
+  
+            <tr class="title">
+                <th colspan="99">
+		                                <span style="text-align:right;font-size: 12px;float: left;">
+                    <form id="searchForm" method="get" action="{:U('Admin/Report/pageDetails')}" style='width:55%;'>
+                           时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="{$ary_get.o_create_time_1}"> -
+                           <input type="text" class="medium timer" name="o_create_time_2" value="{$ary_get.o_create_time_2}">
+                        来源：<select id="" class="medium" name="sp_id">
+                             <option value="0" <php>if($ary_get['sp_id'] == '0'){</php>selected="selected"<php>}</php>>请选择</option>
+                            <volist name="source_platform" id="platform">
+                                 <option value="{$platform.sp_id}" <php>if($platform['sp_id'] == $ary_get['sp_id']){</php>selected="selected"<php>}</php>>{$platform.sp_name}</option>
+                            </volist>
+       
+                        </select>
+                                <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
+                    </form>
+                    
+                </span>
+				</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="orderDetails"><!--orderDetails   start-->
+        <div class="orderCon"><!--orderCon   start-->
+            <h2 class="titleH2">用户信息</h2>
+            <table class="tableOrder">
+                <tr>
+                    <td width="30%">用户总数：{$members.ary_members_count}</td>
+                    <td width="30%">付费用户：{$members.ary_members_type} </td>
+                    <td>免费用户：{$members.ary_members_gratis}</td>
+                </tr>
+            </table>
+        </div><!--orderCon   end-->
+
+        <div class="orderCon"><!--orderCon   start-->
+            <h2 class="titleH2">订单信息</h2>
+            <table class="tableOrder">
+                <tr>
+                    <td>订单总数：{$ary_orders.OrderCount}</td>
+                    <td >已支付订单总数：{$ary_orders.Ordero_pay_status}</td>
+                    <td>未支付订单：{$ary_orders.Ordero_pay_status_notpay}</td>
+                    <td>退款订单总数：{$ary_orders.o_status}</td>
+                    <td>订单总额：{$ary_orders.o_all_price}</td>
+                    <td>订单支付总额：{$ary_orders.o_all_price_pay}</td>
+                    <td>退款订单总额：{$ary_orders.o_all_price_status}</td>
+                </tr>
+
+            </table>
+        </div><!--orderCon   end-->
+        <div class="orderCon"><!--orderCon   start-->
+            <h2 class="titleH2">转换信息</h2>
+            <table class="tableOrder">
+                <tr>
+                    <td>转换的人数：{$transition.AuthorizationCount}</td>
+                    <td>付费转换的人数：{$transition.AuthorizationCount_pay}</td>
+                    <td>使用次数消费：{$transition.AuthorizationCount_number}</td>
+                    <td>使用套餐消费：{$transition.AuthorizationCount_combo}</td>
+                    <td>转换文档总数：{$transition.AuthorizationCount_document}</td>
+                </tr>
+            </table>
+        </div><!--orderCon   end-->
+    </div><!--orderDetails   end-->
+</div><!--rightInner  end-->
+<script>
+    $(document).ready(function(){
+        $(".dater").datepicker({
+            showMonthAfterYear: true,
+            changeMonth: true,
+            changeYear: true,
+            buttonImageOnly: true
+        });
+        $(".timer").datetimepicker({
+            showMonthAfterYear: true,
+            changeMonth: true,
+            changeYear: true,
+            buttonImageOnly: true
+        });
+    });
+    
+    
+    
+</script>
+

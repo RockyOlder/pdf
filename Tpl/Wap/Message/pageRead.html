@@ -1,0 +1,45 @@
+<div class="warp">
+    <div class="head">
+        <p>站内信</p>
+        <a href="javascript:void(0);" onclick="window.history.back();" class="gob"><span>返回</span></a>
+        <a href="javascrip:void(0);" class="regi J_del" slid='{$messageInfo.sl_id}'>删除</a>
+    </div>
+    <div id="con_choose_1" class="chooseDiv"><!--chooseDiv  start-->
+        <div class="mialConBot myOrder" style="background-color: #fff;"><!--mialConBot   start-->
+            <table class="tableTop">
+                    <h3 style="border-bottom: 1px solid #ccc;width: 100%;">{$messageInfo.sl_title}</h3>
+                <tr>
+                    <td width="70" align="right">发信人：</td>
+                    <td>{$messageInfo.from_name}</td>
+                </tr>
+                <tr>
+                    <td width="70" align="right">时&nbsp;&nbsp;间：</td>
+                    <td>{$messageInfo.sl_create_time}</td>
+                </tr>
+
+                <!--<tr>
+                    <td width="70" align="right">收信人：</td>
+                    <td>{$messageInfo.to_name}</td>
+                </tr>-->
+                <!--<tr>
+                    <td align="right">标题：</td>
+                    <td>{$messageInfo.sl_title}</td>
+                </tr>-->
+                <tr style="border-top: 1px solid #ccc;">
+                    <td align="right" valign="top">内&nbsp;&nbsp;容：</td>
+                    <td>{$messageInfo.sl_content}</td>
+                </tr>
+            </table>
+        </div><!--mialConBot   end-->
+    </div><!--chooseDiv  end-->
+    <a class="huifu" href="{:U('Wap/Message/pageReply','mid='.$messageInfo['sl_id'])}">回复</a>
+</div>
+<script type="text/javascript">
+    $('.J_del').click(function(){
+        if(confirm('是否删除站内信')){
+            var data = 'slid=' + $(".J_del").attr("slid") + "&type=0";
+            ajaxReturn('{:U("Wap/Message/doDelete")}',data,'post');
+        }
+        return false;
+    });
+</script>

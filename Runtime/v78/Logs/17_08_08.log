@@ -1,0 +1,6 @@
+[ 2017-08-08T16:12:32+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-08-08T16:13:51+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-08-08T16:14:07+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-08-08T16:14:13+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-08-08T18:11:03+08:00 ] ERR: (ThinkException) Model:GetListAdd您所请求的方法不存在！
+[ 2017-08-08T18:11:54+08:00 ] ERR: (ThinkException) Model:GetListAdd您所请求的方法不存在！

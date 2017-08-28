@@ -1,0 +1,107 @@
+<script type="text/javascript" src="/Public/Tpl/v78/{$view}/js/require.js" data-main="/Public/Tpl/v78/{$view}/js/common" defer async="true" ></script>
+<div class="main">
+        <div class="wrap">
+            <div class="add_banner" style="display:none;"><a href="/Home/Products/ConversionFeeDetail"><img src="__IMAGES__banner-1.2_03.jpg" alt=""></a><i class="icon icon-close"></i></div>
+            <if condition="$ACTIVITY_OPEN  neq 1">
+                <div class="activity_banner">
+                    <img src="__IMAGES__images/1_03.jpg" alt="" />
+                    <div class="content">
+                       <a href="{:U('Home/Index/YearMiddlePage')}">
+                        <div class="left">
+                            <img src="__IMAGES__images/txt.png" alt="" />                       
+                        </div>
+                        <div class="count_down right">
+                            <h3>距离<span class="end_date"></span>活动截止还剩</h3>
+                            <p><span class="day"></span><span class="time"></span></p>
+                            <span class="details">活动详情</span>
+                        </div>
+                        </a>
+                        <div class="linkbox">
+                            <a href="{:U('Home/Index/YearMiddlePage#01')}" class="first">买一个月送5次转换</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#02')}">买一年送3个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#03')}">买二年送6个月</a>
+                        </div>
+                    </div>
+                </div>
+            </if>
+
+            <include file="$Boot_page" />
+            <!--<iframe src="http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes" frameborder="0" scrolling="no" id="external-frame" style=" position: absolute;float: left;z-index: 888; background: windowframe;" onload="setIframeHeight(this)"  width="600" height="300"></iframe>-->
+            <div class="main_main main_vip">                
+                 <div class="rg_vip_main">
+                     <h3>人工VIP服务将享有以下特权</h3>
+                     <div class="list_box clearfix">
+                         <div class="item item_one">
+                             <i class="icon icon_v01"></i>
+                             <h4>OCR识别，PDF文档识别率更高</h4>
+                             <p>特有的PDF识别算法，支持普通PDF文件<br>
+                                扫描PDF文件、加密PDF文件进行扫描识别，识别率高达95%</p>
+                         </div>
+                         <div class="item item_two">
+                             <i class="icon icon_v02"></i>
+                             <h4>转换速度更快，效率更高</h4>
+                             <p>特有的PDF转换内核，转换速度更加迅速<br>提高您的工作效率，让繁琐的PDF文档转换变得更加容易</p>
+                         </div>
+                         <div class="item item_three">
+                             <i class="icon icon_v03"></i>
+                             <h4>文档隐私和加密</h4>
+                             <p>您提交的所有文档，转换完成后都会在24小时内删除<br>确保您的文档隐私和安全，我们还提供文档加密防止数据泄露</p>
+                         </div>
+                         <div class="item item_four">
+                             <i class="icon icon_v04"></i>
+                             <h4>价格更亲民，效果不满意，全额退款</h4>
+                             <p>人工VIP服务收费低价实惠，转换效果好，是您<br>办公、生活、娱乐的好助手，转换效果不满意，我们将全额退还您的费用</p>
+                         </div>
+                     </div>
+                     <div class="rg_vip_footer">
+                         <h3>通过以下方式获得人工VIP服务</h3>
+                         <ul>
+                             <li>
+                                 <a  id="qq_open" href="http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes" target="_blank" >
+                                     <i class="icon icon_v05"></i>
+                                     <p>腾讯企业QQ号</p>
+                                      <div class="method">3004137938</div>
+                                  </a>
+                             </li>
+                             <li><a href="mailto:service@cqttech.com" >
+                                     <i class="icon icon_v06"></i>
+                                     <p>1个工作日内邮件服务</p>
+                                      <div class="method">service@cqttech.com</div>
+                                  </a>
+                             </li>
+                             <li class="last">
+                                 <i class="icon icon_v07"></i>
+                                 <p>客户服务电话</p>
+                                  <div class="method">0755-86952275</div>
+                             </li>
+                         </ul>
+                         <div class="fw_time">服务时间：周一至周日 / 9:00-21:00</div>
+                     </div>
+                 </div>             
+            </div>
+            
+        </div>
+    </div>
+
+<script language="javascript"> 
+function setIframeHeight(iframe) {
+if (iframe) {
+var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+if (iframeWin.document.body) {
+iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+}
+}
+};
+
+//window.onload = function () {
+//setIframeHeight(document.getElementById('external-frame'));
+//};
+</script>
+<input type="hidden" id="year" value="{$year}" />
+<input type="hidden" id="month" value="{$month}" />
+<input type="hidden" id="day" value="{$day}" />
+<input type="hidden" id="start_time" value="{$start_time}" />
+<input type="hidden" id="halfMonther" value="{$halfMonther}" />
+ <div class="popup popup_weixin" >
+
+</div>
