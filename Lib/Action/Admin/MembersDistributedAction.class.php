@@ -78,8 +78,49 @@ class MembersDistributedAction extends AdminAction{
         $ary_color  =  $obj_pie->roundColor(count($ary_labLst));
         $image_file = $obj_pie->draw_img($datLst,$ary_labLst,$ary_color);
         $this->assign('image_file',$image_file);
-        $this->display();exit;
+        $this->display();
     }
+    
+    public function MemberDataFile(){
+        $this->getSubNav(9,1,10);
+        $ary_data = $this->_get();
+        $ary_where_in = array();
+        $ary_where = array();
+        $ary_order = 'f_top desc';
+        $json_data = array();
+        if(!empty($ary_data['m_id'])){
+            $ary_user_data =   D("DataAnalysisUser")->field('COUNT(*) AS total,f_id')->where(array('m_id'=>$ary_data['m_id']))->group('f_id')->limit(0,15)->select();
+            foreach ($ary_user_data as $value){
+                array_push($ary_where_in, $value['f_id']);
+                array_push($json_data,$value['total']);
+            }
+            $ary_where['f_id'] = array('in',$ary_where_in);
+            $ary_order= '';
+        }
+        $ary_platfrom = D("DataAnalysisFile")->where($ary_where)->order($ary_order)->limit(0,15)->select();
+        $labLst =array();
+        if(!empty($ary_platfrom)){
+            foreach($ary_platfrom as $k=>$v){
+                array_push($labLst,$v['f_name']);
+                if(!empty($ary_order)){
+                    array_push($json_data,$v['f_top']);
+                }
+            }
+        }
+        $json_name = json_encode($labLst);
+        $json_data = json_encode($json_data);
+        $this->assign('json_name',$json_name);
+        $this->assign('json_data',$json_data);
+        $this->assign('ary_data',$ary_data);
+        $this->display();
+    }
+
+    public function MemberDataAnalysis(){
+        $this->getSubNav(9,1,20);
+         $this->display();
+    }
+
+
     /*
      * 会员地区分布饼图
      * @author  listen

@@ -714,6 +714,10 @@ abstract class AdminAction extends GyfxAction {
         $menus[9][0][20] = array('name' => L('MENU9_0_20'), 'url' => U('Admin/Report/pageDetails'),'type'=>'1,2,3'); //
         $menus[9][0][50] = array('name' => L('会员平台分布'), 'url' => U('Admin/MembersDistributed/platformPie'),'type'=>'1,2,3'); //会员平台分布
         $menus[9][0][60] = array('name' => L('会员区域分布'), 'url' => U('Admin/MembersDistributed/membersAreaPie'),'type'=>'1,2,3'); //会员区域分布
+        //数据挖掘
+        $menus[9][1][0] = array('name' => L('MENU9_1'), 'url' => '#','type'=>'1,2,3'); 
+        $menus[9][1][10] = array('name' => L('MENU9_1_10'), 'url' => U('Admin/MembersDistributed/MemberDataFile'),'type'=>'1,2,3'); //文件分析
+        $menus[9][1][20] = array('name' => L('MENU9_1_20'), 'url' => U('Admin/MembersDistributed/MemberDataAnalysis'),'type'=>'1,2,3'); //行为分析
 	   // echo "<pre>";print_r($menus);exit;
         $menu = M('menus',C('DB_PREFIX'),'DB_CUSTOM');
         foreach($this->tops as $key_t=>$val_v){

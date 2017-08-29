@@ -117,7 +117,7 @@
                     <form id="searchForm" method="get" action="<?php echo U('Admin/Orders/pageList');?>" style='width:55%;'>
                         订单号：<input type="text" name="o_id" class="large" value="<?php echo ($filter["o_id"]); ?>" style="width: 145px;">
                         昵称：<input type="text" name="m_name" class="large" value="<?php echo ($filter["m_name"]); ?>" validate="{ isCheck:true,messages:{isCheck:'您输入的参数非法，请重新输入'}}"  style="width: 145px;">
-                        来源Id：<input type="text" name="oi_g_name" class="large" value="<?php echo ($filter["oi_g_name"]); ?>" style="width: 145px;">
+                        来源Id：<input type="text" name="o_source_type" class="large" value="<?php echo ($filter["o_source_type"]); ?>" style="width: 145px;">
                         充值类型：<select id="" class="medium" name="pdt_id">
                             <option value="0" <?php if($filter['pdt_id'] == '0'){ ?>selected="selected"<?php } ?>>请选择</option>
                             <option value="1" <?php if($filter['pdt_id'] == '1'){ ?>selected="selected"<?php } ?>>单次</option>

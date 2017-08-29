@@ -174,6 +174,35 @@ class BatchAction extends GyfxAction{
             }
         }
     }
+    
+    public function ScwsFileNameAddData(){
+        require_once FXINC . '/Lib/Common/SCWS/' . 'pscws4.class.php';
+        $pscws = new PSCWS4();
+        $pscws->set_dict(FXINC.'/Lib/Common/SCWS/lib/dict.utf8.xdb');
+        $pscws->set_rule(FXINC.'/Lib/Common/SCWS/lib/rules.utf8.ini');
+        $pscws->set_ignore(true);
+        $value = $this->_post();
+        writeLog(json_encode($value),date('Y-m-d')."ScwsFileNameAddData.log");
+        $value['fname'] = substr($value['fname'],0, strrpos($value['fname'], '.'));
+        $pscws->send_text($value['fname']);
+        $words = $pscws->get_tops(20);
+        if(!empty($value['id'])){
+            foreach ( $words as $file){   
+                    $keywordsSelectFind = D("DataAnalysisFile")->where(array('f_name'=> array('LIKE', '%' . $file['word'] . '%')))->find();
+                    $f_id = $keywordsSelectFind['f_id'];
+                    if(empty($keywordsSelectFind)){
+                      $f_id =  D("DataAnalysisFile")->add(array('f_name'=>$file['word'],'f_top'=>1,'f_create_time'=>date('Y-m-d H:i:s')));
+                    } else {
+                       D("DataAnalysisFile")->where(array('f_id'=>$f_id))->setInc('f_top');
+                    }
+                    D("DataAnalysisUser")->add(array('m_id'=>$value['m_id'],'f_id'=>$f_id,'p_id'=>$value['id'],'c_create_time'=>date('Y-m-d H:i:s')));
+            }
+            unset($words);
+        }
+        $pscws->close();
+    }
+
+
     /**
 	 * 售后状态接口(退款退货的  进ERP后  ERP有没有审核)
      * @author zhangjiasuo <zhangjiasuo@guanyisoft.com>

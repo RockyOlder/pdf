@@ -37,6 +37,7 @@
                 <tr>
                     <th><input type="checkbox" class="checkAll" /></th>
                     <th>操&nbsp;&nbsp;作</th>
+                    <th>会员Id</th>
                     <th>会员账号</th>
                     <th>会员ID</th>
                     <th>来源ID</th>
@@ -65,6 +66,7 @@
                         <a  href="{:U("Admin/Members/addOrder")}?m_id={$members[m_id]}"   target="_blank"  class="confirm">替客户下单</a> -->
                        <!--  <a class="addOrder" m_id="{$members[m_id]}" url='{:U("Admin/Members/addOrder")}'  class="confirm">替客户下单</a>-->  
                     </td>
+                    <td>{$members.m_id}</td>
                     <td>{$members.m_name}</td>
                     <td>{$members.source}</td>
                     <td>

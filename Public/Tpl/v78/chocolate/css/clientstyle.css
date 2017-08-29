@@ -150,9 +150,10 @@ body{font:14px/1.4 '\5FAE\8F6F\96C5\9ED1',Tahoma,Arial,'\5B8B\4F53',sans-serif;o
 .choose_reason li i{background:url(../images/icon.png) -183px -556px;width:16px;height:16px;position:absolute;top:11px;left:0;display:table;content:"";}
 .choose_reason li.on i{background:url(../images/icon.png) -182px -537px;}
 .btn{padding:10px 36px;color:#fff;font-size:16px;display:inline-block;color:#fff;transition:all 0.3s;-webkit-transition:all 0.3s;moz-transition:all 0.3s;-ms-transition:all 0.3s;-o-transition:all 0.3s;*display:inline;*zoom:1;cursor:pointer;}
+/*.btn_contain_pay{width:136px;box-sizing:border-box;}*/
 .btn_end,.btn_contain,.btn_contain_pay,.btn_submit[name="submit"],.btn_only_change{background-color:#199bf8;}
 .btn_submit{padding:10px 50px;margin-left:20px;}
-.btn_submit{background:#ccc;}
+.btn_submit{background:#ccc;/*width:132px;box-sizing:border-box;*/}
 .btn_submit.on{background-color:#199bf8;}
 .btn_end:hover,.btn_contain:hover,.btn_contain_pay:hover,.btn_submit[name="submit"]:hover,.btn_only_change:hover{background:#0d84da;}
 .other_resson{height:100px;outline:none;resize:none;width:500px;padding:10px;box-sizing:border-box;border:1px solid #caddea;overflow-y:hidden}

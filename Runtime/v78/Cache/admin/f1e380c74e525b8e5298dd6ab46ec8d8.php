@@ -139,6 +139,7 @@
                 <tr>
                     <th><input type="checkbox" class="checkAll" /></th>
                     <th>操&nbsp;&nbsp;作</th>
+                    <th>会议Id</th>
                     <th>会员账号</th>
                     <th>会员ID</th>
                     <th>来源ID</th>
@@ -164,6 +165,7 @@
                         <a  href="<?php echo U("Admin/Members/addOrder");?>?m_id=<?php echo ($members[m_id]); ?>"   target="_blank"  class="confirm">替客户下单</a> -->
                        <!--  <a class="addOrder" m_id="<?php echo ($members[m_id]); ?>" url='<?php echo U("Admin/Members/addOrder");?>'  class="confirm">替客户下单</a>-->  
                     </td>
+                    <td><?php echo ($members["m_id"]); ?></td>
                     <td><?php echo ($members["m_name"]); ?></td>
                     <td><?php echo ($members["source"]); ?></td>
                     <td>

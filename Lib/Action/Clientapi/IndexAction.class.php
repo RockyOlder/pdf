@@ -1,7 +1,9 @@
 <?php
 class IndexAction extends MobileAction{
 
-	public function __construct(){
+    public static $ip;
+    public static $request_uri;
+    public function __construct(){
 		$array_params = $_REQUEST;
 		//暂时隐藏验证
 		parent::__construct();
@@ -78,6 +80,7 @@ class IndexAction extends MobileAction{
         }		
         //记录日志
         $ip = get_client_ip();
+        self::$ip = $ip;
         $int_port = "";
         if($_SERVER["SERVER_PORT"] != 80){
             $int_port = ':' . $_SERVER["SERVER_PORT"];
@@ -85,6 +88,7 @@ class IndexAction extends MobileAction{
 		unset($array_params['_URL_']);
         $request_uri = http_build_query($array_params);
         $uri = urldecode($request_uri);
+        self::$request_uri = $uri;
         $url = 'http://'.$_SERVER["HTTP_HOST"].$int_port.'/'.$_SERVER["PATH_INFO"].'?'.$uri;//$_SERVER["REQUEST_URI"]; 
         $msg = 'IP地址为：'.$ip.'    接口调用时间：'.date('Y-m-d H:i:s').'     '.$url."\r\n";
         $this->logs($array_params["method"],$msg);
@@ -209,6 +213,7 @@ class IndexAction extends MobileAction{
                                     }
                             }
                             writeLog("fxMemberSynchronousData_emplty_pcid:". json_encode($response_data),date('Ym-d')."fxMemberSynchronousData.log");
+                            $this->addLog();
                             $this->errorResult(true,10001,$response_data,'pcid is binding existing','Remote service error',true);
                     } else {
                     //    echo date('Y-m-d H:i:s',strtotime($response_data['end_time']));exit;
@@ -231,6 +236,7 @@ class IndexAction extends MobileAction{
                                     'root_tag' => 'pcid is binding existing'
                                 );
                                     writeLog("fxMemberSynchronousData:". json_encode($response_data),date('Ym-d')."fxMemberSynchronousData.log");
+                                    $this->addLog();
                                     $this->errorResult(false,10001,$response_data,'pcid已绑定','Remote service error',true);
                                // $this->errorResult(false,10001,$response_data,'pcid is binding existing');
                         //      $this->result(false,'10001',$response_data,"failure",$options);
@@ -238,6 +244,18 @@ class IndexAction extends MobileAction{
                     }
 
     }
+    
+    private function addLog(){
+      $int_port = "";
+      if($_SERVER["SERVER_PORT"] != 80){
+          $int_port = ':' . $_SERVER["SERVER_PORT"];
+      }
+      $url = 'http://'.$_SERVER["HTTP_HOST"].$int_port.'/'.$_SERVER["PATH_INFO"].'?'.self::$request_uri;//$_SERVER["REQUEST_URI"]; 
+      $msg = 'IP地址为：'.self::$ip.'    接口数据返回时间：'.date('Y-m-d H:i:s').'     '.$url."\r\n";
+      $this->logs($this->array_params["method"],$msg);  
+    }
+
+
     /**
      * 检测客户端数据是否同步接口
      * @author Rocky
@@ -246,9 +264,11 @@ class IndexAction extends MobileAction{
         
         $Members_Object_data = D('Members')->where(array('m_pcid'=>$params['pcid']))->find();
         if(empty($Members_Object_data)){
-            $this->errorResult(false,10001,array('success'=>'success','result'=>true),'pcid可以使用','Remote service error',FALSE);
+            $this->addLog();
+            $this->errorResult(false,10001,array('success'=>'success','result'=>true),'pcid可以使用','Remote service error',true);
         } else {
-            $this->errorResult(true,10001,array('success'=>'failure','result'=>FALSE),'pcid已绑定','Remote service error',FALSE);
+            $this->addLog();
+            $this->errorResult(true,10001,array('success'=>'failure','result'=>FALSE),'pcid已绑定','Remote service error',true);
           //  $this->errorResult(false,10001,array('code'=>10001,'success'=>'failure','result'=>FALSE),'pcid is binding existing');
         }
         
@@ -263,9 +283,11 @@ class IndexAction extends MobileAction{
             $ary_member = $member->where(array('open_id'=>$params['open_id']))->field('m_head_img')->find();
             
             if(!empty($ary_member['m_head_img'])){
-                  $this->errorResult(false,10007,$ary_member,'头像','Remote service error',true);
+                $this->addLog();
+                  $this->errorResult(false,10007,$ary_member,'头像','Remote service error',FALSE);
             } else {
-                  $this->errorResult(false,10001,$ary_member,'用户无头像','Remote service error',true);
+                $this->addLog();
+                  $this->errorResult(false,10001,$ary_member,'用户无头像','Remote service error',FALSE);
               //  $this->errorResult(false,10001,array('code'=>10001,'success'=>'failure','result'=>FALSE),'pcid is binding existing');
             }
     }
@@ -308,6 +330,7 @@ class IndexAction extends MobileAction{
                 if($Authorization_role == 1){
                     $response_data['number_remaining'] = (int)$response_data['number_remaining'] -1;
                 }
+                 $this->addLog();
                  $this->errorResult(true,10007,$response_data,'pcid is binding existing','Remote service error',true);
             }
     }

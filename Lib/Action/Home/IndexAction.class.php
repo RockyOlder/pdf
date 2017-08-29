@@ -146,17 +146,27 @@ class IndexAction extends HomeAction {
         $pscws = new PSCWS4();
         $pscws->set_dict(FXINC.'/Lib/Common/SCWS/lib/dict.utf8.xdb');
         $pscws->set_rule(FXINC.'/Lib/Common/SCWS/lib/rules.utf8.ini');
-        $title='深圳湾公园';
+        $select = D("PdfList")->field('fname,m_id,id')->where(array('role'=>0))->limit(0,1000)->select();
         $pscws->set_ignore(true);
-        $pscws->send_text($title);
-        $words = $pscws->get_tops(5);
-        $tags = array();
-        foreach ($words as $val) {
-            $tags[] = $val['word'];
+        foreach ($select as  $value){
+             $value['fname'] = substr($value['fname'], self::USER_PRISSIONS_STATUS_0, strrpos($value['fname'], '.'));
+             $pscws->send_text($value['fname']);
+             $words = $pscws->get_tops(20);
+             foreach ( $words as $file){   
+                     $keywordsSelectFind = D("DataAnalysisFile")->where(array('f_name'=> array('LIKE', '%' . $file['word'] . '%')))->find();
+                     $f_id = $keywordsSelectFind['f_id'];
+                     if(empty($keywordsSelectFind)){
+                       $f_id =  D("DataAnalysisFile")->add(array('f_name'=>$file['word'],'f_top'=>1,'f_create_time'=>date('Y-m-d H:i:s')));
+                     } else {
+                        D("DataAnalysisFile")->where(array('f_id'=>$f_id))->setInc('f_top');
+                     }
+                     D("DataAnalysisUser")->add(array('m_id'=>$value['m_id'],'f_id'=>$f_id,'p_id'=>$value['id'],'c_create_time'=>date('Y-m-d H:i:s')));
+             }
+             D("PdfList")->where(array('id'=>$value['id']))->data(array('role'=>1))->save();
+             unset($words);
         }
         $pscws->close();
-        var_dump($tags);
-
+        echo 1;exit;
     }
     /**
      * 客户模版默认首页
@@ -412,7 +422,6 @@ class IndexAction extends HomeAction {
                     }
                     $fileTime = strtotime(date('Y-m-d'));
                     $fileNameInfo = safe_replace($fileList["name"]); //去掉特殊字符
-
                     //转换文件名
                     if (is_utf8($fileNameInfo)) {
                         $fileNames = iconv('utf-8', 'gbk//IGNORE', $fileNameInfo);
@@ -552,6 +561,9 @@ class IndexAction extends HomeAction {
                 'tname' => $fileInfo['file']['name'],
                 'error_msg' => self::$error_msg[$this->status]
             );
+            if($this->status != self::USER_PRISSIONS_STATUS_8){
+                make_fsockopen('/Script/Batch/ScwsFileNameAddData',array('id'=>$info['id'],'m_id'=>$userinfo['m_id'],'fname'=>$addList['fname']));
+            }
 
             $this->ajaxReturn(json_encode(array('status' => self::USER_PRISSIONS_STATUS_1, 'files' => $json)), 'EVAL');
         }
@@ -780,10 +792,10 @@ class IndexAction extends HomeAction {
 
     public function download(){
             set_time_limit(0);
-            $sessionMD5 = md5($_SESSION['session_time'].'_PDF_KEY');
-            if(!isset($_GET['key']) || $sessionMD5 != $_GET['key']){
-                    exit('Not normal visit');
-            }
+//            $sessionMD5 = md5($_SESSION['session_time'].'_PDF_KEY');
+//            if(!isset($_GET['key']) || $sessionMD5 != $_GET['key']){
+//                    exit('Not normal visit');
+//            }
             $members = session("Members");
             $fileInfo    = $_GET;
             $File_download_find = D("PdfList")->where(array('m_id'=>$members['m_id'],'id'=>$fileInfo['id']))->find();
