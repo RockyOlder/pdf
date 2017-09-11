@@ -17,6 +17,8 @@
                 <input type="hidden" id="order_no" value="{$Weixinprepay.o_id}" />
                 <input type="hidden" id="client" value="{$client}" />
                 <input type="hidden" id="token" value="{$token}" />
+                <input type="hidden" id="details" value="{$Weixinprepay.details}" />
+                <input type="hidden" id="s_type" value="{$s_type}" />
                 <div class="weixin-main">
                     <ul>
                         <li class="code">
@@ -43,9 +45,17 @@
                         $.ajax({
                             url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").val() + '&t=' + Math.round(Math.random() * 1000000),
                             type: "GET",
-                            dataType: "json",
                             success: function (data) {
+                                var lvContent=""; 
+                                if (typeof data!="string"){  
+                                    lvContent=data.innerText;  
+                                }  
+                                else{  
+                                    lvContent=data;  
+                                }  
+                                data  = eval('('+lvContent+')');
                                 if (data.status == 1) {
+                                    ajaxCount({"s_status":5,"s_value":$("#details").val(),"token":$("#token").val(),"s_payment":"WEIXIN","s_type":$("#s_type").val()},'AjaxActiviOrderPay');
                                     window.location.href = "/Home/Products/success?order_no="+ $("#order_no").val()+'&token='+$("#token").val()+'&client='+$("#client").val();
                                 }
                             }

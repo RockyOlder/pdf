@@ -6,7 +6,12 @@ require.config( {
 require(['jquery','xcConfirm','tool','wxLogin'], function($,xcConfirm,tool,wxLogin) {  
 if(tool.checkNotEmpty($('#year').val()) && tool.checkNotEmpty($('#month').val()) && tool.checkNotEmpty($('#day').val())){
    // setInterval(function(){},1000);
-   tool.ShowCountDown()
+    tool.ShowCountDown();
+    tool.BehaviorStatisticsBanner();
+    tool.ClickTheBanner();
+    if(tool.checkNotEmpty($("#LoadDataType").val()) == false && tool.checkNotEmpty($("#gy_member_open").val()) == true && $("#Authorizationtype").val() == 0){
+          if(!$("#open_box").length>0){tool.rsdConfirm('teachesDay',null,tool);}
+    }
 }
 $(document).ready(function(){
 	window.hostUrl = window.location.origin;
@@ -122,9 +127,9 @@ var dataNowinit = $('.item[name="tc_default"]').data('now');
 var dataFisrtinit = $('.item[name="tc_default"]').data('first'); 
   ExpireDiscount(dataNowinit,dataFisrtinit);
 
-
+  var Authorizationtype = $('#Authorizationtype').val();
 //递增
-    var amount = $('.section_one .amount').val();
+  var amount = $('.section_one .amount').val();
    $('.add_numberof').click(function(){
         amount++;
         if(amount > 1000){
@@ -132,22 +137,40 @@ var dataFisrtinit = $('.item[name="tc_default"]').data('first');
         }
         $('#pdt_id').val(1);
         $('.section_one .amount').val(amount);
-        addCalculation(amount); 
+        getTimesAct(amount);
+         
    })
 
+// 活动次数初始化
+if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
+    var inintimes = $('.section_one .amount').val();
+    $('.give_promet span').html(inintimes*2);
+    $('.section_one').addClass('getTimes');
+}
 //递减
    $('.reduce_numberof').click(function(){
-       
-        if(amount>1){
+      if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
+          if(amount>1){
+            amount--;
+            $('.section_one .amount').val(amount);
+            $('#pdt_stock').val(amount);
+            $('#pdt_id').val(1);
+            addCalculation2(amount);            
+          }else if(amount==""){
+              amount=1;
+          }
+      }else{
+          if(amount>1){
             amount--;
             $('.section_one .amount').val(amount);
             $('#pdt_stock').val(amount);
             $('#pdt_id').val(1);
             addCalculation(amount);            
-        }else if(amount==""){
-            amount=1;
-        }
-        
+          }else if(amount==""){
+              amount=1;
+          }
+        } 
+                
    })
 
   //次数加减算钱 5次送1
@@ -168,13 +191,36 @@ var dataFisrtinit = $('.item[name="tc_default"]').data('first');
          $('.give_promet span').html(time);
       }
    }
+
+   //次数加减算钱 买1送一
+   function addCalculation2(number){
+      $('.discount').html('<div class="left">限期优惠:</div><div class="right">赠送'+number+'次转换</div>');
+      $('#pay .save_money').html("");
+      $('#pay .first_price').html(""); 
+      $('.original').hide();
+      // 次数单价
+      var UnitPrice = parseInt($('#times').data('now'));
+      $('.last_pay .pay_money').html((UnitPrice*number)); 
+      $('.give_promet span').html(number*UnitPrice);
+   }
+
+   function getTimesAct(a){
+      if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
+         addCalculation2(a);
+       }else{
+           addCalculation(a);
+       }
+   }
+
+    
  // 点击加减回到次数
    $('.upor_down').click(function(){
       $(this).parent().siblings('.item').addClass('current').parents(".section").siblings().find('.item').removeClass('current');
       $('#pdt_stock').val(amount);
-      $('#details').val($(this).parent().siblings('.item').data('details'));
-      addCalculation(amount);
+      $('#details').val($(this).parent().siblings('.item').data('details'));     
+      getTimesAct(amount);
    });
+
 
 // 点击次数
    $('#times').click(function(){
@@ -183,7 +229,7 @@ var dataFisrtinit = $('.item[name="tc_default"]').data('first');
         $('#details').val($(this).data('details'));
         $('#pdt_id').val($(this).data('pdt_id'));
         $(this).addClass('current').parents(".section").siblings().find('.item').removeClass('current');
-        addCalculation(amount);
+        getTimesAct(amount);
    });
 //只能输入数字
 $('.section_one .amount').keyup(function() {
@@ -211,12 +257,17 @@ $('.section_one .amount').keyup(function() {
         $('#pdt_id').val(1);
         $(this).parent().siblings('.item').addClass('current').parents(".section").siblings().find('.item').removeClass('current'); 
         $('#details').val($(this).parent().siblings('.item').data('details'));
-        addCalculation(amount);
+        getTimesAct(amount);
         //
         if(amount==""){
-            $('.section_one .amount').val(1);
-            addCalculation(1);
-            $('.give_promet span').html('1');
+          $('.section_one .amount').val(1);
+          if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
+             addCalculation2(1);
+             $('.give_promet span').html('2');
+           }else{
+              addCalculation(1);
+              $('.give_promet span').html('1');
+           }   
         }
      
   })
@@ -288,7 +339,6 @@ $('.popup .close').click(function(){
   var href = window.location.href.split('#');
   var hrefIndex = href.length-1;
   var dataPay =0,imgSrc="";
-  var Authorizationtype = $('#Authorizationtype').val();
   function changeInfo(){
     var Authorizationtype = $('#Authorizationtype').val();
     if(Authorizationtype !==""){
@@ -304,7 +354,6 @@ $('.popup .close').click(function(){
   }
  
    if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
-
       if(href[hrefIndex]=="01"){
         imgSrc = $('.onemouth img').attr('setsrc');        
         dataPay = $('.onemouth .btn').data('pay');
@@ -342,7 +391,7 @@ $('.popup .close').click(function(){
             var details = $(this).data('details');
             imgSrc = $(this).parent().siblings('img').attr('setsrc');
            /// console.log(imgSrc);
-            generateOrder(details)
+            generateOrder(details);
             $('.zfb_pay').attr('onclick','generaAlypay('+details+')');
             $('.weixin_pay').attr('onclick','sendWXorder('+details+')');
  
@@ -354,12 +403,18 @@ $('.popup .close').click(function(){
                   $('.actlogin_promet').hide();
                   weixinlogin2()
            },1000)
-        }
-
-
-            
+        }      
+    });
+    
+    $('.gettimes .degree').hover(function() {
+        $(this).find('.degree_bottom').show();
+    }, function() {
+        $(this).find('.degree_bottom').hide();
     });
 
+    $('.degree_bottom .current').click(function() {
+         $(this).parent().hide();
+    });
 
   })
 })   
@@ -372,14 +427,19 @@ function generaAlypay(details){
         $("#pay_Waiting").show();
         //$('#be_paid').css('display','inline-block').siblings().hide();
         //$('.popup_zfb #be_paid').css({'margin-top':($(window).height()-460)/2});
-        ajaxCount({"s_status":3,"s_value":details},'AjaxActiviOrderPay');
-        onloadQueryApplayOrderPAy();
+        ajaxCount({"s_status":3,"s_value":details,"s_payment":"ALIPAY","s_type":$("#get_data").val()},'AjaxActiviOrderPay');
+        onloadQueryApplayOrderPAy(details);
 }
 
 //微信支付
 function sendWXorder(details){
         var url = '/Ucenter/Financial/doAddDepositOnline';
         var o_id = $("#o_id").val()
+        if(details == 1){
+            var pdt_type = 1;
+        } else {
+            var pdt_type = 2;
+        }
         /**************************************************/
         $.ajax({
             url: url,
@@ -387,7 +447,7 @@ function sendWXorder(details){
             type: "post",
             //   async:false,
             data: {
-            'details': 2,
+            'details': pdt_type,
             'pdt_id':details,
             'activity':1,
             'activity_o_id':o_id,
@@ -412,8 +472,8 @@ function sendWXorder(details){
                            $('#weixin_ifram').remove();
                            $('.popup_weixin').hide();
                        });
-                       ajaxCount({"s_status":2,"s_value":details},'AjaxActiviOrderPay');
-                       onloadQueryOrderPAy();
+                       ajaxCount({"s_status":2,"s_value":details,"s_payment":"WEIXIN","s_type":$("#get_data").val()},'AjaxActiviOrderPay');
+                       onloadQueryOrderPAy(details);
                     }
                 }
 
@@ -435,25 +495,30 @@ function ajaxCount(fileJson,faction){
 }
 
 //微信请求支付结果
-function onloadQueryOrderPAy(){
+function onloadQueryOrderPAy(details){
         $.ajax({
         url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").val() + '&t=' + Math.round(Math.random() * 1000000),
         type: "GET",
-        dataType: "json",
         success: function (data) {
+            var lvContent=""; 
+            if (typeof data!="string"){  
+                lvContent=data.innerText;  
+            }  
+            else{  
+                lvContent=data;  
+            }  
+            data  = eval('('+lvContent+')');
             if (data.status == 1) {
                 var o_id = $("#order_no").val();
-                alert(o_id)
                 $('#weixin_ifram').remove();
                 $('.popup_weixin').hide();
                 clearTimeout(onloadQueryOrderPAy);
-                ajaxCount({"s_status":5,"s_value":o_id},'AjaxActiviOrderPay');
+                ajaxCount({"s_status":5,"s_value":details,"s_payment":"WEIXIN","s_type":$("#get_data").val()},'AjaxActiviOrderPay');
                 var option = {
                     title: "确定",
                     btn: parseInt("0011", 2),
                     onOk: function () {
-                        window.location.href = data.url[0];
-
+                        window.location.href = data.url;
                     }
                 };
                 ajaxLoadShoppingHeader();
@@ -465,7 +530,7 @@ function onloadQueryOrderPAy(){
                     clearTimeout(onloadQueryOrderPAy);
                 } else {
                     setTimeout(function () {
-                        onloadQueryOrderPAy()
+                        onloadQueryOrderPAy(details);
                     }, 3000);
                 }
 
@@ -477,14 +542,18 @@ function onloadQueryOrderPAy(){
 
 // 支付宝支付
 function generateOrder(details){
-
+                if(details == 1){
+                    var pdt_type = 1;
+                } else {
+                    var pdt_type = 2;
+                }
                 $.ajax({
                 url:"/Ucenter/Financial/ALIPAYPayOnline",
                 dataType:"json",
                 type:"post",
                 async:true,
                 data:{
-                    'details': 2,
+                    'details': pdt_type,
                     'pdt_id':details,
                     'activity':1,
                     'pc_abbreviation':'ALIPAY'
@@ -492,7 +561,7 @@ function generateOrder(details){
                 success:function(data){
                     if(data.action == 1 ){
                         $('#o_id').val(data.data.o_id);
-                        var uploadUrl = '/Ucenter/Financial/doALIPAY?code=ALIPAY&o_id='+data.data.o_id+'&details=2';//
+                        var uploadUrl = '/Ucenter/Financial/doALIPAY?code=ALIPAY&o_id='+data.data.o_id+'&details='+pdt_type;//
                         $('.zfb_pay a').attr('href',uploadUrl);
                         $('.popup_actpay').show();
                         $('.popup_actpay .content').show();
@@ -517,7 +586,7 @@ function generateOrder(details){
             });
 
 }
-function onloadQueryApplayOrderPAy(){
+function onloadQueryApplayOrderPAy(details){
     
         $.ajax({
             url: "/Ucenter/Orders/getApplayOid/?order_no=" + $("#o_id").val() + '&t=' + Math.round(Math.random() * 1000000),
@@ -531,7 +600,7 @@ function onloadQueryApplayOrderPAy(){
                     $("#pay_sccess_price").html(data.order.o_all_price);
                     $("#total_number").html(data.order.number_remaining);
                     $("#total_time").html(data.order.end_time);
-                    ajaxCount({"s_status":4,"s_value":$("#o_id").val()},'AjaxActiviOrderPay');
+                    ajaxCount({"s_status":4,"s_value":details,"s_payment":"ALIPAY","s_type":$("#get_data").val()},'AjaxActiviOrderPay');
                     ajaxLoadShoppingHeader();
                     clearTimeout(onloadQueryApplayOrderPAy);
 
@@ -540,7 +609,7 @@ function onloadQueryApplayOrderPAy(){
                     { 
                         clearTimeout(onloadQueryApplayOrderPAy);
                     } else{
-                         setTimeout(function(){onloadQueryApplayOrderPAy()}, 3000);
+                         setTimeout(function(){onloadQueryApplayOrderPAy(details);}, 3000);
                     }
 
                 }

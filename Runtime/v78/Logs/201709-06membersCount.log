@@ -1,0 +1,7 @@
+2017-09-06T17:01:12+08:00	fileInfo_array:{"s_status":3,"s_value":2,"s_payment":"ALIPAY","token":"39e696f3cb9d7223b0886bfd5fe04afa","s_type":"3","s_create_time":"2017-09-06 17:01:12","m_id":"4","source":""}
+2017-09-06T17:01:25+08:00	fileInfo_array:{"s_status":4,"s_value":"2","token":"39e696f3cb9d7223b0886bfd5fe04afa","s_payment":"ALIPAY","s_type":"3","s_create_time":"2017-09-06 17:01:25","m_id":"4","source":""}
+2017-09-06T18:08:50+08:00	fileInfo_array:{"s_status":2,"s_value":1,"s_payment":"WEIXIN","s_type":"0","s_create_time":"2017-09-06 18:08:50","m_id":"4","source":"WX"}
+2017-09-06T18:08:53+08:00	fileInfo_array:{"s_status":3,"s_value":1,"s_payment":"ALIPAY","s_type":"0","s_create_time":"2017-09-06 18:08:53","m_id":"4","source":"WX"}
+2017-09-06T18:08:58+08:00	fileInfo_array:{"s_status":3,"s_value":1,"s_payment":"ALIPAY","s_type":"0","s_create_time":"2017-09-06 18:08:58","m_id":"4","source":"WX"}
+2017-09-06T18:10:43+08:00	fileInfo_array:{"s_status":3,"s_value":1,"s_payment":"ALIPAY","s_type":"0","s_create_time":"2017-09-06 18:10:43","m_id":"4","source":"WX"}
+2017-09-06T18:16:32+08:00	fileInfo_array:{"s_status":3,"s_value":1,"s_payment":"ALIPAY","s_type":"","s_create_time":"2017-09-06 18:16:32","m_id":"4","source":"WX"}

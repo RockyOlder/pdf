@@ -117,8 +117,466 @@ class MembersDistributedAction extends AdminAction{
 
     public function MemberDataAnalysis(){
         $this->getSubNav(9,1,20);
-         $this->display();
+        
+        $labelBottom = array('normal'=>array('color'=>'#ccc','label'=>array('show'=>true,'position'=>'center'),'labelLine'=>array('show'=>false)),'emphasis'=>array('color'=>'rgba(0,0,0,0)'));
+        $labelTop    = array('normal'=>array('label'=>array('show'=>true,'position'=>'center','formatter'=>'{b}','textStyle'=>array('baseline'=>'bottom')),'labelLine'=>array('show'=>false)));
+        $ary_data = $this->_get();
+        $ary_Order_select_count_where = array();
+        $userConversion_where = array();
+        $ary_user_count_where = array();
+        if(!empty($ary_data['m_id'])){
+            
+                $ary_Order_select_count_where['m_id']     =  $ary_data['m_id'];
+                $ary_Order_select_count_pay_where['m_id'] =  $ary_data['m_id'];
+                $userConversion_where['m_id']             =  $ary_data['m_id'];
+                $ary_user_count_where['m_id']             =  $ary_data['m_id'];
+
+                $ary_order_weixin_count_where['m_id']     =  $ary_data['m_id'];
+                $ary_order_weixin_count['m_id']           =  $ary_data['m_id'];
+                $ary_order_weixin_count_pay_where['m_id'] =  $ary_data['m_id'];
+                $ary_order_o_pay_status_where['m_id']     =  $ary_data['m_id'];
+                $ary_order_source_where['m_id']           =  $ary_data['m_id'];
+                $ary_user_pdf_where['m_id']               =  $ary_data['m_id'];
+                $ary_user_cstate_where['m_id']            =  $ary_data['m_id'];
+                $ary_user_c_type_state_where['m_id']      =  $ary_data['m_id'];
+                $ary_user_where['m_id']                   =  $ary_data['m_id'];
+        }
+        if (!empty($ary_data['o_create_time_1']) && !empty($ary_data['o_create_time_2'])) {
+            
+                if ($ary_data['o_create_time_1'] > $ary_data['o_create_time_2']) {
+                    $ary_where_time['m_create_time'] = array("BETWEEN", array($ary_data['o_create_time_2'], $ary_data['o_create_time_1']));
+                    $pdfList['crate_time'] = array("BETWEEN", array(strtotime($ary_data['o_create_time_2']), strtotime($ary_data['o_create_time_1'])));
+                } else if ($ary_data['o_create_time_1'] < $ary_data['o_create_time_2']) {
+                    $ary_where_time['m_create_time']= array("BETWEEN", array($ary_data['o_create_time_1'], $ary_data['o_create_time_2']));
+                    $pdfList['crate_time'] = array("BETWEEN", array(strtotime($ary_data['o_create_time_1']), strtotime($ary_data['o_create_time_2'])));
+                } else {
+                    $ary_where_time['m_create_time'] = $ary_data['o_create_time_1'];
+                    $pdfList['crate_time'] = strtotime($ary_data['o_create_time_1']);
+                }
+                $ary_Order_select_count_where['o_create_time']      =  $ary_where_time['m_create_time'];
+                $ary_Order_select_count_pay_where['o_create_time']  =  $ary_where_time['m_create_time'];
+                $userConversion_where['crate_time']                 =  $pdfList['crate_time'];
+                $ary_user_count_where['m_create_time']              =  $ary_where_time['m_create_time'];
+
+                $ary_order_weixin_count_where['o_create_time']      =  $ary_where_time['m_create_time'];
+                $ary_order_weixin_count['o_create_time']            =  $ary_where_time['m_create_time'];
+                $ary_order_weixin_count_pay_where['o_create_time']  =  $ary_where_time['m_create_time'];
+                $ary_order_o_pay_status_where['o_create_time']      =  $ary_where_time['m_create_time'];
+                $ary_order_source_where['o_create_time']            =  $ary_where_time['m_create_time'];
+                $ary_user_pdf_where['crate_time']                   =  $pdfList['crate_time'];
+                $ary_user_cstate_where['crate_time']                =  $pdfList['crate_time'];
+                $ary_user_c_type_state_where['crate_time']          =  $pdfList['crate_time'];
+                $ary_user_where['m_create_time']                    =  $ary_where_time['m_create_time'];
+        }
+        $ary_Order_select_count = D('orders')->where($ary_Order_select_count_where)->count();
+         //订单行为
+        $ary_order_weixin_count_where['o_payment'] = 13;
+        $ary_order_weixin_count = D('orders')->where($ary_order_weixin_count_where)->count();
+        $ary_weixin_avg = round(sprintf('%0.2f',($ary_order_weixin_count / $ary_Order_select_count) * 100));
+        $ary_order_avg  = round(sprintf('%0.2f',(($ary_Order_select_count - $ary_order_weixin_count) / $ary_Order_select_count) *100));
+        $ary_o_payment_type = array(array('name'=>'other','value'=>$ary_order_avg,'itemStyle'=>$labelBottom),array('name'=>'订单微信选择','value'=>$ary_weixin_avg,'itemStyle'=>$labelTop));
+        $this->assign('ary_o_payment_type', json_encode($ary_o_payment_type));
+        
+        //订单支付类型
+        $ary_Order_select_count_pay_where['o_pay_status'] = 1;
+        $ary_Order_select_count_pay = D('orders')->where($ary_Order_select_count_pay_where)->count();
+        
+        $ary_order_weixin_count_pay_where['o_pay_status'] = 1;
+        $ary_order_weixin_count_pay_where['o_payment'] = 13;
+        $ary_order_weixin_count_pay = D('orders')->where($ary_order_weixin_count_pay_where)->count();
+        $ary_weixin_pay_avg = round(sprintf('%0.2f',($ary_order_weixin_count_pay / $ary_Order_select_count_pay) * 100));
+        $ary_order_Alibaba_pay_avg  = round(sprintf('%0.2f',(($ary_Order_select_count_pay - $ary_order_weixin_count_pay) / $ary_Order_select_count_pay) *100));
+        $ary_o_payment_pay = array(array('name'=>'other','value'=>$ary_order_Alibaba_pay_avg,'itemStyle'=>$labelBottom),array('name'=>'订单微信支付','value'=>$ary_weixin_pay_avg,'itemStyle'=>$labelTop));
+        $this->assign('ary_o_payment_pay', json_encode($ary_o_payment_pay));
+        //订单支付行为
+        $ary_order_o_pay_status_where['o_pay_status'] = 1;
+        $ary_order_o_pay_status = D('orders')->where($ary_order_o_pay_status_where)->count();
+        $ary_order_pay_success_avg  = round(sprintf('%0.2f',($ary_order_o_pay_status / $ary_Order_select_count) * 100));
+        $ary_order_pay_fial_avg  = round(sprintf('%0.2f',(($ary_Order_select_count - $ary_order_o_pay_status) / $ary_Order_select_count) *100));
+        $ary_order_o_payment_pay = array(array('name'=>'other','value'=>$ary_order_pay_fial_avg,'itemStyle'=>$labelBottom),array('name'=>'订单已支付','value'=>$ary_order_pay_success_avg,'itemStyle'=>$labelTop));
+        $this->assign('ary_order_o_payment_pay', json_encode($ary_order_o_payment_pay));
+        //订单来源
+        $ary_order_source_where['o_source'] = 'pc';
+        $ary_order_source= D('orders')->where($ary_order_source_where)->count();
+        $ary_order_source_pc = round(sprintf('%0.2f',($ary_order_source / $ary_Order_select_count) * 100));
+        $ary_order_source_client  = round(sprintf('%0.2f',(($ary_Order_select_count - $ary_order_source) / $ary_Order_select_count) *100));
+        $ary_order_source_json = array(array('name'=>'other','value'=>$ary_order_source_client,'itemStyle'=>$labelBottom),array('name'=>'订单来源PC','value'=>$ary_order_source_pc,'itemStyle'=>$labelTop));
+        $this->assign('ary_order_source_json', json_encode($ary_order_source_json));
+        //转换行为
+        
+        $userConversion = D("PdfList")->where($userConversion_where)->count();
+        //转换类型行为分析
+        $ary_user_pdf_where['ftype'] = 'pdf';
+        $ary_user_pdf= D('PdfList')->where($ary_user_pdf_where)->count();
+        $ary_user_pdf_type = round(sprintf('%0.2f',($ary_user_pdf / $userConversion) * 100));
+        $ary_user_excure_type  = round(sprintf('%0.2f',(($userConversion - $ary_user_pdf) / $userConversion) *100));
+        $ary_user_pdf_type_json = array(array('name'=>'other','value'=>$ary_user_excure_type,'itemStyle'=>$labelBottom),array('name'=>'上传PDF文件','value'=>$ary_user_pdf_type,'itemStyle'=>$labelTop));
+        $this->assign('ary_user_pdf_type_json', json_encode($ary_user_pdf_type_json));
+        //转换成功
+        $ary_user_cstate_where['cstate'] = 1;
+        $ary_user_cstate= D('PdfList')->where($ary_user_cstate_where)->count();
+        $ary_user_cstate_success = round(sprintf('%0.2f',($ary_user_cstate / $userConversion) * 100));
+        $ary_user_cstate_fail  = round(sprintf('%0.2f',(($userConversion - $ary_user_cstate) / $userConversion) *100));
+        $ary_user_cstate_success_json = array(array('name'=>'other','value'=>$ary_user_cstate_fail,'itemStyle'=>$labelBottom),array('name'=>'转换成功文件','value'=>$ary_user_cstate_success,'itemStyle'=>$labelTop));
+        $this->assign('ary_user_cstate_success_json', json_encode($ary_user_cstate_success_json));
+        
+        //转换文件重复行为
+        $ary_user_c_type_state_where['c_type_state'] = 2;
+        $ary_user_c_type_state= D('PdfList')->where($ary_user_c_type_state_where)->count();
+        $ary_user_c_type_state_success = round(sprintf('%0.2f',($ary_user_c_type_state / $userConversion) * 100));
+        $ary_user_c_type_state_fail  = round(sprintf('%0.2f',(($userConversion - $ary_user_c_type_state) / $userConversion) *100));
+        $ary_user_c_type_state_json = array(array('name'=>'other','value'=>$ary_user_c_type_state_fail,'itemStyle'=>$labelBottom),array('name'=>'上传重复文件','value'=>$ary_user_c_type_state_success,'itemStyle'=>$labelTop));
+        $this->assign('ary_user_c_type_state_json', json_encode($ary_user_c_type_state_json));
+        
+        //用户付费行为
+        
+        $ary_user_count = D('Members')->where($ary_user_count_where)->count();
+        $ary_user_where['conversion_type'] = 0;
+        $ary_user= D('Members')->where($ary_user_where)->count();
+        $ary_user_charge = round(sprintf('%0.2f',($ary_user / $ary_user_count) * 100));
+        $ary_user_pay =  round(sprintf('%0.2f',(($ary_user_count - $ary_user) / $userConversion) *100));
+        $ary_user_json = array(array('name'=>'other','value'=>$ary_user_pay,'itemStyle'=>$labelBottom),array('name'=>'免费用户','value'=>$ary_user_charge,'itemStyle'=>$labelTop));
+        $this->assign('ary_user_json', json_encode($ary_user_json));
+        $this->assign('ary_data',$ary_data);
+        $this->display();
     }
+    public function SourceActivity(){
+        $this->getSubNav(9,1,30);
+        $ary_data = $this->_get();
+        if (!empty($ary_data['o_create_time_1']) && !empty($ary_data['o_create_time_2'])) {
+            
+                if ($ary_data['o_create_time_1'] > $ary_data['o_create_time_2']) {
+                    $ary_where_time['m_create_time'] = array("BETWEEN", array($ary_data['o_create_time_2'], $ary_data['o_create_time_1']));
+                } else if ($ary_data['o_create_time_1'] < $ary_data['o_create_time_2']) {
+                    $ary_where_time['m_create_time']= array("BETWEEN", array($ary_data['o_create_time_1'], $ary_data['o_create_time_2']));
+                } else {
+                    $ary_where_time['m_create_time'] = $ary_data['o_create_time_1'];
+                }
+                $ary_Order_select_count_where['s_create_time']      =  $ary_where_time['m_create_time'];
+
+        }
+        $ary_source_data =   D("Source")->where($ary_Order_select_count_where)->field('COUNT(*) AS total,source')->order('total desc')->group('source')->select();
+        $source = array();
+        foreach ($ary_source_data as $key=>$value){
+            if(!empty($value['source'])){
+                    switch ($value['source']){
+                        case 'WX':
+                            $value['source'] = '微信';
+                            break;
+                        case 'c2494a81':
+                            $value['source'] = '百度';
+                            break;
+//                        case '4b6b7a35':
+//                            $value['source'] = '公众号推广';
+//                            break;
+                        default :
+                            $value['source'] = '客户端';
+                    }
+                      array_push($source, array('value'=>$value['total'],'name'=>$value['source']));
+                       // array_push($source, array('value'=>$value['total'],'name'=>$value['source'],'selected'=>true));
+            }
+        }
+        $ary_source_count =   D("Source")->where($ary_Order_select_count_where)->select();
+
+        $SnapUpClick = 0;
+        $FiveUserbrandClick = 0;
+        $ApibrandClick = 0;
+        $UserbrandConversionsClick = 0;
+        $UserbrandClick = 0;
+        $brandClick = 0;
+        $ApiUserbrandClick = 0;
+        foreach ( $ary_source_count as $v){
+            if($v['s_type'] == 0 && $v['s_status'] == 1){ //横幅点击
+                $brandClick = $brandClick+1;
+            }
+            if($v['s_type'] == 1 && $v['s_status'] == 1){  //免费用登录弹窗点击
+                $UserbrandClick = $UserbrandClick+1;
+            }
+            if($v['s_type'] == 2 && $v['s_status'] == 1){  //免费用转换弹窗点击
+                $UserbrandConversionsClick = $UserbrandConversionsClick+1;  
+            }
+            if($v['s_type'] == 3 && $v['s_status'] == 1){  //Api右上角
+                $ApibrandClick = $ApibrandClick+1;
+            }
+            if($v['s_type'] == 4 && $v['s_status'] == 1){ //客户端Brand
+                $ApiUserbrandClick = $ApiUserbrandClick+1;
+            }
+            if($v['s_type'] == 5 && $v['s_status'] == 1){ //客户端Brand five click
+                $FiveUserbrandClick = $FiveUserbrandClick+1;
+            }
+            if($v['s_type'] == 6 && $v['s_status'] == 1){ //客户端立即抢购 click
+                $SnapUpClick = $SnapUpClick+1;
+            }
+        }
+        $inlet = array();
+        array_push($inlet, 
+                array('value'=>$brandClick,'name'=>'横幅点击'),
+                array('value'=>$UserbrandClick,'name'=>'登录弹窗点击'),
+                array('value'=>$UserbrandConversionsClick,'name'=>'转换弹窗点击'),
+                array('value'=>$ApibrandClick,'name'=>'ApiRight'),
+                array('value'=>$ApiUserbrandClick,'name'=>'ApiBrandClick'),
+                array('value'=>$FiveUserbrandClick,'name'=>'APIFiveClick'),
+                array('value'=>$SnapUpClick,'name'=>'ApiSnapUpClick')
+        );
+        $this->assign('source', json_encode($source));
+        $this->assign('inlet', json_encode($inlet));
+        $this->assign('ary_data',$ary_data);
+        $this->display();
+    }
+
+    public function WeekArray($ary_data,$i=1,$int=0,$day=0,$week_time=array()){
+        $weekarray=array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+        $key = date("w",strtotime($ary_data['o_create_time_1']));
+        $week_time[$weekarray[$key]] = strtotime($ary_data['o_create_time_1']);
+        if( count($week_time) == 7){
+            return $week_time;
+        }
+        if($int == 1 && count($week_time) <7 ){
+              $week_time[$weekarray[$i]] = strtotime($ary_data['o_create_time_1']." +".$day." day" );
+            return $this->WeekArray($ary_data,++$i,1,++$day,$week_time);
+        }else {
+            if(($key+$i) >6){
+               return $this->WeekArray($ary_data,$i=0,1,++$day,$week_time);
+            } else {
+                  $week_time[$weekarray[$key+$i]] =strtotime($ary_data['o_create_time_1']." +".($day+1)." day" );
+                 return $this->WeekArray($ary_data,$i+1,0,++$day,$week_time);
+            }
+        }
+    }
+
+
+    public function SourceActivityPayCount(){
+        $this->getSubNav(9,1,40);
+        $ary_data = $this->_get();
+        $ary_where = array();
+        $week = array();
+        if (!empty($ary_data['o_create_time_1'])) {
+              
+               $week_time = $this->WeekArray($ary_data);
+                $ary_where['s_create_time']      =  array("BETWEEN", array($ary_data['o_create_time_1'], date('Y-m-d',strtotime($ary_data['o_create_time_1']." +7 day"))));
+                $date = $ary_data['o_create_time_1'];
+        } else {
+            $date = date("Y-m-d",mktime(0, 0 , 0,date("m"),date("d")-date("w")+1-7,date("Y")));
+            $ary_where['s_create_time'] = array("BETWEEN", array($date, date('Y-m-d',strtotime($date." +7 day"))));
+            $week_time = array(
+                        'Monday'=> strtotime($date),
+                        'Tuesday'=> strtotime($date." +1 day" ),
+                        'Wednesday'=> strtotime($date." +2 day"),
+                        'Thursday'=> strtotime($date." +3 day"),
+                        'Friday'=> strtotime($date ." +4 day"),
+                        'Saturday'=> strtotime($date ." +5 day"),
+                        'Sunday'=> strtotime($date." +6 day"),
+            );
+        }
+        if (!empty($ary_data['s_type']) &&  $ary_data['s_type'] != 'all') {
+            $ary_where['s_type'] = $ary_data['s_type'];
+        }
+        foreach ($week_time as $key=>$data){
+            array_push($week, $key);
+        }
+        $this->assign('week', json_encode($week));
+        
+        $ary_platfrom = D('SourcePlatform')->where(array('sp_default'=>0,'sp_stauts'=>1))->select();
+        $this->assign('platfrom',$ary_platfrom);
+        
+        $ary_where['s_status'] = array('in',array(2,3,4,5));
+
+        $ary_members_office  =D('Source')->where($ary_where)->select();
+        $ActivityPay = array();
+        $ActivityPay_1 = array();
+        $ActivityPay_2 = array();
+        $ActivityApi = array();
+        $ActivityApi_1 = array();
+        $ActivityApi_2 = array();
+        if(!empty($ary_members_office)){
+                    foreach($ary_members_office as $v){
+                            foreach ($week_time as $key=>$time){
+                                    if(strtotime(date('Y-m-d',strtotime($v['s_create_time']))) == $time){  
+                                                if (!empty($ary_data['s_type']) &&  $ary_data['s_type'] != 'all') {
+                                                    if(($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 1 ))
+                                                    {
+                                                         $ActivityPay[$key] = $ActivityPay[$key] +1;
+                                                    }
+                                                    if($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 3 )
+                                                    {
+                                                         $ActivityPay_1[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                    if($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 4 )
+                                                    {
+                                                         $ActivityPay_2[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                    if($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 2 )
+                                                    {
+                                                         $ActivityApi[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                    if($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 5 )
+                                                    {
+                                                         $ActivityApi_1[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                    if($v['s_type'] == $ary_data['s_type'] && $v['s_status'] == 99 )
+                                                    {
+                                                         $ActivityApi_2[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                } else {
+                                                    if(($v['s_type'] == 1 && $v['s_status'] == 4 )|| ($v['s_type'] == 1 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityPay[$key] = $ActivityPay[$key] +1;
+                                                    }
+                                                    if(($v['s_type'] == 2 && $v['s_status'] == 4 )|| ($v['s_type'] == 2 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityPay_1[$key] = $ActivityPay_1[$key] +1;
+                                                    }
+                                                    if(($v['s_type'] == 3 && $v['s_status'] == 4 )|| ($v['s_type'] == 3 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityPay_2[$key] = $ActivityPay_2[$key] +1;
+                                                    }
+                                                    if(($v['s_type'] == 4 && $v['s_status'] == 4 )|| ($v['s_type'] == 4 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityApi[$key] = $ActivityApi[$key] +1;
+                                                    }
+                                                    if(($v['s_type'] == 5 && $v['s_status'] == 4 )|| ($v['s_type'] == 5 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityApi_1[$key] = $ActivityApi_1[$key] +1;
+                                                    }
+                                                    if(($v['s_type'] == 6 && $v['s_status'] == 4 )|| ($v['s_type'] == 6 && $v['s_status'] == 5 ) )
+                                                    {
+                                                         $ActivityApi_2[$key] = $ActivityApi_2[$key] +1;
+                                                    }
+                                                }
+
+                                    }
+                            }
+                    }
+                    
+            if (!empty($ary_data['s_type']) &&  $ary_data['s_type'] != 'all') {
+                $ActivityPay['name']   = '横幅点击';
+                $ActivityPay_1['name'] = '支付宝点击未支付';
+                $ActivityPay_2['name'] = '支付宝点击已支付';
+                $ActivityApi['name']   = '微信点击未支付';
+                $ActivityApi_1['name'] = '微信点击已支付';
+                $ActivityApi_2['name'] = '点击取消';
+                $title = json_encode(array('横幅点击','支付宝点击未支付','支付宝点击已支付','微信点击未支付','微信点击已支付','点击取消'));
+            } else {
+                $ActivityPay['name']   = '立即抢购点击';
+                $ActivityPay_1['name'] = '免费用户转换';
+                $ActivityPay_2['name'] = '客户端右上角';
+                $ActivityApi['name']   = '客户端界面横幅';
+                $ActivityApi_1['name'] = '只转5页图片点击';
+                $ActivityApi_2['name'] = '立即抢购点击';
+                $title = json_encode(array('免费用户登录','免费用户转换','客户端右上角','客户端界面横幅','只转5页图片点击','立即抢购点击'));
+            }
+            $this->assign('title', $title);
+            $json_pay_1 = json_encode(array(
+                                            'name'=>$ActivityPay['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityPay['Monday'])?$ActivityPay['Monday']:0,
+                                                isset($ActivityPay['Tuesday'])?$ActivityPay['Tuesday']:0,
+                                                isset($ActivityPay['Wednesday'])?$ActivityPay['Wednesday']:0,
+                                                isset($ActivityPay['Thursday'])?$ActivityPay['Thursday']:0,
+                                                isset($ActivityPay['Friday'])?$ActivityPay['Friday']:0,
+                                                isset($ActivityPay['Saturday'])?$ActivityPay['Saturday']:0,
+                                                isset($ActivityPay['Sunday'])?$ActivityPay['Sunday']:0
+                                             )
+                                    )
+                            );
+            $json_pay_2 = json_encode(array(
+                                            'name'=>$ActivityPay_1['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityPay_1['Monday'])?$ActivityPay_1['Monday']:0,
+                                                isset($ActivityPay_1['Tuesday'])?$ActivityPay_1['Tuesday']:0,
+                                                isset($ActivityPay_1['Wednesday'])?$ActivityPay_1['Wednesday']:0,
+                                                isset($ActivityPay_1['Thursday'])?$ActivityPay_1['Thursday']:0,
+                                                isset($ActivityPay_1['Friday'])?$ActivityPay_1['Friday']:0,
+                                                isset($ActivityPay_1['Saturday'])?$ActivityPay_1['Saturday']:0,
+                                                isset($ActivityPay_1['Sunday'])?$ActivityPay_1['Sunday']:0
+                                            )
+                                    )
+                            );
+            $json_pay_3 = json_encode(array(
+                                            'name'=>$ActivityPay_2['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityPay_2['Monday'])?$ActivityPay_2['Monday']:0,
+                                                isset($ActivityPay_2['Tuesday'])?$ActivityPay_2['Tuesday']:0,
+                                                isset($ActivityPay_2['Wednesday'])?$ActivityPay_2['Wednesday']:0,
+                                                isset($ActivityPay_2['Thursday'])?$ActivityPay_2['Thursday']:0,
+                                                isset($ActivityPay_2['Friday'])?$ActivityPay_2['Friday']:0,
+                                                isset($ActivityPay_2['Saturday'])?$ActivityPay_2['Saturday']:0,
+                                                isset($ActivityPay_2['Sunday'])?$ActivityPay_2['Sunday']:0
+                                            )
+                                    )
+                            );
+            $json_pay_4 = json_encode(array(
+                                            'name'=>$ActivityApi['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityApi['Monday'])?$ActivityApi['Monday']:0,
+                                                isset($ActivityApi['Tuesday'])?$ActivityApi['Tuesday']:0,
+                                                isset($ActivityApi['Wednesday'])?$ActivityApi['Wednesday']:0,
+                                                isset($ActivityApi['Thursday'])?$ActivityApi['Thursday']:0,
+                                                isset($ActivityApi['Friday'])?$ActivityApi['Friday']:0,
+                                                isset($ActivityApi['Saturday'])?$ActivityApi['Saturday']:0,
+                                                isset($ActivityApi['Sunday'])?$ActivityApi['Sunday']:0
+                                            )
+                                    )
+                            );
+            $json_pay_5 = json_encode(array(
+                                            'name'=>$ActivityApi_1['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityApi_1['Monday'])?$ActivityApi_1['Monday']:0,
+                                                isset($ActivityApi_1['Tuesday'])?$ActivityApi_1['Tuesday']:0,
+                                                isset($ActivityApi_1['Wednesday'])?$ActivityApi_1['Wednesday']:0,
+                                                isset($ActivityApi_1['Thursday'])?$ActivityApi_1['Thursday']:0,
+                                                isset($ActivityApi_1['Friday'])?$ActivityApi_1['Friday']:0,
+                                                isset($ActivityApi_1['Saturday'])?$ActivityApi_1['Saturday']:0,
+                                                isset($ActivityApi_1['Sunday'])?$ActivityApi_1['Sunday']:0
+                                            )   
+                                    )
+                            );
+            $json_pay_6 = json_encode(array(
+                                            'name'=>$ActivityApi_2['name'],
+                                            'type'=>'line',
+                                            'stack'=>'总量',
+                                            'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
+                                            'data'=>array(
+                                                isset($ActivityApi_2['Monday'])?$ActivityApi_2['Monday']:0,
+                                                isset($ActivityApi_2['Tuesday'])?$ActivityApi_2['Tuesday']:0,
+                                                isset($ActivityApi_2['Wednesday'])?$ActivityApi_2['Wednesday']:0,
+                                                isset($ActivityApi_2['Thursday'])?$ActivityApi_2['Thursday']:0,
+                                                isset($ActivityApi_2['Friday'])?$ActivityApi_2['Friday']:0,
+                                                isset($ActivityApi_2['Saturday'])?$ActivityApi_2['Saturday']:0,
+                                                isset($ActivityApi_2['Sunday'])?$ActivityApi_2['Sunday']:0
+                                            )
+                                    )
+                            );
+        }
+        if (empty($ary_data['s_type'])) {
+            $ary_data['s_type'] = 'all';
+        }
+        $this->assign('json_pay_1',$json_pay_1);
+        $this->assign('json_pay_2',$json_pay_2);
+        $this->assign('json_pay_3',$json_pay_3);
+        $this->assign('json_pay_4',$json_pay_4);
+        $this->assign('json_pay_5',$json_pay_5);
+        $this->assign('json_pay_6',$json_pay_6);
+        $this->assign('ary_data',$ary_data);
+        $this->display();
+    }
+
+
 
 
     /*

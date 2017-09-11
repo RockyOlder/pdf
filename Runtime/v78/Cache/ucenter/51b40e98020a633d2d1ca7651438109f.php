@@ -7,8 +7,8 @@
         <title>悦书PDF阅读器授权购买 - 悦书PDF阅读器</title>
 <!--        <base href='http://manage.com/' />-->
         <link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/<?php echo ($view); ?>/css/clientstyle.css"/>
-        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/main.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/scanmain.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
         <div class="popup weixin">
@@ -45,6 +45,8 @@
                   <input type="hidden" value="<?php echo ($arr_order["m_id"]); ?>" name="m_id" id="m_id" />
                 <input type="hidden" id="client" value="<?php echo ($client); ?>" />
                 <input type="hidden" id="token" value="<?php echo ($token); ?>" />
+                <input type="hidden" id="s_type" value="<?php echo ($s_type); ?>" />
+                <input type="hidden" id="details" value="<?php echo ($arr_order["details"]); ?>" />
             </div>
         </div>
         <script type="text/javascript">
@@ -54,9 +56,17 @@
                         $.ajax({
                             url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").html() + '&t=' + Math.round(Math.random() * 1000000),
                             type: "GET",
-                            dataType: "json",
                             success: function (data) {
+                                var lvContent=""; 
+                                if (typeof data!="string"){  
+                                    lvContent=data.innerText;  
+                                }  
+                                else{  
+                                    lvContent=data;  
+                                }  
+                                data  = eval('('+lvContent+')');
                                 if (data.status == 1) {
+                                    ajaxCount({"s_status":4,"s_value":$("#details").val(),"token":$("#token").val(),"s_payment":"ALIPAY","s_type":$("#s_type").val()},'AjaxActiviOrderPay');
                                     window.location.href = "/Home/Products/success?order_no="+ $("#order_no").html()+'&token='+$("#token").val()+'&client='+$("#client").val();
                                 }
                             }

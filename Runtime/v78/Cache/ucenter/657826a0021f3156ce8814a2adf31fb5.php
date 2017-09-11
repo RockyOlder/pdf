@@ -6,9 +6,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=11,IE=10,IE=9,IE=8" />
         <title>悦书PDF阅读器授权购买 - 悦书PDF阅读器</title>
         <!--        <base href='http://manage.com/' />-->
-        <link rel="stylesheet" type="text/css" href="__CSS__clientstyle.css"/>
-        <script src="__JS__jquery.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="__JS__main.js" type="text/javascript" charset="utf-8"></script>
+        <link rel="stylesheet" type="text/css" href="/Public/Tpl/v78/<?php echo ($view); ?>/css/clientstyle.css"/>
+        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="/Public/Tpl/v78/<?php echo ($view); ?>/js/scanmain.js" type="text/javascript" charset="utf-8"></script>
     </head>
     <body>
         <div class="popup weixin">
@@ -17,6 +17,8 @@
                 <input type="hidden" id="order_no" value="<?php echo ($Weixinprepay["o_id"]); ?>" />
                 <input type="hidden" id="client" value="<?php echo ($client); ?>" />
                 <input type="hidden" id="token" value="<?php echo ($token); ?>" />
+                <input type="hidden" id="details" value="<?php echo ($Weixinprepay["details"]); ?>" />
+                <input type="hidden" id="s_type" value="<?php echo ($s_type); ?>" />
                 <div class="weixin-main">
                     <ul>
                         <li class="code">
@@ -43,9 +45,17 @@
                         $.ajax({
                             url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").val() + '&t=' + Math.round(Math.random() * 1000000),
                             type: "GET",
-                            dataType: "json",
                             success: function (data) {
+                                var lvContent=""; 
+                                if (typeof data!="string"){  
+                                    lvContent=data.innerText;  
+                                }  
+                                else{  
+                                    lvContent=data;  
+                                }  
+                                data  = eval('('+lvContent+')');
                                 if (data.status == 1) {
+                                    ajaxCount({"s_status":5,"s_value":$("#details").val(),"token":$("#token").val(),"s_payment":"WEIXIN","s_type":$("#s_type").val()},'AjaxActiviOrderPay');
                                     window.location.href = "/Home/Products/success?order_no="+ $("#order_no").val()+'&token='+$("#token").val()+'&client='+$("#client").val();
                                 }
                             }

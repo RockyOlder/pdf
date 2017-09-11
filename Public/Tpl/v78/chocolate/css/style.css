@@ -108,7 +108,8 @@ body >.header .wrap{padding-top:32px;}
 .div_usehover:hover .bubble_promet{display:block;}
 .choose_file .btn_file{margin:18px auto;width:190px;height:60px;line-height:60px;text-align:center;background-color:#199bf8;color:#fff;font-size:18px;display:block;transition:all 0.3s;-webkit-transition:all 0.3s;-moz-transition:all 0.3s;-ms-transition:all 0.3s;position:relative;}
 .choose_file .btn_file:hover{background-color:#0d8ae4;}
-.choose_file .btn_file input{opacity:0;filter:alpha(opacity=0);position:absolute;width:100%;height:60px;left:0;left:-50px\9;top:0;display:block;background:none;border:none;text-align:center;outline:none;}
+.choose_file .btn_file:hover input{background-color:#0d8ae4\9;color:#0d8ae4\9;}
+.choose_file .btn_file input{opacity:0;filter:alpha(opacity=0);position:absolute;width:100%;height:60px;left:0;left:-50px\9;top:0;display:block;background:none;border:none;text-align:center;outline:none;font-size:0;background:#199bf8\9;color:#199bf8\9;}
 .bubble_promet{width:160px;height:92px;position:absolute;top:-103px;left:18px;background-color:#f0f9ff;box-shadow:0 10px 20px #c1c1c1;-webkit-box-shadow:0 10px 20px #c1c1c1;-moz-box-shadow:0 10px 20px #c1c1c1;-o-box-shadow:0 10px 20px #c1c1c1;-ms-box-shadow:0 10px 20px #c1c1c1;z-index:100;font-size:12px;color:#4c4c4c;line-height:1.5;display:none;cursor:pointer;}
 .bubble_promet p{padding-top:7px;}
 .bubble_promet .strong{color:#19b800;font-size:14px;}
@@ -246,6 +247,7 @@ body >.header .wrap{padding-top:32px;}
 .pay .first_price{text-decoration:line-through;color:#b3b3b3;}
 .num_input[name="num_input"]:after{background:url(../images/icon.png) -145px -596px;width:52px;height:16px;position:absolute;top:-6px;left:6px;display:table;content:"";}
 .package .item[name="tc_default"] em{background:url(../images/icon.png) -52px -794px;width:43px;height:16px;position:absolute;top:-6px;left:6px;display:table;content:"";z-index:100;}
+.getTimes .num_input[name="num_input"]:after{background:url(../images/icon.png) -98px -1200px;}
 .pay_method{margin-top:36px;}
 .pay_method >div{width:150px;line-height:50px;height:50px;display:inline-block;vertical-align:top;*display:inline;*zoom:1;text-align:center;color:#fff;font-size:18px;font-weight:500;transition:all 0.3s;-webkit-transition:all 0.3s;-moz-transition:all 0.3s;-ms-transition:all 0.3s;-o-transition:all 0.3s;cursor:pointer;}
 .pay_method .zfb_pay{background:#199bf8;margin-right:15px;}
@@ -255,11 +257,12 @@ body >.header .wrap{padding-top:32px;}
 .pay_method a{display:block;color:#fff;}
 .give_promet{display:inline-block;vertical-align:-15px;*display:inline;*zoom:1;}
 .give_promet span{color:#ff412d;font-size:22px;font-weight:500;}
-.discount{display:-none;padding-top:5px;}
-.discount strong{font-size:18px;color:#ff412d;padding-right:10px;font-weight:500;}
+.discount{padding-top:5px;}
+.discount strong{font-size:18px;padding-right:10px;font-weight:500;}
 .discount .left,.discount .right{vertical-align:middle;}
-.discount .right{padding-left:5px;}
+.discount .right{padding-left:5px;color:#ff412d;}
 .package .last_pay{padding-top:5px;}
+
 
 /*人工vip*/
 
@@ -304,7 +307,7 @@ body >.header .wrap{padding-top:32px;}
 .popup .weixin_pay span span{font-size:28px;font-weight:500;line-height:1;}
 .popup h3{color:#5bb34d;margin-bottom:30px;}
 .popup .weixin_pay{padding:10px;}
-.popup_other .content{/*min-height:340px;*/box-sizing:border-box;padding:30px;width:568px;}
+.popup_other .content{/*min-height:340px;*/box-sizing:border-box;padding:30px;width:580px;}
 .popup_other h4{font-size:20px;color:#666;text-align:left;}
 .popup_other .bottom{margin-top:30px;}
 .popup_other .txt{padding:10px 0;}
@@ -462,8 +465,12 @@ body >.header .wrap{padding-top:32px;}
 .act_page_con >div{width:1120px;margin:-45px auto 0;}
 .act_page_con .item{background:url(../images/images/bg2.png);padding:40px 0;border-radius:8px;text-align:center;margin-top:45px;}
 .act_page_con .item li{display:inline-block;*display:inline;*zoom:1;vertical-align:top;}
-.act_type_box li{margin:0 18px;}
+.act_type_box li{margin:0 8px;position:relative;}
+.act_type_box li:after{width:54px;height:28px;background:url(../images/images/icon2.png) no-repeat;display:table;content:"";position:absolute;left:10px;top:-2px;}
+.act_type_box li.gettimes:after{width:108px;height:31px;background:url(../images/images/icon1.png) no-repeat;}
+.act_type_box li img{width:246px;}
 .act_type_box .txt{background:#fff;padding:30px 0;}
+.gettimes,.gettimes .btn{color:#f48251;}
 .onemouth,.onemouth .btn{color:#269f98;}
 .oneyears,.oneyears .btn{color:#1e8fe0;}
 .twoyears,.twoyears .btn{color:#7f63eb;}
@@ -471,12 +478,16 @@ body >.header .wrap{padding-top:32px;}
 .act_type_box .price span{font-size:42px;font-weight:600;} 
 .act_type_box .fisrt_price{text-decoration:line-through;margin:10px 0 20px;font-size:18px;}
 .act_type_box .btn{padding:6px 25px;display:inline-block;*display:inline;*zoom:1;transition:all 0.3s;-webkit-transition:all 0.3s;-moz-transition:all 0.3s;-ms-transition:all 0.3s;-o-transition:all 0.3s;cursor:pointer;border-radius:4px;font-size:18px;}
+.act_type_box .btn:hover{color:#fff;}
 .onemouth .btn{border:1px solid #269f98;}
-.onemouth .btn:hover{background:#269f98;color:#fff;}
+.onemouth .btn:hover{background:#269f98;}
 .oneyears .btn{border:1px solid #1e8fe0;}
-.oneyears .btn:hover{background:#1e8fe0;color:#fff;}
+.oneyears .btn:hover{background:#1e8fe0;}
 .twoyears .btn{border:1px solid #7f63eb;}
-.twoyears .btn:hover{background:#7f63eb;color:#fff;}
+.twoyears .btn:hover{background:#7f63eb;}
+.gettimes .btn{border:1px solid #f48251;}
+.gettimes .btn:hover{background:#f48251;}
+.gettimes p{height:25px;}
 
 .Member_box{text-align:center;}
 .Member_box_t{height:52px;background:url(../images/images/2_03.png) no-repeat center;font-size:24px;font-weight:600;color:#fff;line-height:46px;margin-bottom:38px;}
@@ -498,7 +509,7 @@ body >.header .wrap{padding-top:32px;}
 .act_promet >div p{text-align:left;padding:20px 0;}
 .getback{padding:6px 20px;display:inline-block;border-radius:4px;background:#7674fb;color:#fff;}
 
-
+ 
 /*充值页面活动banner*/
 .activity_con{height:120px;padding:10px 0;}
 .activity_con .content{background:url(../images/images/1_003.png) no-repeat;height:100%;position:relative;} 
@@ -513,4 +524,18 @@ body >.header .wrap{padding-top:32px;}
 .item_banner .wrap{width:1200px;margin:0 auto;}
 .item_banner >a{display:block;padding-top:25px;}
 
+
+/*教师节活动*/
+.popup .content[name="teachesDay"],.popup .content[name="freeContent"]{padding:0;background:none;}
+.popup .content[name="teachesDay"] img,.popup .content[name="freeContent"] img{width:100%;display:block;border:none;}
+.popup .content[name="teachesDay"] a,.popup .content[name="freeContent"] a{display:block;}
+.gettimes .degree{position:absolute;right:42px;top:42px;background:#fff;width:88px;height:34px;}
+.gettimes .degree .degree_top{padding:0 6px;text-align:left;font-size:20px;color:#666;line-height:34px;position:relative;cursor:pointer;}
+.gettimes .degree:after{width:14px;height:10px;background:url(../images/icon.png) no-repeat -183px -579px;display:table;content:"";position:absolute;right:11px;top:50%;margin-top:-2px;}
+.gettimes .degree_top:before{width:1px;height:34px;display:table;content:"";position:absolute;right:37px;top:0;background:#fde3db;}
+.gettimes .degree .degree_bottom{position:absolute;top:33px;left:0;width:100%;background:#fff;border-top:1px solid #f7956a;font-size:16px;display:none;}
+.gettimes .current{text-align:left;position:relative;color:#666;padding:5px 0 5px 10px;border-bottom:1px solid #fde3db;cursor:pointer;}
+.gettimes .current:after{width:20px;height:15px;margin-top:-8px;text-align:left;position:absolute;right:6px;top:50%;display:table;content:"";background:url(../images/icon.png) no-repeat -159px -1200px;}
+.gettimes .other_times a{color:#e7713f;}
+.gettimes .other_times{padding:5px 0;}
 

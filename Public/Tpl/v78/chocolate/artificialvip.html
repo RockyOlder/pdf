@@ -6,7 +6,7 @@
                 <div class="activity_banner">
                     <img src="__IMAGES__images/1_03.jpg" alt="" />
                     <div class="content">
-                       <a href="{:U('Home/Index/YearMiddlePage')}">
+                       <a href="{:U('Home/Index/YearMiddlePage',array('s_type'=>0))}" class="Behavior_Statistics_Banner">
                         <div class="left">
                             <img src="__IMAGES__images/txt.png" alt="" />                       
                         </div>
@@ -17,9 +17,9 @@
                         </div>
                         </a>
                         <div class="linkbox">
-                            <a href="{:U('Home/Index/YearMiddlePage#01')}" class="first">买一个月送5次转换</a>
-                            <a href="{:U('Home/Index/YearMiddlePage#02')}">买一年送3个月</a>
-                            <a href="{:U('Home/Index/YearMiddlePage#03')}">买二年送6个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#01',array('s_type'=>0))}" class="first">买一个月送5次转换</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#02',array('s_type'=>0))}">买一年送3个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#03',array('s_type'=>0))}">买二年送6个月</a>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,15 @@
             
         </div>
     </div>
-
+    <!-- 各种状态的弹窗 -->
+    <div class="popup popup_other">
+        <div class="content" name="teachesDay">
+            <div class="icon close" itemid="1" ></div>
+            <a href="{:U('Home/Index/YearMiddlePage',array('s_type'=>1))}" itemtype="1" itemid="1" class="ClickTheBanner" >
+                <img src="__IMAGES__images/x01.jpg"  alt="教师节抢购" />
+            </a>
+        </div>
+    </div>
 <script language="javascript"> 
 function setIframeHeight(iframe) {
 if (iframe) {

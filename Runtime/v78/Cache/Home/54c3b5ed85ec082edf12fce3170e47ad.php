@@ -65,6 +65,7 @@
                     <input type="hidden" id="halfMonther" value="<?php echo ($halfMonther); ?>" />
                     <input type="hidden" id="month" value="<?php echo ($month); ?>" />
                     <input type="hidden" id="day" value="<?php echo ($day); ?>" />
+                    <input type="hidden" id="get_data" value="<?php echo ($get_data); ?>" />
                     <input type="hidden" id="ACTIVITPPROJECT_TIME" value="<?php echo ($ACTIVITPPROJECT_TIME); ?>" />
                 </div>
                 <a href="<?php echo U('Home/Index/CoreBusiness');?>" class="start_change">开始转换</a>
@@ -78,6 +79,21 @@
             <div>
                 <div class="item">
                 <ul class="act_type_box">
+                    <li class="gettimes">
+                        <img src="__IMAGES__images/s001.jpg" setsrc="__IMAGES__images/s04.gif" alt="悦书年中促销-买5次送5次转换" />
+                        <div class="txt">
+                            <div class="price">&yen;<span>10</span></div>
+                            <p class="fisrt_price"></p>
+                            <div class="btn" data-pay="10" data-details='1' >限时购买</div>
+                        </div>
+                        <div class="degree">
+                            <div class="degree_top">5次</div>
+                            <div class="degree_bottom">
+                                <div class="current">5次</div>
+                                <div class="other_times"><a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" target="_blank">其他数量</a></div>
+                            </div>
+                        </div>
+                    </li>
                     <li class="onemouth">
                         <img src="__IMAGES__images/s01.jpg" setsrc="__IMAGES__images/ss01.jpg" alt="悦书年中促销-1个月送5次转换" />
                         <div class="txt">
@@ -134,8 +150,9 @@
                 <h3 class="Member_box_t">活动规则</h3>
                 <div class="actinfo">
                     <p>1、活动起止时间为<span class="actDate"></span><span class="date_time"></span>，活动结束后将取消促销优惠</p>
-                    <p>2、如对活动存有疑问可咨询客服。QQ：3004137938 &nbsp; &nbsp;电话：0755-86952275</p>
-                    <p>3、本活动最终解释权归深圳市常青藤软件科技有限公司所有</p>
+                    <p>2、购买包月、包年等套餐在套餐生效期间内可无限次使用转换服务；购买次数可无限期使用转换服务</p>
+                    <p>3、如对活动存有疑问可咨询客服。QQ：3004137938 &nbsp; &nbsp;电话：0755-86952275</p>
+                    <p>4、本活动最终解释权归深圳市常青藤软件科技有限公司所有</p>
                 </div>
             </div>
                 <input type="hidden" id="o_id" value="" />

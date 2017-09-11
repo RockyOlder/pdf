@@ -38,9 +38,9 @@
             <?php if(empty($_SESSION['Members']['m_name'])): ?><a href="javascript:return false;" id="login_weixin" class="login_weixin">登录</a><!-- <?php echo U('Home/Index/weixin_login');?> --><?php endif; ?>
                 <?php if(!empty($_SESSION['Members']['m_name'])): ?><div class="user">
                      <div class="name">你好，<?php echo ($_SESSION['Members']['m_name']); ?></div>
-                     <div class="info">
-                         <i class="arrow_up"></i>
-                             
+                     <div class="info" id="appendHtml">
+                         
+<i class="arrow_up"></i>
 <div class="content" id="hederGet">
     <h3><div class="login_name" title="<?php echo ($_SESSION['Members']['m_name']); ?>"><?php echo ($_SESSION['Members']['m_name']); ?></div></h3><a href="<?php echo U('Home/User/doLogout');?>" class="exit">退出<!-- <div><i class="icon icon_exit"></i></div>  --></a>
     <p class="promet2"> 
@@ -64,22 +64,21 @@
         <p class="promet"><a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" style='color:red' >亲，您的VIP套餐已经到期了，现在购买套餐尊享<span class="zkou">9.5</span>折优惠哦~</a></p><?php endif; ?>
     <?php if($out_time > 30 and $time_count != 0 ): ?><p class="promet">包月转换次数不受限，包年最低只要0.1元/天</p><?php endif; ?>
 </div>
-
 </div>
-                         <div class="work_time" data-id="info">
-                             <a href="<?php echo U('Home/Index/informationRecords',array('record'=>Prepaidrecords));?>" class="record">充值记录</a>
-                             <a href="<?php echo U('Home/Index/informationRecords',array('record'=>Conversionrecord));?>" class="record">转换记录</a>
-                             <a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" class="now_cz">立即充值</a>
-                         </div>                        
+<div class="work_time" data-id="info" id="header_tag_data">
+    <a href="<?php echo U('Home/Index/informationRecords',array('record'=>Prepaidrecords));?>" class="record">充值记录</a>
+    <a href="<?php echo U('Home/Index/informationRecords',array('record'=>Conversionrecord));?>" class="record">转换记录</a>
+    <a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" class="now_cz">立即充值</a>
+</div>                   
                      </div>
                  </div><?php endif; ?>
-
                 <div class="recharge_box">&nbsp;&nbsp;│&nbsp;&nbsp;<a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" class="recharge">充值</a></div>
                 <input type="hidden" value="<?php echo ($_SESSION['Members']['m_id']); ?>" name ="gy_member_open" id="gy_member_open"/>
                 <input type="hidden" value="<?php echo ($redirect); ?>" name ="redirect" id="redirect"/>
                 <input type="hidden" id="Authorizationtype" value="<?php echo ($ary_member["conversion_type"]); ?>" />
                 <input type="hidden" id="Free_authorization" value="<?php echo ($ary_member["Free_authorization"]); ?>" />
                 <input type="hidden" id="ACTIVITY_OPEN" value="<?php echo ($ACTIVITY_OPEN); ?>" />
+                <input type="hidden" id="LoadDataType" value="<?php echo ($_SESSION['Members']['LoadDataType']); ?>" />
             </div>
         </div>
     </div>
@@ -90,7 +89,7 @@
             <?php if($ACTIVITY_OPEN != 1): ?><div class="activity_banner">
                     <img src="__IMAGES__images/1_03.jpg" alt="" />
                     <div class="content">
-                       <a href="<?php echo U('Home/Index/YearMiddlePage');?>">
+                       <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>0));?>" class="Behavior_Statistics_Banner">
                         <div class="left">
                             <img src="__IMAGES__images/txt.png" alt="" />                       
                         </div>
@@ -101,9 +100,9 @@
                         </div>
                         </a>
                         <div class="linkbox">
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#01');?>" class="first">买一个月送5次转换</a>
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#02');?>">买一年送3个月</a>
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#03');?>">买二年送6个月</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#01',array('s_type'=>0));?>" class="first">买一个月送5次转换</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#02',array('s_type'=>0));?>">买一年送3个月</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#03',array('s_type'=>0));?>">买二年送6个月</a>
                         </div>
                     </div>
                 </div><?php endif; ?>
@@ -206,7 +205,15 @@
             
         </div>
     </div>
-
+    <!-- 各种状态的弹窗 -->
+    <div class="popup popup_other">
+        <div class="content" name="teachesDay">
+            <div class="icon close" itemid="1" ></div>
+            <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>1));?>" itemtype="1" itemid="1" class="ClickTheBanner" >
+                <img src="__IMAGES__images/x01.jpg"  alt="教师节抢购" />
+            </a>
+        </div>
+    </div>
 <script language="javascript"> 
 function setIframeHeight(iframe) {
 if (iframe) {

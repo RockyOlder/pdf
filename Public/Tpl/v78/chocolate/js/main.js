@@ -4,43 +4,20 @@
         paths: {                    //如果某个前缀的依赖不是按照baseUrl拼接这么简单，就需要在这里指出
               conversion: 'conversion/conversion',
               wxLogin:'http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin'
-              
-              
+
         }
- //       shim: {                     //引入没有使用requirejs模块写法的类库
-//            'zepto': {
-//                exports: '_'
-//            },
-//
-//            'store': {
-//                exports: 'store'
-//            },
-//            'layer': {
-//                exports: 'layer'
-//            },
-//            conversion: {
-//               init:function (){
-//                   return { conversion:conversion}
-//               }
-//            }
-//            'IScroll': {
-//                exports: 'IScroll'
-//            },
-//            'dropload':{
-//                deps: ["zepto"],
-//                exports: 'dropload'
-//            },
-//            'wxshare': {
-//                deps: ["zepto"],
-//                exports: 'wxshare'
-//            }
-//
-//        }
+
     });
 require(['jquery','conversion','jquery.ui.widget','jquery.iframe-transport','jquery.fileupload','remindSendConfirm','xcConfirm','tool','wxLogin'], function($,conversion,widget,transport,fileupload,remindSendConfirm,xcConfirm,tool,wxLogin) {
     'use strict';
- if($('#email').val() !==''){
-        $('.email_div').show()
+    if($('#email').val() !==''){
+           $('.email_div').show();
+       }
+//    if(tool.checkNotEmpty($("#gy_member_open").val()) == true){
+//        tool.fixedBox($("#appendHtml"),{'setEvent':'scroll','id':2,'left':0,boxT:$(".main_header").offset().top,top:0,zIndex:9});
+//    }
+    if(tool.checkNotEmpty($("#LoadDataType").val()) == false && tool.checkNotEmpty($("#gy_member_open").val()) == true && $("#Authorizationtype").val() == 0){
+            tool.rsdConfirm('teachesDay',null,tool);
     }
     var $list = $(".list");
     // Change this to the location of your server-side upload handler:
@@ -212,8 +189,10 @@ require(['jquery','conversion','jquery.ui.widget','jquery.iframe-transport','jqu
     }).prop('disabled', !$.support.fileInput)
 
     tool.ActivityStatistics();
+    tool.BehaviorStatisticsBanner();
     tool.WeixinLogin();
     tool.brandCommon();
+    tool.ClickTheBanner();
     conversion.init();
     tool.ShowCountDown();
 });

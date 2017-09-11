@@ -139,7 +139,7 @@
                 <tr>
                     <th><input type="checkbox" class="checkAll" /></th>
                     <th>操&nbsp;&nbsp;作</th>
-                    <th>会议Id</th>
+                    <th>会员Id</th>
                     <th>会员账号</th>
                     <th>会员ID</th>
                     <th>来源ID</th>

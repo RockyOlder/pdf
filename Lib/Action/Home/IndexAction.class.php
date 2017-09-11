@@ -132,41 +132,30 @@ class IndexAction extends HomeAction {
 
     public function _initialize() {
         parent::_initialize();
-        static::$ary_member = $ary_member =  D('Members')->getMemberInfo(array('m_id'=>$_SESSION['Members']['m_id']),'m_id,m_email,Free_authorization,Free_obtain_time,end_time,number_remaining,conversion_type');
+        static::$ary_member =  D('Members')->getMemberInfo(array('m_id'=>$_SESSION['Members']['m_id']),'m_id,m_email,m_name,Free_authorization,Free_obtain_time,end_time,number_remaining,conversion_type,open_source');
         $this->assign('ary_member', static::$ary_member);
-        //$Member_object = D('Members')->where(array('m_id'=>4))->find();
-        //session('Members', $Member_object);
+       //$Member_object = D('Members')->where(array('m_id'=>4))->find();
+       //session('Members', $Member_object);
     }
-    
     public function getHeaderData(){
         $this->display();
     }
-    public function scws(){
-        require_once FXINC . '/Lib/Common/SCWS/' . 'pscws4.class.php';
-        $pscws = new PSCWS4();
-        $pscws->set_dict(FXINC.'/Lib/Common/SCWS/lib/dict.utf8.xdb');
-        $pscws->set_rule(FXINC.'/Lib/Common/SCWS/lib/rules.utf8.ini');
-        $select = D("PdfList")->field('fname,m_id,id')->where(array('role'=>0))->limit(0,1000)->select();
-        $pscws->set_ignore(true);
-        foreach ($select as  $value){
-             $value['fname'] = substr($value['fname'], self::USER_PRISSIONS_STATUS_0, strrpos($value['fname'], '.'));
-             $pscws->send_text($value['fname']);
-             $words = $pscws->get_tops(20);
-             foreach ( $words as $file){   
-                     $keywordsSelectFind = D("DataAnalysisFile")->where(array('f_name'=> array('LIKE', '%' . $file['word'] . '%')))->find();
-                     $f_id = $keywordsSelectFind['f_id'];
-                     if(empty($keywordsSelectFind)){
-                       $f_id =  D("DataAnalysisFile")->add(array('f_name'=>$file['word'],'f_top'=>1,'f_create_time'=>date('Y-m-d H:i:s')));
-                     } else {
-                        D("DataAnalysisFile")->where(array('f_id'=>$f_id))->setInc('f_top');
-                     }
-                     D("DataAnalysisUser")->add(array('m_id'=>$value['m_id'],'f_id'=>$f_id,'p_id'=>$value['id'],'c_create_time'=>date('Y-m-d H:i:s')));
-             }
-             D("PdfList")->where(array('id'=>$value['id']))->data(array('role'=>1))->save();
-             unset($words);
+    private function ceshi(){
+       // $count =  $ary_member = D("Members")->where(array('m_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-31 23:59:59'))))->count();
+        //echo $count;exit;
+        $select =  $ary_member = D("Members")->field('m_id')->where(array('m_create_time'=>array('BETWEEN',array('2017-07-10 00:00:00','2017-08-10 23:59:59'))))->select();
+        //$count  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-07-10 00:00:00','2017-08-10 23:59:59')),'ps_status'=>1))->group('m_id')->count();
+        
+      //  $select  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-10 23:59:59'))))->group('m_id')->select();
+        $i = 0;
+        foreach($select as $value){
+           $data =  D('PaymentSerial')->where(array('m_id'=>$value['m_id'],'ps_status'=>1))->count();
+            if($data >= 1){
+                $i ++;
+            }
         }
-        $pscws->close();
-        echo 1;exit;
+        echo $i;exit;
+      
     }
     /**
      * 客户模版默认首页
@@ -220,33 +209,7 @@ class IndexAction extends HomeAction {
             }
             return false;
     }
-//    private function getActivitp(){
-//        $beginThismonth=mktime(0,0,0,date('m'),1,date('Y'));
-//        $endThismonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
-//        $data = D('SysConfig')->getCfgByModule('ACTIVITPPROJECT_TIME');
-//        if((time() > $beginThismonth) && (time () <  strtotime(date('Y-m-d',$beginThismonth) . '+ 15day'))){
-//           $halfMonthertime =  strtotime(date('Y-m-d',$beginThismonth) . '+ 14day');
-//           $halfMonther =  mktime(23,59,59,date('m',$halfMonthertime),date('d',$halfMonthertime),date('Y',$halfMonthertime));
-//           if(empty($data['ACTIVITPPROJECT_TIME'])){
-//               D("SysConfig")->setConfig('ACTIVITPPROJECT_TIME','ACTIVITPPROJECT_TIME',$halfMonther);
-//           } else {
-//               if(time() > $data['ACTIVITPPROJECT_TIME']){
-//                   D("SysConfig")->setConfig('ACTIVITPPROJECT_TIME','ACTIVITPPROJECT_TIME',$halfMonther);
-//               }
-//           }
-//        } else {
-//            $halfMonther = $endThismonth;
-//             if(empty($data['ACTIVITPPROJECT_TIME'])){
-//                    D("SysConfig")->setConfig('ACTIVITPPROJECT_TIME','ACTIVITPPROJECT_TIME',$endThismonth);
-//             } else {
-//                 if(time() >$data['ACTIVITPPROJECT_TIME']){
-//                    D("SysConfig")->setConfig('ACTIVITPPROJECT_TIME','ACTIVITPPROJECT_TIME',$endThismonth);
-//                 }
-//             }
-//        }
-//        return $halfMonther;
-//        
-//    }
+
     public function boot_page() {
         $tpl ='./Public/Tpl/' . CI_SN . '/' . TPL . '/Boot_page.html';
         $this->display($tpl); 
@@ -430,7 +393,9 @@ class IndexAction extends HomeAction {
                     }
                     $fileNames = substr($fileNames, self::USER_PRISSIONS_STATUS_0, strrpos($fileNames, '.')) . '_' . $fileTime . '.' . $this->suffix_file_postfix;
                     $md5_file = md5_file($uploadPaths . '/' . $fileNames);
-                    $info = D("PdfList")->where(array('m_id' => $seesion['m_id'], 'md5_file' => $md5_file, 'delete_remove' => array('neq', 1), 'fstate' => array('neq', 99)))->find();
+                   if(!empty($md5_file)){
+                        $info = D("PdfList")->where(array('m_id' => $seesion['m_id'], 'md5_file' => $md5_file, 'delete_remove' => array('neq', 1), 'fstate' => array('neq', 99)))->find();
+                   }
                     if ($this->suffix_file_postfix != 'pdf') {
                         $this->cSuffix = 'pdf';
                     } else {
@@ -441,21 +406,27 @@ class IndexAction extends HomeAction {
                                 $this->status = getErrorState($fileList['error']);
                     } else if ($this->file_Size_data >= $this->maxSize) {
                                 $this->status = self::USER_PRISSIONS_STATUS_4; //文件太大，充值用户只能上传小于20M的文档
-                    } else if (!file_exists($uploadPaths . '/' . $fileNames)) {
-                        $a = move_uploaded_file($fileList["tmp_name"], $uploadPaths . "/" . $fileNames);
-                        if ($a) {
-                            $this->status = self::USER_PRISSIONS_STATUS_1; //上传成功
-                            chmod($uploadPaths . "/" . $fileNames, 0777);
-                        } else {
-                            $this->status = self::USER_PRISSIONS_STATUS_3; //上传失败
-                        }
-                        $md5_file = md5_file($uploadPaths . '/' . $fileNames);
-                    } else {
-                        $this->status = self::USER_PRISSIONS_STATUS_1; //文件已有
-                        if (!empty($info)) {
+                    } else  { //(!file_exists($uploadPaths . '/' . $fileNames))
+                           if (!empty($info)) {
+                             
                             $this->status = self::USER_PRISSIONS_STATUS_8;  //文件重复
+                        }else {
+                            $a = move_uploaded_file($fileList["tmp_name"], $uploadPaths . "/" . $fileNames);
+                            if ($a) {
+                                $this->status = self::USER_PRISSIONS_STATUS_1; //上传成功
+                                chmod($uploadPaths . "/" . $fileNames, 0777);
+                            } else {
+                                $this->status = self::USER_PRISSIONS_STATUS_3; //上传失败
+                            }
+                            $md5_file = md5_file($uploadPaths . '/' . $fileNames);
                         }
-                    }
+                    } 
+//                    else {
+//                        $this->status = self::USER_PRISSIONS_STATUS_1; //文件已有
+//                        if (!empty($info)) {
+//                            $this->status = self::USER_PRISSIONS_STATUS_8;  //文件重复
+//                        }
+//                    }
                 } else {
                     $this->status = self::USER_PRISSIONS_STATUS_2;
                 }
@@ -472,6 +443,7 @@ class IndexAction extends HomeAction {
                          }
                     }
             }
+      
            if($this->suffix_file_postfix  == 'pdf'){
              $this->number_page_pdf = countPdfPage($uploadPaths . '/' . $fileNames);
                 if($this->number_page_pdf < 0 || empty($this->number_page_pdf)){
@@ -1038,13 +1010,22 @@ class IndexAction extends HomeAction {
                 }
                 if ($split_start == 1) {
                     $this->resState = self::USER_PRISSIONS_STATUS_0;
-                    if (!is_file($fileReplacePath)) {
                         writeLog('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"',date('Y-m-d')."conversion.log");
                         exec('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"');
                         D("PdfList")->where(array('m_id' => $member_data['m_id'], 'id' => $data['id']))->data(array('fstate'=>self::USER_PRISSIONS_STATUS_7))->save();
-                    } else {
-                         $this->redirect('/Home/Index/ConvertAsynchronous',array('key'=>$rsa_public_encrypt,'result'=>1));
-                    }
+//                    if (!is_file($fileReplacePath)) {
+//                        writeLog('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"',date('Y-m-d')."conversion.log");
+//                        exec('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"');
+//                        D("PdfList")->where(array('m_id' => $member_data['m_id'], 'id' => $data['id']))->data(array('fstate'=>self::USER_PRISSIONS_STATUS_7))->save();
+//                    } else {
+//                        if($member_data['Free_authorization'] == self::USER_PRISSIONS_STATUS_0){
+//                                writeLog('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"',date('Y-m-d')."conversion.log");
+//                                exec('"' . $pdfconversion . '" "' . $filePath . '" "' . $fileReplacePath . '" ipdfReader_PDV "'.C('HOST_CONVERSIONS').'" "'.$rsa_public_encrypt.'"');
+//                                D("PdfList")->where(array('m_id' => $member_data['m_id'], 'id' => $data['id']))->data(array('fstate'=>self::USER_PRISSIONS_STATUS_7))->save();
+//                        } else {
+//                            $this->redirect('/Home/Index/ConvertAsynchronous',array('key'=>$rsa_public_encrypt,'result'=>1));
+//                        }
+//                    }
                 } else {
                     $this->redirect('/Home/Index/ConvertAsynchronous',array('key'=>$rsa_public_encrypt,'result'=>-10));
                 }
@@ -1201,7 +1182,7 @@ header("Location: $wxurl");
                     if($returnFile){
                         $this->ajaxReturn(array('action'=>1,'success'=>$returnFile));
                     }else{
-                        $this->ajaxReturn(array('action'=>0,'pdf_count'=>$count));
+                        $this->ajaxReturn(array('action'=>0));
                     }
             }
     }
@@ -1518,18 +1499,38 @@ header("Location: $wxurl");
         $source = array();
         $source['s_status'] =1;
         $source['s_create_time'] =date('Y-m-d H:i:s');
+        $source['m_id'] = isset(self::$ary_member['m_id'])?self::$ary_member['m_id']:0;
+        $source['source'] = isset(self::$ary_member['open_source'])?self::$ary_member['open_source']:'';
         D("Source")->add($source);
     }
-
+    public function ActivitLoadDataTypeAdd() {
+        $source = array();
+        $fileJsonPost              =   $this->_post();
+        $fileJsonCode               = json_decode($fileJsonPost['fileInfo']);
+        static::$ary_member['LoadDataType'] = 1;
+        session('Members',static::$ary_member);
+        $source['s_status']         =       $fileJsonCode->s_status;
+        $source['s_type']           =       $fileJsonCode->s_type;
+        $source['m_id']             =       static::$ary_member['m_id'];
+        $source['source']           =       static::$ary_member['open_source'];
+        $source['s_create_time']    =       date('Y-m-d H:i:s');
+        D("Source")->add($source);
+    }
 // 年中促销活动页面
      public function YearMiddlePage(){
         $tpl ='./Public/Tpl/' . CI_SN . '/' . TPL . '/YearMiddlePage.html';
         $halfMonther = self::getActivitp();
+        $get_data = $this->_get();
+        $this->assign('get_data',$get_data['s_type']);
         $sc_value= D('SysConfig')->where(array('sc_key'=>'ACTIVITPPROJECT_TIME'))->getField("sc_value");
         $this->assign('ACTIVITPPROJECT_TIME',date('Y-m-d H:i:s',$sc_value));
         if(empty($halfMonther)){
              $this->assign('ACTIVITY_OPEN',1);
         } else {
+            if(!empty(static::$ary_member)){
+                static::$ary_member['LoadDataType'] = 1;
+                session('Members',static::$ary_member);
+            }
             $this->assign('start_time',date('Y-m-d H:i:s'));
             $this->assign('halfMonther',date('Y-m-d H:i:s',$halfMonther));
             $this->assign('year',date('Y',$halfMonther));
@@ -1543,6 +1544,9 @@ header("Location: $wxurl");
                 $fileInfoList = $_POST['fileInfo'];
                 $fileInfo_array = json_decode($fileInfoList,true);
                 $fileInfo_array['s_create_time'] = date('Y-m-d H:i:s');
+                $fileInfo_array['m_id'] = isset(self::$ary_member['m_id'])?self::$ary_member['m_id']:0;
+                $fileInfo_array['source'] = isset(self::$ary_member['open_source'])?self::$ary_member['open_source']:'';
+                writeLog("fileInfo_array:". json_encode($fileInfo_array),date('Ym-d')."membersCount.log");
                 D("Source")->add($fileInfo_array);
     }
 }

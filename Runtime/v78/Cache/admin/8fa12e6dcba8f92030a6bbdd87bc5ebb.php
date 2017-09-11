@@ -106,9 +106,9 @@
         <thead>
             <tr class="title">
                 <th colspan="22">
-<!--                    <p class="conOneP" style="float: left;">
+                    <p class="conOneP" style="float: left;">
                         <a href="javascript:void(0);" class="btnG ico_explort">导出Excel</a>
-                    </p>-->
+                    </p>
 <!--                    <p class="conOneP" style="float: left;">
                         <a href="javascript:void(0);" class="btnG Set" id="setAutoOrders">批量审核订单</a>
                     </p>-->
@@ -187,10 +187,10 @@
                 </td>
                 <td> <span style="width:120px;"><?php echo ($order["o_create_time"]); ?></span></td>		
               <td><?php echo ($order["m_id"]); ?></td>	
-              <td>pc</td>
+              <td><?php echo ($order["o_source"]); ?></td>
               <td>  <span style="margin-left:10px;"><?php echo ($order["str_pay_status"]); ?></span></td>
                <td><?php echo ($order["pc_name"]); ?></td>
-               <td><?php echo ($order["o_source"]); ?></td>
+               <td><?php echo ($order["o_source_type"]); ?></td>
                                <td><?php echo ($order["o_all_price"]); ?></td>
                                  <td><?php echo ($order["pdf_type_order"]); ?></td>
                                  <td><?php echo ($order["oi_nums"]); ?></td>
@@ -347,36 +347,7 @@
 			data['search'] = requset;
 			
 		}
-        $.post("<?php echo U('Admin/Orders/selectOrdersPropetry');?>",{},function(dataHTML){
-            $("#select_orders_property").html(dataHTML);
-            $("#select_orders_property").dialog({
-                    height:'auto',
-                    width:'auto',
-                    resizable:false,
-                    modal:true,
-                    title:'请选择要导出的可选字段',
-                    buttons: {
-                        '确认': function() {
-                            data['export_type'] = {};
-                            $('.goods_sale_property_checked').each(function(i){
-                                data['export_type'][$(this).attr('ename')] = {}
-                                data['export_type'][$(this).attr('ename')] = $(this).attr('e_value');
-                            });
-                            explortOrder(data);
-                            $("#select_orders_property").dialog('destroy');
-                            $('#pro_dialog').append($('#select_orders_property'));
-                        },
-                        '关闭': function() {
-                            $("#select_orders_property").dialog('destroy');
-                            $('#pro_dialog').append($('#select_orders_property'));
-                        }
-                    },
-                    close:function(){
-                        $("#select_orders_property").dialog('destroy');
-                        $('#pro_dialog').append($('#select_orders_property'));
-                    }
-                });
-        },'html')
+           explortOrder(data);
     }
     
     function explortOrder(data){

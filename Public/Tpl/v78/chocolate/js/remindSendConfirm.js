@@ -61,6 +61,7 @@ require(['jquery'], function($) {
             }
 		//取消按钮事件
 		function doCancel(){
+
 			var $o = $(this);
                          $('.popup').hide();
                          $o.parent().hide();

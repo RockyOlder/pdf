@@ -7964,10 +7964,10 @@ class OrdersAction extends CommonAction {
         $data = D('Orders')->where(array('o_id'=>$ary_get))->field('o_id,o_pay_status')->find();
    
         if(!empty($data) && $data['o_pay_status'] == 1){
-                                 $this->success('已支付成功,返回首页', array(U("Home/Index/CoreBusiness")));
-           // $this->ajaxReturn($data);
+             $this->ajaxReturn(json_encode(array('info'=>'已支付成功,返回首页','status'=>1,'url'=>'/Home/Index/CoreBusiness')), 'EVAL');
+             //$this->success('已支付成功,返回首页', array(U("Home/Index/CoreBusiness")));
         } else {
-            $this->ajaxReturn(array('status'=>2));
+            $this->ajaxReturn(json_encode(array('status'=>2)), 'EVAL');
         }
     }
     public function getApplayOid(){
@@ -7975,11 +7975,11 @@ class OrdersAction extends CommonAction {
         $ary_get = $this->_get('order_no');
         $data = D('Orders')->where(array('o_id'=>$ary_get))->field('o_id,o_pay_status,o_all_price')->find();
         if(!empty($data) && $data['o_pay_status'] == 1){
-                $Member_object = D('Members')->where(array('m_id'=>$member['m_id']))->find();
+                $Member_object = D('Members')->field('conversion_type,number_remaining,end_time')->where(array('m_id'=>$member['m_id']))->find();
+                $data['conversion_type'] = $Member_object['conversion_type'];
                 $data['number_remaining']  = $Member_object['number_remaining'];
                 if(time() > strtotime($Member_object['end_time'])){
                         $data['end_time']  = 0;
-
                 } else {
                         $data['end_time']  = count_days(strtotime(date('Y-m-d')),strtotime($Member_object['end_time']));
                 }

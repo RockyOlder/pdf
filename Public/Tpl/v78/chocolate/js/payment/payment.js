@@ -43,8 +43,16 @@ define(['tool'], function(tool){
                             $('#play_success').show();
                             $('#play_success').css('display','inline-block').siblings().hide(); 
                             $("#pay_sccess_price").html(data.order.o_all_price);
-                            $("#total_number").html(data.order.number_remaining);
-                            $("#total_time").html(data.order.end_time);
+                            //您的授权剩余次数<span id="total_number">2</span>次，剩余时间还剩<span id="total_time">12</span>天
+                            if(data.order.conversion_type == 1){
+                                $('#permissions').html('您的授权剩余次数<span>'+data.order.number_remaining+'</span>次');
+                            }else if(data.order.conversion_type == 2 && data.order.number_remaining != 0){
+                                $('#permissions').html('您的授权剩余次数<span>'+data.order.number_remaining+'</span>次,剩余时间还剩<span>'+data.order.end_time+'</span>天');
+                            } else {
+                                $('#permissions').html('您的授权剩余时间还剩<span>'+data.order.end_time+'</span>天');
+                            }
+//                            $("#total_number").html(data.order.number_remaining);
+//                            $("#total_time").html(data.order.end_time);
                             tool.ajaxLoadShoppingHeader();
                             clearTimeout(payment.onloadQueryApplayOrderPAy);
 
@@ -284,8 +292,15 @@ define(['tool'], function(tool){
                 $.ajax({
                 url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").val() + '&t=' + Math.round(Math.random() * 1000000),
                 type: "GET",
-                dataType: "json",
                 success: function (data) {
+                    var lvContent=""; 
+                    if (typeof data!="string"){  
+                        lvContent=data.innerText;  
+                    }  
+                    else{  
+                        lvContent=data;  
+                    }  
+                    data  = eval('('+lvContent+')');
                     if (data.status == 1) {
                         $('#weixin_ifram').remove();
                         $('.popup_weixin').hide();
@@ -294,7 +309,7 @@ define(['tool'], function(tool){
                             title: "确定",
                             btn: parseInt("0011", 2),
                             onOk: function () {
-                                window.location.href = data.url[0];
+                                window.location.href = data.url;
 
                             }
                         };

@@ -72,13 +72,13 @@
 </div>                   
                      </div>
                  </div><?php endif; ?>
-
                 <div class="recharge_box">&nbsp;&nbsp;│&nbsp;&nbsp;<a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" class="recharge">充值</a></div>
                 <input type="hidden" value="<?php echo ($_SESSION['Members']['m_id']); ?>" name ="gy_member_open" id="gy_member_open"/>
                 <input type="hidden" value="<?php echo ($redirect); ?>" name ="redirect" id="redirect"/>
                 <input type="hidden" id="Authorizationtype" value="<?php echo ($ary_member["conversion_type"]); ?>" />
                 <input type="hidden" id="Free_authorization" value="<?php echo ($ary_member["Free_authorization"]); ?>" />
                 <input type="hidden" id="ACTIVITY_OPEN" value="<?php echo ($ACTIVITY_OPEN); ?>" />
+                <input type="hidden" id="LoadDataType" value="<?php echo ($_SESSION['Members']['LoadDataType']); ?>" />
             </div>
         </div>
     </div>
@@ -174,6 +174,15 @@
         </div>
     </div>
 </div>
+<!-- 各种状态的弹窗 -->
+<div class="popup popup_other">
+    <div class="content" name="teachesDay">
+        <div class="icon close" itemid="1" ></div>
+        <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>1));?>" itemtype="1" itemid="1" class="ClickTheBanner" >
+            <img src="__IMAGES__images/x01.jpg"  alt="教师节抢购" />
+        </a>
+    </div>
+</div>
 <input type="hidden" id="year" value="<?php echo ($year); ?>" />
 <input type="hidden" id="month" value="<?php echo ($month); ?>" />
 <input type="hidden" id="day" value="<?php echo ($day); ?>" />
@@ -183,7 +192,7 @@
  <?php if($ACTIVITY_OPEN != 1): ?><div class="item_banner">    
        <a href="<?php echo U('Home/Index/YearMiddlePage');?>">
            <div class="wrap">
-                <div class="left"><img src="__IMAGES__images/4_03.png" alt="年中大促" /></div>
+                <div class="left"><img src="__IMAGES__images/a2_03.png" alt="教师节活动抢购" /></div>
                 <div class="count_down right">
                     距离<span class="end_date"></span>活动截止还剩<span class="day"></span><span class="time"></span>
                     <span class="details">活动详情</span>           

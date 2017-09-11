@@ -105,9 +105,11 @@
             <thead>
                 <tr class="title">
                 <th colspan="<?php echo 14+count($fields); ?>">
-                    <form id="searchForm" method="get" action="<?php echo U('Admin/MembersDistributed/MemberDataFile');?>" style='width:55%;'>
+                    <form id="searchForm" method="get" action="<?php echo U('Admin/MembersDistributed/MemberDataAnalysis');?>" style='width:55%;'>
                     <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
                          主题切换：<select id="theme-select" class="medium" ></select>
+                            时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="<?php echo ($ary_data["o_create_time_1"]); ?>"> -
+                           <input type="text" class="medium timer" name="o_create_time_2" value="<?php echo ($ary_data["o_create_time_2"]); ?>">
                           用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">
                           <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
                     </span>
@@ -127,21 +129,6 @@
   */
 var myChart;
 var theme = 'macarons';
-var labelTop = {
-    normal : {
-        label : {
-            show : true,
-            position : 'center',
-            formatter : '{b}',
-            textStyle: {
-                baseline : 'bottom'
-            }
-        },
-        labelLine : {
-            show : false
-        }
-    }
-};
 var labelFromatter = {
     normal : {
         label : {
@@ -154,21 +141,7 @@ var labelFromatter = {
         }
     },
 }
-var labelBottom = {
-    normal : {
-        color: '#ccc',
-        label : {
-            show : true,
-            position : 'center'
-        },
-        labelLine : {
-            show : false
-        }
-    },
-    emphasis: {
-        color: 'rgba(0,0,0,0)'
-    }
-};
+
 var radius = [40, 55];
     // Step:3 conifg ECharts's path, link to echarts.js from current page.
     // Step:3 为模块加载器配置echarts的路径，从当前页面链接到echarts.js，定义所需图表路径
@@ -201,13 +174,13 @@ var radius = [40, 55];
                     x : 'center',
                     y : 'center',
                     data:[
-                        'GoogleMaps','Facebook','Youtube','Google+','Weixin',
-                        'Twitter', 'Skype', 'Messenger', 'Whatsapp', 'Instagram'
+                        '订单微信选择','订单微信支付','订单已支付','订单来源PC','上传PDF文件',
+                        '转换成功文件', '上传重复文件', '免费用户'
                     ]
                 },
                 title : {
-                    text: 'The App World',
-                    subtext: 'from global web index',
+                    text: '用户行为分析',
+                    subtext: '实时数据',
                     x: 'center'
                 },
                 toolbox: {
@@ -243,118 +216,71 @@ var radius = [40, 55];
                 series : [
                     {
                         type : 'pie',
-                        center : ['10%', '30%'],
+                        center : ['20%', '30%'],
                         radius : radius,
                         x: '0%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:46, itemStyle : labelBottom},
-                            {name:'GoogleMaps', value:54,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_o_payment_type); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['30%', '30%'],
+                        center : ['40%', '30%'],
                         radius : radius,
                         x:'20%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:56, itemStyle : labelBottom},
-                            {name:'Facebook', value:44,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_o_payment_pay); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['50%', '30%'],
+                        center : ['60%', '30%'],
                         radius : radius,
                         x:'40%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:65, itemStyle : labelBottom},
-                            {name:'Youtube', value:35,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_order_o_payment_pay); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['70%', '30%'],
+                        center : ['80%', '30%'],
                         radius : radius,
                         x:'60%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:70, itemStyle : labelBottom},
-                            {name:'Google+', value:30,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_order_source_json); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['90%', '30%'],
-                        radius : radius,
-                        x:'80%', // for funnel
-                        itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:73, itemStyle : labelBottom},
-                            {name:'Weixin', value:27,itemStyle : labelTop}
-                        ]
-                    },
-                    {
-                        type : 'pie',
-                        center : ['10%', '70%'],
+                        center : ['20%', '70%'],
                         radius : radius,
                         y: '55%',   // for funnel
                         x: '0%',    // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:78, itemStyle : labelBottom},
-                            {name:'Twitter', value:22,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_user_pdf_type_json); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['30%', '70%'],
+                        center : ['40%', '70%'],
                         radius : radius,
                         y: '55%',   // for funnel
                         x:'20%',    // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:78, itemStyle : labelBottom},
-                            {name:'Skype', value:22,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_user_cstate_success_json); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['50%', '70%'],
+                        center : ['60%', '70%'],
                         radius : radius,
                         y: '55%',   // for funnel
                         x:'40%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:78, itemStyle : labelBottom},
-                            {name:'Messenger', value:22,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_user_c_type_state_json); ?>
                     },
                     {
                         type : 'pie',
-                        center : ['70%', '70%'],
+                        center : ['80%', '70%'],
                         radius : radius,
                         y: '55%',   // for funnel
                         x:'60%', // for funnel
                         itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:83, itemStyle : labelBottom},
-                            {name:'Whatsapp', value:17,itemStyle : labelTop}
-                        ]
-                    },
-                    {
-                        type : 'pie',
-                        center : ['90%', '70%'],
-                        radius : radius,
-                        y: '55%',   // for funnel
-                        x:'80%', // for funnel
-                        itemStyle : labelFromatter,
-                        data : [
-                            {name:'other', value:89, itemStyle : labelBottom},
-                            {name:'Instagram', value:11,itemStyle : labelTop}
-                        ]
+                        data : <?php echo ($ary_user_json); ?>
                     }
                 ]
             });

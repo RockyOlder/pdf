@@ -101,7 +101,17 @@ $(function() {
 	});
 
 });
-
+function ajaxCount(fileJson,faction){
+            $.ajax({
+                type:'post',
+                url:'/Home/Products/'+faction,
+                data:{"fileInfo":JSON.stringify(fileJson)},
+                dataType:'json',
+                //async:false,
+                success:function(returnlInfo){
+                }		
+        });
+}
 function timeChange()
 {
 	var inputVal = parseInt($('.input-nums').val());

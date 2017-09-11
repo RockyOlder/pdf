@@ -2211,7 +2211,22 @@ class ProductsAction extends HomeAction {
         // echo "<pre>";print_r($ary_goods);exit;
         $this->display($tpl);
     }
-    
+    public function AjaxActiviOrderPay(){
+        $fileInfoList = $_POST['fileInfo'];
+        $fileInfo_array = json_decode($fileInfoList,true);
+        if( !empty($fileInfo_array['token'])){
+            $model_mb_user_token = D('MbUserToken');
+            $mb_user_token_info = $model_mb_user_token->getMbUserTokenInfoByToken($fileInfo_array['token']);
+            $members = D('Members')->getMemberInfoByID($mb_user_token_info['m_id']);
+        } else {
+            $members = session('Members');
+        }
+        $fileInfo_array['s_create_time'] = date('Y-m-d H:i:s');
+        $fileInfo_array['m_id'] = isset($members['m_id'])?$members['m_id']:0;
+        $fileInfo_array['source'] = isset($members['open_source'])?$members['open_source']:'';
+        writeLog("fileInfo_array:". json_encode($fileInfo_array),date('Ym-d')."membersCount.log");
+        D("Source")->add($fileInfo_array);
+    }
     public function ClientapiConversionFeeDetail() {
 
         if( !empty($this->_get('token'))){
@@ -2228,6 +2243,17 @@ class ProductsAction extends HomeAction {
         if( !empty($this->_get('union'))){
             $this->assign('union', $this->_get('union'));
         }
+        $s_type = $this->_get('s_type');
+        if(isset($s_type)){
+            $source = array();
+            $source['s_status'] =1;
+            $source['s_type'] =$this->_get('s_type');
+            $source['m_id'] = isset($members['m_id'])?$members['m_id']:0;
+            $source['s_create_time'] =date('Y-m-d H:i:s');
+            $source['source'] = isset($members['open_source'])?$members['open_source']:'';
+            D("Source")->add($source);
+        }
+        $this->assign('get_data',$s_type);
         $ary_get = $this->_get('client');
         $halfMonther = $this->getActivitp();
         $sc_value= D('SysConfig')->where(array('sc_key'=>'ACTIVITPPROJECT_TIME'))->getField("sc_value");
@@ -2278,11 +2304,11 @@ class ProductsAction extends HomeAction {
         $ary_get = $this->_get('order_no');
         $data = D('Orders')->where(array('o_id'=>$ary_get))->field('o_id,m_id,o_pay_status,o_all_price')->find();
         if(!empty($data) && $data['o_pay_status'] == 1){
-                $Member_object = D('Members')->where(array('m_id'=>$data['m_id']))->find();
+                $Member_object = D('Members')->field('conversion_type,number_remaining,end_time')->where(array('m_id'=>$data['m_id']))->find();
+                $data['conversion_type'] = $Member_object['conversion_type'];
                 $data['number_remaining']  = $Member_object['number_remaining'];
                 if(time() > strtotime($Member_object['end_time'])){
                         $data['end_time']  = 0;
-
                 } else {
                         $data['end_time']  = count_days(strtotime(date('Y-m-d')),strtotime($Member_object['end_time']));
                 }

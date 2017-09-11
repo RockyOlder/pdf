@@ -24,7 +24,7 @@
                 <div class="main_main">                
                     <div class="package_box">
                         <h3>悦书客户端用户仅可免费转换5页，若超过5页请购买授权</h3> 
-                        <div class="actTxt"><span class="actDate"></span>，买一个月送5次转换，买 一年送2个月，买两年送6个月！</div>                                          
+                        <div class="actTxt"><span class="actDate"></span>，买一个月送5次转换，买 一年送3个月，买两年送6个月！</div>                                          
                         <div class="package">
                             <div class="content">
                                 <div class="section section_one">
@@ -108,6 +108,7 @@
                     <input type="hidden" id="ACTIVITY_OPEN" value="<?php echo ($ACTIVITY_OPEN); ?>" />
                     <input type="hidden" id="ACTIVITPPROJECT_TIME" value="<?php echo ($ACTIVITPPROJECT_TIME); ?>" />
                     <input type="hidden" id="halfMonther" value="<?php echo ($halfMonther); ?>" />
+                    <input type="hidden" id="get_data" value="<?php echo ($get_data); ?>" />
                 </form>
             <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes" class="customer_service"><img src="__IMAGES__callme.png" alt="" /></a>
             <?php if($ary_get == 'free'): ?><div class="txt-limit" id="closeBtn">只转5页</div><?php endif; ?>

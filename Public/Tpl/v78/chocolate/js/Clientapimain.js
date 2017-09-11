@@ -86,29 +86,48 @@ window.hostUrl = window.location.origin;
   ExpireDiscount(dataNowinit,dataFisrtinit);
 
 //递增
-    var amount = $('.section_one .amount').val();
+   var amount = $('.section_one .amount').val();
    $('.add_numberof').click(function(){
         amount++;
         if(amount > 1000){
-            amount = 1000;
-        }        
+            amount = 1000;          
+        }
         $('#pdt_id').val(1);
         $('.section_one .amount').val(amount);
-        addCalculation(amount);
-        
+        getTimesAct(amount);
+         
    })
 
+// 活动次数初始化
+if($('#ACTIVITY_OPEN').val() == ""){
+    var inintimes = $('.section_one .amount').val();
+    $('.give_promet span').html(inintimes*2);
+    $('.section_one').addClass('getTimes');
+}
 //递减
    $('.reduce_numberof').click(function(){
-       
-        if(amount>1){
+      if($('#ACTIVITY_OPEN').val() ==""){
+          if(amount>1){
             amount--;
-            addCalculation(amount);
             $('.section_one .amount').val(amount);
             $('#pdt_stock').val(amount);
             $('#pdt_id').val(1);
-        }
-        
+            addCalculation2(amount);            
+          }else if(amount==""){
+              amount=1;
+          }
+      }else{
+          if(amount>1){
+            amount--;
+            $('.section_one .amount').val(amount);
+            $('#pdt_stock').val(amount);
+            $('#pdt_id').val(1);
+            addCalculation(amount);            
+          }else if(amount==""){
+              amount=1;
+          }
+        } 
+                
    })
 
    //次数加减算钱 5次送1
@@ -133,13 +152,33 @@ window.hostUrl = window.location.origin;
       
    }
 
+    //次数加减算钱 买1送一
+   function addCalculation2(number){
+      $('.discount').html('<div class="left">限期优惠:</div><div class="right">赠送'+number+'次转换</div>');
+      $('#pay .save_money').html("");
+      $('#pay .first_price').html(""); 
+      $('.original').hide();
+      // 次数单价
+      var UnitPrice = parseInt($('#times').data('now'));
+      $('.last_pay .pay_money').html((UnitPrice*number)); 
+      $('.give_promet span').html(number*UnitPrice);
+   }
+
+   function getTimesAct(a){
+      if($('#ACTIVITY_OPEN').val() ==""){
+         addCalculation2(a);
+       }else{
+           addCalculation(a);
+       }
+   }
+
    // 点击加减回到次数
 
    $('.upor_down').click(function(){
       $(this).parent().siblings('.item').addClass('current').parents(".section").siblings().find('.item').removeClass('current');
       $('#pdt_stock').val(amount);
       $('#details').val($(this).parent().siblings('.item').data('details'));
-      addCalculation(amount); 
+      getTimesAct(amount);
    });
 
 // 点击次数
@@ -149,7 +188,7 @@ window.hostUrl = window.location.origin;
         $('#details').val($(this).data('details'));
         $('#pdt_id').val($(this).data('pdt_id'));
         $(this).addClass('current').parents(".section").siblings().find('.item').removeClass('current');
-        addCalculation(amount);
+        getTimesAct(amount);
    });
 
 
@@ -179,10 +218,16 @@ $('.section_one .amount').keyup(function() {
         $('#pdt_id').val(1);
         $(this).parent().siblings('.item').addClass('current').parents(".section").siblings().find('.item').removeClass('current'); 
         $('#details').val($(this).parent().siblings('.item').data('details'));
-         addCalculation(amount);
+         getTimesAct(amount);
         if(amount=="" || amount ==0){
             $('.section_one .amount').val(1);
-            addCalculation(1);
+            if($('#ACTIVITY_OPEN').val() ==""){
+               addCalculation2(1);
+               $('.give_promet span').html('2');
+             }else{
+                addCalculation(1);
+                $('.give_promet span').html('1');
+             }   
         }
      
   })
@@ -399,6 +444,7 @@ function sendOrderGethref(type,pdt_id,details,pdt_sn){
             var token = $('#token').val();
             var union = $('#union').val();
             var client = $('#client').val();
+            var s_type = $("#get_data").val();
             if (isNaN(details)){
                     $.ThinkBox.error('异常错误');
                     return;
@@ -419,10 +465,12 @@ function sendOrderGethref(type,pdt_id,details,pdt_sn){
                 $.ThinkBox.error('数量不能小于一');
                 return;
             }
-            var param = '?pdt_id='+pdt_id+'&details='+details+'&pdt_stock='+pdt_stock+'&pdt_sn='+pdt_sn+'&pdt_sale_price='+pdt_sale_price+'&pc_abbreviation='+type+'&token='+token+'&union='+union+'&client='+client;
+            var param = '?pdt_id='+pdt_id+'&details='+details+'&pdt_stock='+pdt_stock+'&pdt_sn='+pdt_sn+'&pdt_sale_price='+pdt_sale_price+'&pc_abbreviation='+type+'&token='+token+'&union='+union+'&client='+client+'&s_type='+s_type;
         if(type == 'WEIXIN') {
+            ajaxCount({"s_status":2,"s_value":details,"s_payment":"WEIXIN","token":token,"s_type":$("#get_data").val()},'AjaxActiviOrderPay');
                 window.location.href = '/Ucenter/Financial/doAddDepositOnline'+param+'&clien=clien';
         } else {
+            ajaxCount({"s_status":3,"s_value":details,"s_payment":"ALIPAY","token":token,"s_type":$("#get_data").val()},'AjaxActiviOrderPay');
                 window.location.href = '/Ucenter/Financial/ClientapiALIPAYPayOnline'+param;
         }
 
@@ -493,8 +541,15 @@ function onloadQueryOrderPAy(){
         $.ajax({
             url: "/Ucenter/Orders/getOrderPyOid/?order_no=" + $("#order_no").val() + '&t=' + Math.round(Math.random() * 1000000),
             type: "GET",
-            dataType: "json",
             success: function (data) {
+                var lvContent=""; 
+                if (typeof data!="string"){  
+                    lvContent=data.innerText;  
+                }  
+                else{  
+                    lvContent=data;  
+                }  
+                data  = eval('('+lvContent+')');
                 if (data.status == 1) {
                     $('#weixin_ifram').remove();
                     $('.popup_weixin').hide(); 
@@ -525,6 +580,17 @@ function onloadQueryOrderPAy(){
         });
  //   }, 3000);
              
+}
+function ajaxCount(fileJson,faction){
+            $.ajax({
+                type:'post',
+                url:'/Home/Products/'+faction,
+                data:{"fileInfo":JSON.stringify(fileJson)},
+                dataType:'json',
+                //async:false,
+                success:function(returnlInfo){
+                }		
+        });
 }
 function onloadQueryApplayOrderPAy(){
                    

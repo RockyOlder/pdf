@@ -281,6 +281,9 @@ class FinancialAction extends CommonAction {
         $pdt_id = $ary_datas['pdt_id'];
         $data_type = $ary_datas['details'];
         $num = $ary_datas ['pdt_stock'];
+        if(!empty($ary_datas['activity'])){
+            $num =  5;
+        }
         $Payment = D('PaymentCfg');
         $ary_payment = $Payment->where(array('pc_abbreviation'=>$code))->find();
         $ary_member = D("Members")->where(array('m_id'=>$_SESSION['Members']['m_id']))->find();
@@ -303,6 +306,7 @@ class FinancialAction extends CommonAction {
         $ary_orders ['o_id'] = $order_id = '400'.date('YmdHis') . rand(1000, 9999);
         $ary_orders['o_goods_all_price'] = $price['pmlp_price'];
         $end_time_count_out  = 0;
+        $activity =  D('SysConfig')->getSysconfigActivity();
         if($data_type  == 2){
                 if(time() > strtotime($ary_member['end_time'])){
                         $end_time_count_out =  count_days(strtotime($ary_member['end_time']),strtotime(date('Y-m-d')));
@@ -325,11 +329,16 @@ class FinancialAction extends CommonAction {
 		//保存订单
         } else {
             $ary_orders['o_all_price'] = $price['pmlp_price'] * $num;
-            $num = (floor($num /5)) +$num;
+            if(empty($activity)){
+                $num = (floor($num /5)) +$num;
+            }
         }
-        $activity =  D('SysConfig')->getSysconfigActivity();
+
         if(!empty($activity)){
                 switch ($data['pdt_id']){
+                    case 1:
+                        $ps_buy_giving = $num;
+                        break;
                     case 2:
                         $ps_buy_giving = 5;
                         break;
@@ -412,6 +421,7 @@ class FinancialAction extends CommonAction {
             $member = session('Members');
         }
         $this->assign('client', $this->_get('client'));
+        $this->assign('s_type', $this->_get('s_type'));
         if(empty($member['m_id'])){
             $this->error('请登录！');
         }
@@ -456,6 +466,7 @@ class FinancialAction extends CommonAction {
         if(!empty($ary_datas['union'])){
             $ary_orders['union'] = $ary_datas['union'];
         }
+        $activity =  D('SysConfig')->getSysconfigActivity();
         if($data_type  == 2){
                 $end_time_count_out  = 0;
                 if(time() > strtotime($ary_member['end_time'])){
@@ -478,11 +489,16 @@ class FinancialAction extends CommonAction {
 		//保存订单
         } else {
             $ary_orders['o_all_price'] = $price['pmlp_price'] * $num;
-            $num = (floor($num /5)) +$num;
+            if(empty($activity)){
+                $num = (floor($num /5)) +$num;
+            }
         }
-        $activity =  D('SysConfig')->getSysconfigActivity();
+
         if(!empty($activity)){
                 switch ($data['pdt_id']){
+                    case 1:
+                        $ps_buy_giving = $num;
+                        break;
                     case 2:
                         $ps_buy_giving = 5;
                         break;
@@ -562,6 +578,7 @@ class FinancialAction extends CommonAction {
             $member = session('Members');
         }
         $this->assign('client', $this->_get('client'));
+        $this->assign('s_type', $this->_get('s_type'));
         if(empty($member['m_id'])){
             $this->error('请登录！');
         }
@@ -609,6 +626,7 @@ class FinancialAction extends CommonAction {
         if(!empty($ary_datas['union'])){
             $ary_orders['union'] = $ary_datas['union'];
         }
+        $activity =  D('SysConfig')->getSysconfigActivity();
         if($data_type  == 2){
                 $end_time_count_out  = 0;
                 if(time() > strtotime($ary_member['end_time'])){
@@ -632,12 +650,15 @@ class FinancialAction extends CommonAction {
 		//保存订单
         } else {
             $ary_orders['o_all_price'] = $price['pmlp_price'] * $num;
-         
-            $num = (floor($num /5)) +$num;
+            if(empty($activity)){
+                $num = (floor($num /5)) +$num; 
+            }
         }
-            $activity =  D('SysConfig')->getSysconfigActivity();
             if(!empty($activity)){
                     switch ($data['pdt_id']){
+                        case 1:
+                            $ps_buy_giving = $num;
+                            break;
                         case 2:
                             $ps_buy_giving = 5;
                             break;
@@ -691,11 +712,11 @@ class FinancialAction extends CommonAction {
             $data_type_number = $ary_orders['oi_nums'];
             D("Orders")->where(array('o_id'=>$ary_datas['activity_o_id']))->save(array('o_payment'=>$ary_payment['pc_id']));
         }
-
         $Pay = $Payment::factory($code,  json_decode($ary_payment['pc_config'], true));
         $restult = $Pay->pay($ary_orders ['o_id'],$data_type,$data_type_number,$member['m_id']);
         $restult['o_all_price'] = $ary_orders['o_all_price'];
         $restult['o_id'] = $ary_orders['o_id'];
+        $restult['details'] = $pdt_id;
         $this->assign('Weixinprepay',$restult);
         if($ary_datas['clien'] == 'clien'){
                 $tpl = './Public/Tpl/' . CI_SN . '/' . TPL . '/scan.html';

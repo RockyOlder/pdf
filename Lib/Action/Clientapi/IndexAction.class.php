@@ -138,13 +138,13 @@ class IndexAction extends MobileAction{
      * @author Rocky
      */
     private function fxMemberSynchronousData($params=null){
+                  
                     // $params['pcid'] = '9cbe834f1953aac31866b5ab422254a1';
                     //$params['open_id']  = 'oQWclwLBcb0-cHFkox2F0_lMRtgk';
                     $data_send  =  rsa_public_encrypt(json_encode(array('pcid'=>$params['pcid'])));
                     $response = makeRequestUtf8('http://readermgr.cqttech.com/api/getAuthData', array('data'=>$data_send),'post');
                     if(!empty($response)){
                         $rsa_data_decrypt  = rsa_public_decrypt($response);
-
                     }
                     $member = D('Members');
                     $add_day  = 0;
@@ -255,7 +255,19 @@ class IndexAction extends MobileAction{
       $this->logs($this->array_params["method"],$msg);  
     }
 
-
+    private static function getActivitp(){
+            $ary_data = D('SysConfig')->getCfgByModule('GY_SHOP');
+            if($ary_data['ACTIVITY_OPEN'] ==true) {
+                    if(time() > $ary_data['ACTIVITPPROJECT_TIME'] )
+                    {
+                        if(time () < $ary_data['ACTIVITPPROJECT_end_TIME'] )
+                        {
+                            return $ary_data['ACTIVITPPROJECT_end_TIME'];
+                        }
+                    }
+            }
+            return false;
+    }
     /**
      * 检测客户端数据是否同步接口
      * @author Rocky
@@ -263,12 +275,13 @@ class IndexAction extends MobileAction{
     private function fxMemberConcurrentValidation($params=null){
         
         $Members_Object_data = D('Members')->where(array('m_pcid'=>$params['pcid']))->find();
+        $Activity_time = (int)self::getActivitp();
         if(empty($Members_Object_data)){
             $this->addLog();
-            $this->errorResult(false,10001,array('success'=>'success','result'=>true),'pcid可以使用','Remote service error',true);
+            $this->errorResult(false,10001,array('success'=>'success','result'=>true,'Activity_time'=>$Activity_time),'pcid可以使用','Remote service error',true);
         } else {
             $this->addLog();
-            $this->errorResult(true,10001,array('success'=>'failure','result'=>FALSE),'pcid已绑定','Remote service error',true);
+            $this->errorResult(true,10001,array('success'=>'failure','result'=>FALSE,'Activity_time'=>$Activity_time),'pcid已绑定','Remote service error',true);
           //  $this->errorResult(false,10001,array('code'=>10001,'success'=>'failure','result'=>FALSE),'pcid is binding existing');
         }
         
@@ -278,10 +291,12 @@ class IndexAction extends MobileAction{
      * @param return string
      */
     private function fxMemberHeadPortrait($params=null){
-        
             $member = D('Members');
             $ary_member = $member->where(array('open_id'=>$params['open_id']))->field('m_head_img')->find();
-            
+            $ary_member['Activity_time'] = (int)self::getActivitp();
+            $ary_member['RightLogin'] = array('dataMsg'=>'感恩特惠,现购买时长套餐最高可送6个月','url'=>'/Home/Products/ClientapiConversionFeeDetail/s_type/3');
+            $ary_member['ConvertBanner'] = array('ImgDownload'=>'http://cdnfile.cqttech.com/res/banner.png','url'=>'/Home/Products/ClientapiConversionFeeDetail/s_type/4');
+            $ary_member['Free_of_charge_five'] = array('ImgDownload'=>'http://cdnfile.cqttech.com/res/tips.png','ImgClick'=>'/Home/Products/ClientapiConversionFeeDetail/s_type/5','SnapUrl'=>'/Home/Products/ClientapiConversionFeeDetail/s_type/6');
             if(!empty($ary_member['m_head_img'])){
                 $this->addLog();
                   $this->errorResult(false,10007,$ary_member,'头像','Remote service error',FALSE);

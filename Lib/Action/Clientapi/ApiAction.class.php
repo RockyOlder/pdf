@@ -115,7 +115,6 @@ class ApiAction extends GyfxAction{
               // echo strtotime(date("Y-m-d"));exit;
 		//dump($paramArr);die();
 		$sign = $this->createSign($paramArr,$array_authz['ci_app_secret']);
-                //echo $sign;exit;
 		if($sign != $array_params['sign']){
 			$this->errorResult(false,10001,array(),'数据签名不正确','',true);
 		}

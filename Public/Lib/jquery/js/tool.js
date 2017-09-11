@@ -235,6 +235,7 @@ define(function (){
                 });
              });
         },
+
         yearsMiddle2:function(){// 年中活动赠送 无折扣
            //$('#ACTIVITY_OPEN').attr('value','1');
             if($('#ACTIVITY_OPEN').val() == ''){

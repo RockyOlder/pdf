@@ -2,13 +2,28 @@
 <div class="main">
         <div class="wrap">
             <if condition="$ACTIVITY_OPEN  neq 1">
-                <div class="activity_con">
+                <div class="activity_banner">
+                    <img src="__IMAGES__images/1_03.jpg" alt="" />
                     <div class="content">
-                        <a href="{:U('Home/Index/YearMiddlePage')}" class="linkbox"></a>                                                                                 
-                        <div class="Deadline count_down">距离<span class="end_date"></span>活动截止还剩<span class="day"></span><span class="time"></span></div>
+                       <a href="{:U('Home/Index/YearMiddlePage',array('s_type'=>0))}" class="Behavior_Statistics_Banner">
+                        <div class="left">
+                            <img src="__IMAGES__images/txt.png" alt="" />                       
+                        </div>
+                        <div class="count_down right">
+                            <h3>距离<span class="end_date"></span>活动截止还剩</h3>
+                            <p><span class="day"></span><span class="time"></span></p>
+                            <span class="details">活动详情</span>
+                        </div>
+                        </a>
+                        <div class="linkbox">
+                            <a href="{:U('Home/Index/YearMiddlePage#01',array('s_type'=>0))}" class="first">买一个月送5次转换</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#02',array('s_type'=>0))}">买一年送3个月</a>
+                            <a href="{:U('Home/Index/YearMiddlePage#03',array('s_type'=>0))}">买二年送6个月</a>
+                        </div>
                     </div>
                 </div>
             </if>
+
             <div class="main_main">                
                 <div class="package_box">
                    <!--  <h3>悦书PDF在线转换工具每天可以免费转换一次50页</h3> -->
@@ -69,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="discount">
-                                    <div class="left">优惠折扣:</div>
+                                    <div class="left">限期优惠:</div>
                                     <div class="right"><strong></strong>老用户专享！</div>
                                 </div>
                                 <div class="last_pay">
@@ -151,7 +166,7 @@
             <div class="zfb_info">
                 <i class="icon icon-end"></i>
                 <div class="txt">您已成功支付<span class="pay">&yen;<span class="pay_money" id="pay_sccess_price"></span></span></div>  
-                <div class="promet">您的授权剩余次数<span id="total_number">2</span>次，剩余时间还剩<span id="total_time">12</span>天</div>           
+                <div class="promet" id="permissions"></div>           
                 <div class="bottom">
                     <a href="javascript:;" class="btn btn_contain">继续购买</a>
                     <a href="javascript:;" class="btn btn_return">返回</a>
@@ -171,7 +186,7 @@
                     <a href="####" class="btn btn_only_change">购买单次</a>
                     <a href="####" class="btn btn_recharge">试试包月</a>
                 </div> 
-        </div>          
+        </div>      
     </div>
 
 

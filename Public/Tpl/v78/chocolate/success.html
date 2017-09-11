@@ -16,7 +16,14 @@
                 <div class="pay-top">
                     <i class="icon icon-success"></i><p>您已成功支付<span class="pay">{$arr_order.o_all_price}</span>元	</p>
                 </div>
-                <div class="txt-onlytime"> 您的授权剩余次数<span id="total_number">{$arr_order.number_remaining}</span>次，剩余时间还剩<span id="total_time">{$arr_order.end_time}</span>天 </div>
+                <if condition="$arr_order['conversion_type'] eq 1"> 
+                      <div class="txt-onlytime"> 您的授权剩余次数<span id="total_number">{$arr_order.number_remaining}</span>次</div>
+                   <elseif condition="$arr_order['conversion_type'] eq 2 and $arr_order['number_remaining'] neq 0" />
+                    <div class="txt-onlytime"> 您的授权剩余次数<span id="total_number">{$arr_order.number_remaining}</span>次，剩余时间还剩<span id="total_time">{$arr_order.end_time}</span>天 </div>
+                   <else />
+                    <div class="txt-onlytime"> 您的授权剩余时间<span id="total_time">{$arr_order.end_time}</span>天 </div>
+                 </if>
+                
                 <div class="pay-on">
                     <a href="{:U('Home/Products/ClientapiConversionFeeDetail',array('token'=>$token,'client'=>$client))}" class="btn links-on buy-continue">继续购买</a>
                     <a href="javascript:void(0);" class="btn links-off close">关闭</a>

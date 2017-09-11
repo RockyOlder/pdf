@@ -33,7 +33,7 @@ define(['tool'], function(tool){
                 }
                 if($("#Authorizationtype").val()  == this._this_number_Permission_1 ) {
                         if(number_page_pdf > 500){
-                            $($this).parents('tr').find('td').eq(6).find('div').removeClass('success').addClass('failure').html('文档页数超出限制,请充值后尝试');
+                            $($this).parents('tr').find('td').eq(6).find('div').removeClass('success').addClass('failure').html('文档页数超出限制<br />请充值后尝试');
                             $($this).removeClass('reture_switch').removeClass('start_switch').addClass('rg_vip').removeAttr("onclick").html(this.getHost(6));
                             var fileId 		=   $($this).parents('tr').find('td').eq(0).attr('id');
                             tool.fileAjax({"fileId": fileId},'upload_state_save');
@@ -128,10 +128,14 @@ define(['tool'], function(tool){
                                                   if(FilfeType  == 'PDF') {
                                                         if($("#Free_authorization").val() == 1){
                                                            if($("#Authorizationtype").val()  == conversion._this_number_Permission_0){
-                                                               window.rsd.rsdConfirm('content_success');
-                                                               $("#Free_authorization").val(0);
+                                                                if(tool.checkNotEmpty($('#ACTIVITY_OPEN').val()) ==false){
+                                                                    tool.rsdConfirm('freeContent',null,tool);
+                                                                   //  tool.rsdConfirm('teachesDay',null,tool);
+                                                                } else {
+                                                                    window.rsd.rsdConfirm('content_success');
+                                                                    $("#Free_authorization").val(0);
+                                                                }
                                                            }
-
                                                        }
                                                   }
                                                 tool.ajaxLoadShoppingMember();
@@ -167,11 +171,11 @@ define(['tool'], function(tool){
                 };
         },
         onloadQuery: function () {
-                var timestamp = tool.getCookie('timestamp');
+                //var timestamp = tool.getCookie('timestamp');
                 $.ajax({
                         type:'post',
                         url:'/Home/Index/fileRequest',
-                        data:{"verify":"PDF","timestamp":timestamp},
+                        data:{"verify":"PDF"},
                         dataType:'json',
                         success:function(returnlFile){
                                 if(typeof returnlFile.action != 'undefined' && returnlFile.action == 1){
@@ -186,10 +190,8 @@ define(['tool'], function(tool){
                                                     conversion.AskstartTransition($(".table").find("tbody").find("tr:eq("+f+")").find('td').eq(7).find('div'),'/Home/Index/batchConversionAjax');
                                                 }
                                         }
-                                }else{
-                                        window.timestamp = Date.parse(new Date()) / 1000;
-                                        tool.setCookie('timestamp',window.timestamp,0.354);
                                 }
+                                //  tool.setCookie('timestamp',window.timestamp,0.354);
                         }		
                 });   
         },
@@ -387,10 +389,10 @@ define(['tool'], function(tool){
 			case 6: var $hint  = '每日可免费转换1次50页pdf';break;
 			case 7: var $hint  = '正在转换';break;
 			case 8: var $hint  = '文件重复';break;
-			case 9: var $hint  = '文档页数超出限制,请充值后尝试操作';break;
+			case 9: var $hint  = '文档页数超出限制<br />请充值后尝试操作';break;
 			case 10: var $hint = '内存不足';break;
 			case 11: var $hint = '文档需要密码';break;
-			case 12: var $hint = '文档已损坏,无法打开';break;
+			case 12: var $hint = '文档已损坏';break;
 			case 13: var $hint = '文档保存失败';break;
 			case 14: var $hint = '运行环境错误';break;
 			case 15: var $hint = '转换成功';break;
@@ -486,13 +488,7 @@ define(['tool'], function(tool){
                     var listFileType = listLi.find('td').eq(0).children('label').find('i').attr('file-state_type');
                     var success      = listLi.find('td').eq(0).children('label').find('i').attr('file-state');
                     var id           = listLi.find('td').eq(0).attr('id');
-                    //file.size == listFileSize &&//&&  listFileName == file.tname
-                //  listFileName  = listFileName.replace(/&nbsp;/ig,'');
-                
-                  // t = listFileName.indexOf(file.tname);
-//                    console.log(t)
-//                    console.log('............')
-//                    console.log(file.tname)
+
                     if( typeof(id)== 'undefined' && listFileMd5  != file.md5file  && listFileName == file.tname  && success !=='successful' && listFileType !== '4' && listFileType!== '5' && listFileType!== '8' ){
                             if(file.state  == 1){
                                     listLi.find('td').eq(7).find('div').html('开始转换').attr("onclick","conversion.startTransition(this)");
@@ -671,7 +667,7 @@ define(['tool'], function(tool){
                                 }
                                 if($("#Authorizationtype").val()  == conversion._this_number_Permission_1 ) {
                                     if(number_page_pdf > 500){
-                                        $(this).parents('tr').find('td').eq(6).find('div').removeClass('success').addClass('failure').html('文档页数超出限制,请充值后尝试');
+                                        $(this).parents('tr').find('td').eq(6).find('div').removeClass('success').addClass('failure').html('文档页数超出限制<br />请充值后尝试');
                                         $(this).parents('tr').find('td').eq(7).find('div').removeClass('start_switch').addClass('rg_vip').removeAttr("onclick").html(conversion.getHost(6));
                                        $(this).find('i').attr('file-state','failure');
                                         tool.fileAjax({"fileId": $(this).parents('tr').find('td').eq(0).attr('id')},'upload_state_save');
@@ -860,38 +856,22 @@ define(['tool'], function(tool){
                                                             var delTime  = $(".upload_file .checked").eq(b).parents('tr').find('td').eq(0).attr('del-time');
 
                                                             var jsonInfo = {"fid":fileId,"fileName":fileName,"fsize":fileSize,"delTime":delTime,"dstyle":2};
-                                                            delJson.push(jsonInfo);
-                                                            //console.debug(inputL);				
+                                                            delJson.push(jsonInfo);			
                                                             if(inputL>0){
-
                                                                     var fileInfoList = fileType+'_'+fileSize+'_'+fileName;
-                                                                    //console.debug(fileInfoList);
                                                                     var valIndex = $.inArray(fileInfoList,fileInput);
-                                                                    //console.debug(valIndex);
                                                                     if(valIndex != -1){
-
                                                                             fileInput.splice(valIndex,1);
                                                                     }
                                                                     $("#fileVal").val(fileInput.join(','));
-                                                            }
-                                                            //var fileId = $(".checkbox").eq(b).parent().parent().parent('li').eq(0);
-                                                            //var fileId = liInfo.attr('id');
-                                                            //var fdel   = $(".checkbox").eq(b).siblings('.delete').attr('f-del');
-                                                            //var iState = $(".checkbox").eq(b).attr('file-state');
-                                                            //if(iState != 'failure' && fdel == 'off')
-                                                         //   console.log($(".table tr").eq(b).html())
-                                                                    //uploader.removeFile(fileId,true);//删除插件里面的队列文件				
+                                                            }		
                                                               $(".upload_file .checked").eq(b).parents('tr').remove();//删除页面节点
 
                                                     }
                                                     if(delJson.length > 0){
                                                             tool.fileAjax(delJson,'delete');
                                                     }
-                                                    var liLen = $(".table tr");
-                                                    if(liLen.length == 0){
-                                                            window.timestamp = Date.parse(new Date()) / 1000;
-                                                            tool.setCookie('timestamp',window.timestamp,0.354);
-                                                    }					
+//                                                    }					
                                             }
                                     }
                                     window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm,option);
@@ -911,29 +891,17 @@ define(['tool'], function(tool){
                         title: "删除",
                         btn: parseInt("0011", 2),
                         onOk: function () {
-
                             if (fileInput.length > 0) {
-
                                 var fileInfo = fileType + '_' + fileSize + '_' + fileName;
-
                                 var valIndex = $.inArray(fileInfo, fileInput);
                                 if (valIndex != -1) {
-
                                     fileInput.splice(valIndex, 1);
                                 }
                                 $("#fileVal").val(fileInput.join(','));
                             }
                             _this.parents('tr').remove();
-                            //if(iState != 'failure' && fdel == 'off')
-                            //uploader.removeFile(fileId,true);//删除插件里面的队列文件
-
                             var jsonInfo = [{"fid": fileId, "fileName": fileName, "fsize": fileSize, "dstyle": 1, "delTime": delTime}];
                             tool.fileAjax(jsonInfo, 'delete');
-                            var liLen = $(".table tr");
-                            if (liLen.length == 0) {
-                                window.timestamp = Date.parse(new Date()) / 1000;
-                                tool.setCookie('timestamp', window.timestamp, 0.354);
-                            }
                         }
                     }
                     window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.info, option);
@@ -946,10 +914,6 @@ define(['tool'], function(tool){
                             }else{
                                $(this).addClass('checked');
                             }
-            //         if($(this).find('i').attr('file-state') == 'successful'){
-            //
-            //         }
-
                  });
                 // 全选
                 $('.file_operation .all_choose').click(function(){

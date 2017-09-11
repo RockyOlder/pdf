@@ -4,9 +4,9 @@
         <thead>
             <tr class="title">
                 <th colspan="22">
-<!--                    <p class="conOneP" style="float: left;">
+                    <p class="conOneP" style="float: left;">
                         <a href="javascript:void(0);" class="btnG ico_explort">导出Excel</a>
-                    </p>-->
+                    </p>
 <!--                    <p class="conOneP" style="float: left;">
                         <a href="javascript:void(0);" class="btnG Set" id="setAutoOrders">批量审核订单</a>
                     </p>-->
@@ -101,10 +101,10 @@
                 </td>
                 <td> <span style="width:120px;">{$order.o_create_time}</span></td>		
               <td>{$order.m_id}</td>	
-              <td>pc</td>
+              <td>{$order.o_source}</td>
               <td>  <span style="margin-left:10px;">{$order.str_pay_status}</span></td>
                <td>{$order.pc_name}</td>
-               <td>{$order.o_source}</td>
+               <td>{$order.o_source_type}</td>
                                <td>{$order.o_all_price}</td>
                                  <td>{$order.pdf_type_order}</td>
                                  <td>{$order.oi_nums}</td>
@@ -268,36 +268,7 @@
 			data['search'] = requset;
 			
 		}
-        $.post("{:U('Admin/Orders/selectOrdersPropetry')}",{},function(dataHTML){
-            $("#select_orders_property").html(dataHTML);
-            $("#select_orders_property").dialog({
-                    height:'auto',
-                    width:'auto',
-                    resizable:false,
-                    modal:true,
-                    title:'请选择要导出的可选字段',
-                    buttons: {
-                        '确认': function() {
-                            data['export_type'] = {};
-                            $('.goods_sale_property_checked').each(function(i){
-                                data['export_type'][$(this).attr('ename')] = {}
-                                data['export_type'][$(this).attr('ename')] = $(this).attr('e_value');
-                            });
-                            explortOrder(data);
-                            $("#select_orders_property").dialog('destroy');
-                            $('#pro_dialog').append($('#select_orders_property'));
-                        },
-                        '关闭': function() {
-                            $("#select_orders_property").dialog('destroy');
-                            $('#pro_dialog').append($('#select_orders_property'));
-                        }
-                    },
-                    close:function(){
-                        $("#select_orders_property").dialog('destroy');
-                        $('#pro_dialog').append($('#select_orders_property'));
-                    }
-                });
-        },'html')
+           explortOrder(data);
     }
     
     function explortOrder(data){

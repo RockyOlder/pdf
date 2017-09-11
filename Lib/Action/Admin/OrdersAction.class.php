@@ -298,7 +298,7 @@ class OrdersAction extends AdminAction {
         //数据分页处理，获取符合条件的记录数并分页显示
         $count = D("Orders")->join($join_where)->where($ary_where)->order(array(C("DB_PREFIX") . 'orders.o_id' => 'desc'))->count('distinct(fx_orders.o_id)');
         $string_count = $count;
-        $obj_page = new Pager($string_count, 10);
+        $obj_page = new Pager($string_count, 20);
         $page = $obj_page->showpage();
         //订单数据获取
         $array_order = array(C("DB_PREFIX") . 'orders.o_id' => 'desc');
@@ -3410,6 +3410,7 @@ class OrdersAction extends AdminAction {
         if (!empty($ary_post['end']) && $ary_post['end'] > 50) {
             $ary_post['end'] = 50;
         }
+        
         //导出选中
         if(!empty($ary_post['orders_type']) && $ary_post['orders_type'] == '1'){
             $ary_order_datas['o_ids'] = $ary_post['o_ids'];
@@ -3449,11 +3450,22 @@ class OrdersAction extends AdminAction {
             }
             //如果需要根据会员名称进行搜索
             if (!empty($array_search_where['m_name']) && isset($array_search_where['m_name'])) {
-                $ary_where[C("DB_PREFIX") . 'members.m_name'] = $array_search_where['m_name'];
+                $ary_where[C("DB_PREFIX") . 'members.m_name'] = array('like',$array_search_where['m_name']."%");
             }
             //如果需要根据收货人进行搜索
             if (!empty($array_search_where['o_receiver_name']) && isset($array_search_where['o_receiver_name'])) {
                 $ary_where[C("DB_PREFIX") . 'orders.o_receiver_name'] = $array_search_where['o_receiver_name'];
+            }
+            //根据来源id搜索
+            if (!empty($array_search_where['o_source_type']) && isset($array_search_where['o_source_type'])) {
+                $ary_where[C("DB_PREFIX") . 'orders.o_source_type'] = $array_search_where['o_source_type'];
+            }
+            if (!empty($array_search_where['o_source']) && isset($array_search_where['o_source'])) {
+                $ary_where[C("DB_PREFIX") . 'orders.o_source'] = $array_search_where['o_source'];
+            }
+            //根据商品id 搜索
+            if (!empty($array_search_where['pdt_id']) && isset($array_search_where['pdt_id'])) {
+                $ary_where[C("DB_PREFIX") . 'orders_items.pdt_id'] = $array_search_where['pdt_id'];
             }
             //判断订单状态
             if (isset($array_search_where['o_status'])) {
@@ -3617,15 +3629,14 @@ class OrdersAction extends AdminAction {
                 $ary_order_datas['end'] = $ary_post['end'];
             }
         }
-
         if(!empty($ary_post['orders_type']) && $ary_post['orders_type'] == 4){
             //订单数据获取
             $array_order = array(C("DB_PREFIX") . 'orders.o_id' => 'desc');
 			$ocount =  M('Orders',C('DB_PREFIX'),'DB_CUSTOM')
 					->Distinct(true)
-					->field(C("DB_PREFIX")."orders.o_id,fx_admin.u_name as admin_name,".C("DB_PREFIX")."orders.*,".C("DB_PREFIX")."logistic_type.*,".C("DB_PREFIX")."logistic_corp.*,".C("DB_PREFIX")."payment_cfg.*,".C("DB_PREFIX")."members.*")
-					->join(" ".C("DB_PREFIX")."logistic_type ON ".C("DB_PREFIX")."logistic_type.lt_id=".C("DB_PREFIX")."orders.lt_id")
-					->join(" ".C("DB_PREFIX")."logistic_corp ON ".C("DB_PREFIX")."logistic_type.lc_id=".C("DB_PREFIX")."logistic_corp.lc_id")
+					->field(C("DB_PREFIX")."orders.o_id,fx_admin.u_name as admin_name,".C("DB_PREFIX")."orders.*,".C("DB_PREFIX")."payment_cfg.*,".C("DB_PREFIX")."members.m_email,".C("DB_PREFIX")."members.m_name,".C("DB_PREFIX")."orders_items.pdt_id,".C("DB_PREFIX")."orders_items.oi_nums,".C("DB_PREFIX")."orders_items.oi_g_name")
+					//->join(" ".C("DB_PREFIX")."logistic_type ON ".C("DB_PREFIX")."logistic_type.lt_id=".C("DB_PREFIX")."orders.lt_id")
+					//->join(" ".C("DB_PREFIX")."logistic_corp ON ".C("DB_PREFIX")."logistic_type.lc_id=".C("DB_PREFIX")."logistic_corp.lc_id")
 					->join(" ".C("DB_PREFIX")."payment_cfg ON ".C("DB_PREFIX")."payment_cfg.pc_id=".C("DB_PREFIX")."orders.o_payment")
 					->join(" ".C("DB_PREFIX")."orders_items ON ".C("DB_PREFIX")."orders_items.o_id=".C("DB_PREFIX")."orders.o_id")
 					->join(" ".C("DB_PREFIX")."members ON ".C("DB_PREFIX")."members.m_id=".C("DB_PREFIX")."orders.m_id")
@@ -3640,9 +3651,9 @@ class OrdersAction extends AdminAction {
 					$string_limit = $page . ',' . $pagesize;
 					$tmp_ary_data =   M('Orders',C('DB_PREFIX'),'DB_CUSTOM')
 					->Distinct(true)
-					->field(C("DB_PREFIX")."orders.o_id,fx_admin.u_name as admin_name,".C("DB_PREFIX")."orders.*,".C("DB_PREFIX")."logistic_type.*,".C("DB_PREFIX")."logistic_corp.*,".C("DB_PREFIX")."payment_cfg.*,".C("DB_PREFIX")."members.*")
-					->join(" ".C("DB_PREFIX")."logistic_type ON ".C("DB_PREFIX")."logistic_type.lt_id=".C("DB_PREFIX")."orders.lt_id")
-					->join(" ".C("DB_PREFIX")."logistic_corp ON ".C("DB_PREFIX")."logistic_type.lc_id=".C("DB_PREFIX")."logistic_corp.lc_id")
+					->field(C("DB_PREFIX")."orders.o_id,fx_admin.u_name as admin_name,".C("DB_PREFIX")."orders.*,".C("DB_PREFIX")."payment_cfg.*,".C("DB_PREFIX")."members.m_email,".C("DB_PREFIX")."members.m_name,".C("DB_PREFIX")."orders_items.pdt_id,".C("DB_PREFIX")."orders_items.oi_nums,".C("DB_PREFIX")."orders_items.oi_g_name")
+					//->join(" ".C("DB_PREFIX")."logistic_type ON ".C("DB_PREFIX")."logistic_type.lt_id=".C("DB_PREFIX")."orders.lt_id")
+					//->join(" ".C("DB_PREFIX")."logistic_corp ON ".C("DB_PREFIX")."logistic_type.lc_id=".C("DB_PREFIX")."logistic_corp.lc_id")
 					->join(" ".C("DB_PREFIX")."payment_cfg ON ".C("DB_PREFIX")."payment_cfg.pc_id=".C("DB_PREFIX")."orders.o_payment")
 					->join(" ".C("DB_PREFIX")."orders_items ON ".C("DB_PREFIX")."orders_items.o_id=".C("DB_PREFIX")."orders.o_id")
 					->join(" ".C("DB_PREFIX")."members ON ".C("DB_PREFIX")."members.m_id=".C("DB_PREFIX")."orders.m_id")
@@ -3669,19 +3680,6 @@ class OrdersAction extends AdminAction {
             $ary_pay_status = array('o_pay_status' => $ad_val['o_pay_status']);
             $str_pay_status = D("Orders")->getOrderItmesStauts('o_pay_status', $ary_pay_status);
             $ary_tmp_data[$ad_key]['str_pay_status'] = $str_pay_status;
-            if($ary_tmp_data[$ad_key]['o_receiver_mobile']){
-                $ary_tmp_data[$ad_key]['o_receiver_mobile'] = decrypt($ary_tmp_data[$ad_key]['o_receiver_mobile']);
-            }
-            if($ary_tmp_data[$ad_key]['o_receiver_telphone']){
-                $ary_tmp_data[$ad_key]['o_receiver_telphone'] = decrypt($ary_tmp_data[$ad_key]['o_receiver_telphone']);
-            }
-            if($ary_tmp_data[$ad_key]['invoice_phone']){
-                $ary_tmp_data[$ad_key]['invoice_phone'] = decrypt($ary_tmp_data[$ad_key]['invoice_phone']);
-            }
-
-            //订单的发货状态
-            $ary_orders_status = D("Orders")->getOrdersStatus($ad_val['o_id']);
-            $ary_tmp_data[$ad_key]['deliver_status'] = $ary_orders_status['deliver_status'];
             $ary_tmp_data[$ad_key]['pc_name'] = $array_payment_cfg[$ad_val["o_payment"]];
             foreach ($ary_orders_item as $oi_k=>$oi_v){
                 $ary_cate = D('RelatedGoodsCategory')->field('gc.gc_id,gc.gc_name,gc.gc_parent_id,gc.gc_is_parent')->join('fx_goods_category as gc on(fx_related_goods_category.gc_id=gc.gc_id)')->where(array('fx_related_goods_category.g_id'=>$oi_v['g_id']))->select();
@@ -3701,16 +3699,6 @@ class OrdersAction extends AdminAction {
                         }
                     }
                 }
-                $json_pmn_config = D('promotion')->where(array('pmn_name'=>trim($oi_v['promotion'])))->getField('pmn_config');
-                if(isset($json_pmn_config) && !empty($json_pmn_config)){
-                    $array_pmn_config = json_decode($json_pmn_config,true);
-                    $ary_orders_item[$oi_k]['oi_price'] -= $array_pmn_config['cfg_discount'];
-                }
-                $gc_name = trim($gc_name,'，');
-                $ary_last_gc_name = trim($ary_last_gc_name,'，');
-                $ary_orders_item[$oi_k]['gc_name'] = $gc_name;
-                $ary_orders_item[$oi_k]['last_gc_name'] = $ary_last_gc_name;
-                $ary_orders_item[$oi_k]['gb_name'] = D('GoodsBrand')->join('fx_goods as g on(g.gb_id=fx_goods_brand.gb_id)')->where(array('g.g_id'=>$oi_v['g_id']))->getField('gb_name');
 
                 unset($gc_name);
                 unset($ary_last_gc_name);
@@ -3720,286 +3708,58 @@ class OrdersAction extends AdminAction {
 
         }
         //dump($ary_data);exit;
-		$ary_fields_avaliable = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ');
+		$ary_fields_avaliable = array('A','B','C','D','E','F','G','H','I','J','K','L');//,'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ'
         if (!empty($ary_data) && is_array($ary_data)) {
             $heards = array();$fields = array();
             $export_type = $ary_post['export_type'];
+            
             array_push($heards,'订单编号');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'支付状态');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'发货状态');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'是否预售订单');array_push($fields,array_shift($ary_fields_avaliable));
             array_push($heards,'下单时间');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'支付时间');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'发货时间');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'会员');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'客服');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'产品分类');array_push($fields,array_shift($ary_fields_avaliable));
-            if($export_type['二级分类']){
-                array_push($heards,'二级分类');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['品牌名称']){
-                array_push($heards,'品牌名称');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            array_push($heards,'产品名称');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'商品价格');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'成交价');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'数量');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'商品小计');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'订单总价');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'配送费用');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'已支付金额');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'支付手续费');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'优惠券使用金额');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'优惠券编号');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'优惠券面额');array_push($fields,array_shift($ary_fields_avaliable));
-            if($export_type['赠送积分']){
-                array_push($heards,'赠送积分');array_push($fields,array_shift($ary_fields_avaliable));
-            }
+            array_push($heards,'用户ID');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'来源ID');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'支付状态');array_push($fields,array_shift($ary_fields_avaliable));
             array_push($heards,'支付方式');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'收货人');array_push($fields,array_shift($ary_fields_avaliable));
-            if($export_type['收货人手机']){
-                array_push($heards,'收货人手机');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['收货人电话']){
-                array_push($heards,'收货人电话');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            array_push($heards,'省份');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'市');array_push($fields,array_shift($ary_fields_avaliable));
-            array_push($heards,'县/区');array_push($fields,array_shift($ary_fields_avaliable));
-            if($export_type['收货地址']){
-                array_push($heards,'收货地址');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            array_push($heards,'邮编');array_push($fields,array_shift($ary_fields_avaliable));
-            if($export_type['买家留言']){
-                array_push($heards,'买家留言');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['卖家备注']){
-                array_push($heards,'卖家备注');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['是否开发票']){
-                array_push($heards,'是否开发票');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['个人姓名']){
-                array_push($heards,'个人姓名');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['发票类型']){
-                array_push($heards,'发票类型');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['发票抬头']){
-                array_push($heards,'发票抬头');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['发票内容']){
-                array_push($heards,'发票内容');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['银行账号']){
-                array_push($heards,'银行账号');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['开户银行']){
-                array_push($heards,'开户银行');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['注册电话']){
-                array_push($heards,'注册电话');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['注册地址']){
-                array_push($heards,'注册地址');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['纳税人识别号']){
-                array_push($heards,'纳税人识别号');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['商品编码']){
-                array_push($heards,'商品编码');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['商品货号']){
-                array_push($heards,'商品货号');array_push($fields,array_shift($ary_fields_avaliable));
-            }
-            if($export_type['规格名称']){
-                array_push($heards,'规格名称');array_push($fields,array_shift($ary_fields_avaliable));
-            }
+            array_push($heards,'支付入口');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'充值金额');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'充值类型');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'次数/月份');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'会员名');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'邮箱');array_push($fields,array_shift($ary_fields_avaliable));
+            array_push($heards,'商品名字');array_push($fields,array_shift($ary_fields_avaliable));
 
-            if($export_type['售后状态']){
-                array_push($heards,'售后状态');array_push($fields,array_shift($ary_fields_avaliable));
-            }
             foreach ($ary_data as $ky => $vl) {
-                $is_invoice = '';
-                if ($vl['is_invoice'] == '1') {
-                    $is_invoice = '是';
-                } else {
-                    $is_invoice = '否';
-                }
-                $o_pre_sale = '';
-                if ($vl['o_pre_sale'] == '1') {
-                    $o_pre_sale = '是';
-                } else {
-                    $o_pre_sale = '否';
-                }
-                $invoice_type = '';
-                if ($vl['invoice_type'] == '1') {
-                    $invoice_type = '普通发票';
-                } else {
-                    $invoice_type = '增值税发票';
-                }
-                $invoice_head = '';
-                if($vl['invoice_head'] == '1'){
-                    $invoice_head = '个人';
-                }else{
-                    $invoice_head = '单位';
-                }
-                $pay_time = D('OrdersLog')->where(array('o_id'=>$vl['o_id'],'ol_behavior'=>'支付成功'))->getField('ol_create');
-                $wait_time = D('OrdersLog')->where(array('o_id'=>$vl['o_id'],'ol_behavior'=>'发货成功'))->getField('ol_create');
                 $contents[0][$ky] = array();
                 array_push($contents[0][$ky],$vl['o_id']." ");//订单编号
-                array_push($contents[0][$ky],$vl['str_pay_status']);//订单状态
-                array_push($contents[0][$ky],$vl['deliver_status']);//发货状态
-                array_push($contents[0][$ky],$o_pre_sale);//是否预售订单
                 array_push($contents[0][$ky],$vl['o_create_time']);//下单时间
-                array_push($contents[0][$ky],$pay_time);//付款时间
-                array_push($contents[0][$ky],$wait_time);//发货时间
-                array_push($contents[0][$ky],$vl['m_name']);//会员
-                if(isset($vl['admin_id']) && $vl['admin_id'] > 0) {
-                    $ary_admin = D('Admin')->getAdminInfoById($vl['admin_id'], array('u_name'));
-                    if(is_array($ary_admin) && !empty($ary_admin)) {
-                        array_push($contents[0][$ky],$ary_admin['u_name']);//客服
-                    }
-                }else{
-                    array_push($contents[0][$ky],'暂无客服');//客服
-                }
-                array_push($contents[0][$ky],empty($vl['last_gc_name'])?$vl['gc_name']:$vl['last_gc_name']);//产品分类
-                if($export_type['二级分类']){
-                    array_push($contents[0][$ky],$vl['gc_name']);//二级分类
-                }
-                if($export_type['品牌名称']){
-                    array_push($contents[0][$ky],$vl['gb_name']);//品牌名称
-                }
-                array_push($contents[0][$ky],$vl['oi_g_name']);//产品名称
-                array_push($contents[0][$ky],$vl['pdt_sale_price']);//商品价格
-                array_push($contents[0][$ky],$vl['oi_price']);//成交价
-                array_push($contents[0][$ky],$vl['oi_nums']);//数量
-                array_push($contents[0][$ky],$vl['oi_price']*$vl['oi_nums']);//商品小计
-                array_push($contents[0][$ky],$vl['o_all_price']);//订单总价
-                array_push($contents[0][$ky],$vl['o_cost_freight']);//配送费用
-                array_push($contents[0][$ky],$vl['o_pay']);//已支付金额
-                array_push($contents[0][$ky],$vl['o_cost_payment']);//支付手续费
-                array_push($contents[0][$ky],$vl['o_coupon_menoy']);//优惠券使用金额
-                array_push($contents[0][$ky],$vl['coupon_sn']);//优惠券编号
-                array_push($contents[0][$ky],$vl['coupon_value']);//优惠券面额
-                if($export_type['赠送积分']){
-                    array_push($contents[0][$ky],$vl['o_reward_point']);//优惠券面额
-                }
+                array_push($contents[0][$ky],$vl['m_id']);//用户ID
+                array_push($contents[0][$ky],$vl['o_source']);//来源ID
+                array_push($contents[0][$ky],$vl['str_pay_status']);//订单状态
                 array_push($contents[0][$ky],$vl['pc_name']);//支付方式
-                array_push($contents[0][$ky],$vl['o_receiver_name']);//收货人
-                if($export_type['收货人手机']){
-                    array_push($contents[0][$ky],$vl['o_receiver_mobile']);//收货人手机
+                array_push($contents[0][$ky],$vl['o_source_type']);//支付入口
+                array_push($contents[0][$ky],$vl['o_all_price']);//订单总价
+                switch ($vl['pdt_id']){ //充值类型
+                    case 1:
+                         array_push($contents[0][$ky],'次数');
+                        break;
+                    case 2:
+                        array_push($contents[0][$ky],'一月');
+                        break;
+                    case 3:
+                        array_push($contents[0][$ky],'三月');
+                        break;  
+                    case 4:
+                        array_push($contents[0][$ky],'六月');
+                        break;
+                    case 5:
+                        array_push($contents[0][$ky],'一年');
+                        break;
+                    default :
+                        array_push($contents[0][$ky],'二年');
                 }
-                if($export_type['收货人电话']){
-                    array_push($contents[0][$ky],$vl['o_receiver_telphone']);//收货人电话
-                }
-                array_push($contents[0][$ky],$vl['o_receiver_state']);//省份
-                array_push($contents[0][$ky],$vl['o_receiver_city']);//市
-                array_push($contents[0][$ky],$vl['o_receiver_county']);//区
-                if($export_type['收货地址']){
-                    array_push($contents[0][$ky],$vl['o_receiver_address']);//收货地址
-                }
-                array_push($contents[0][$ky],$vl['o_receiver_zipcode']);//收货人邮编
-                if($export_type['买家留言']){
-                    array_push($contents[0][$ky],$vl['o_buyer_comments']);//买家留言
-                }
-                if($export_type['卖家备注']){
-                    array_push($contents[0][$ky],$vl['o_seller_comments']);//卖家备注
-                }
-                if($export_type['是否开发票']){
-                    array_push($contents[0][$ky],$is_invoice);//是否开发票
-                }
-                if($export_type['个人姓名']){
-					if($is_invoice == '是'){
-						array_push($contents[0][$ky],$vl['invoice_people'].$vl['invoice_name']);//个人姓名
-					}else{
-						array_push($contents[0][$ky],' ');//个人姓名
-					} 
-                }
-                if($export_type['发票类型']){
-					if($is_invoice == '是'){
-						array_push($contents[0][$ky],$invoice_type);//发票类型
-					}else{
-						array_push($contents[0][$ky],' ');//发票类型
-					}
-                }
-                if($export_type['发票抬头']){
-					if($is_invoice == '是'){
-						array_push($contents[0][$ky],$invoice_head);//发票抬头
-					}else{
-						array_push($contents[0][$ky],' ');//发票抬头
-					}
-                }
-                if($export_type['发票内容']){
-                    array_push($contents[0][$ky],$vl['invoice_content']);//发票内容
-                }
-                if($export_type['银行账号']){
-                    array_push($contents[0][$ky],$vl['invoice_account']);//银行账号
-                }
-                if($export_type['开户银行']){
-                    array_push($contents[0][$ky],$vl['invoice_bank']);//开户银行
-                }
-                if($export_type['注册电话']){
-                    array_push($contents[0][$ky],$vl['invoice_phone']);//注册电话
-                }
-                if($export_type['注册地址']){
-                    array_push($contents[0][$ky],$vl['invoice_address']);//注册地址
-                }
-                if($export_type['纳税人识别号']){
-                    array_push($contents[0][$ky],$vl['invoice_identification_number']);//纳税人识别号
-                }
-                if($export_type['商品编码']){
-                    array_push($contents[0][$ky],$vl['g_sn']);
-                }
-                if($export_type['商品货号']){
-                    array_push($contents[0][$ky],$vl['pdt_sn']);
-                }
-                if($export_type['规格名称']){
-                    $pdt_name = D('GoodsSpec')->getProductsSpec($vl['pdt_id']);
-                    array_push($contents[0][$ky],$pdt_name);
-                }
-                if($export_type['售后状态']){
-                    $ary_afersale = M('orders_refunds', C('DB_PREFIX'), 'DB_CUSTOM')->where(array('o_id' => $vl['o_id']))->order('or_create_time asc')->select();
-                    if (!empty($ary_afersale) && is_array($ary_afersale)) {
-                        foreach ($ary_afersale as $keyaf => $valaf) {
-                            if ($valaf['or_service_verify'] == '1' && $valaf['or_finance_verify'] == '1') {
-                                M('orders_refunds', C('DB_PREFIX'), 'DB_CUSTOM')->where(array('o_id' => $vl['o_id'],'or_update_time'=>date('Y-m-d H:i:s')))->save(array('or_processing_status' => 1));
-                            }
-                            //退款
-                            if ($valaf['or_refund_type'] == 1) {
-                                switch ($valaf['or_processing_status']) {
-                                    case 0:
-                                        array_push($contents[0][$ky],'退款中');
-                                        break;
-                                    case 1:
-                                        array_push($contents[0][$ky],'退款成功');
-                                        break;
-                                    case 2:
-                                        array_push($contents[0][$ky],'退款驳回');
-                                        break;
-                                    default:
-                                        array_push($contents[0][$ky],'暂无'); //没有退款
-                                }
-                            } elseif ($valaf['or_refund_type'] == 2) {         //退货
-                                switch ($valaf['or_processing_status']) {
-                                    case 0:
-                                        array_push($contents[0][$ky],'退货中');
-                                        break;
-                                    case 1:
-                                        array_push($contents[0][$ky],'退货成功');
-                                        break;
-                                    case 2:
-                                        array_push($contents[0][$ky],'退货驳回');
-                                        break;
-                                    default:
-                                        array_push($contents[0][$ky],'暂无');
-                                }
-                            }
-                        }
-                    }elseif(empty($ary_afersale)){
-                        array_push($contents[0][$ky],'暂无记录');
-                    }
-                }
+                array_push($contents[0][$ky],$vl['oi_nums']);//次数/月份
+                array_push($contents[0][$ky],$vl['m_name']);//会员名字
+                array_push($contents[0][$ky],$vl['m_email']);//会员邮箱
+                array_push($contents[0][$ky],$vl['oi_g_name']);//商品名字 
             }
             $filexcel = APP_PATH.'Public/Uploads/'.CI_SN.'/excel/';
             if(!is_dir($filexcel)){
@@ -4091,7 +3851,10 @@ class OrdersAction extends AdminAction {
 //			file_put_contents($filexcel.$file_name, $csv_data) ;
 		}
 	}
-	public function selectOrdersPropetry(){
+    public function selectOrdersPropetry(){
+        $this->display();
+    }
+    public function selectOrdersPropetryData(){
         $this->display();
     }
     

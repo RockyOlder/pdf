@@ -72,13 +72,13 @@
 </div>                   
                      </div>
                  </div><?php endif; ?>
-
                 <div class="recharge_box">&nbsp;&nbsp;│&nbsp;&nbsp;<a href="<?php echo U('Home/Products/ConversionFeeDetail');?>" class="recharge">充值</a></div>
                 <input type="hidden" value="<?php echo ($_SESSION['Members']['m_id']); ?>" name ="gy_member_open" id="gy_member_open"/>
                 <input type="hidden" value="<?php echo ($redirect); ?>" name ="redirect" id="redirect"/>
                 <input type="hidden" id="Authorizationtype" value="<?php echo ($ary_member["conversion_type"]); ?>" />
                 <input type="hidden" id="Free_authorization" value="<?php echo ($ary_member["Free_authorization"]); ?>" />
                 <input type="hidden" id="ACTIVITY_OPEN" value="<?php echo ($ACTIVITY_OPEN); ?>" />
+                <input type="hidden" id="LoadDataType" value="<?php echo ($_SESSION['Members']['LoadDataType']); ?>" />
             </div>
         </div>
     </div>
@@ -88,7 +88,7 @@
             <?php if($ACTIVITY_OPEN != 1): ?><div class="activity_banner">
                     <img src="__IMAGES__images/1_03.jpg" alt="" />
                     <div class="content">
-                       <a href="<?php echo U('Home/Index/YearMiddlePage');?>">
+                       <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>0));?>" class="Behavior_Statistics_Banner">
                         <div class="left">
                             <img src="__IMAGES__images/txt.png" alt="" />                       
                         </div>
@@ -99,13 +99,12 @@
                         </div>
                         </a>
                         <div class="linkbox">
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#01');?>" class="first">买一个月送5次转换</a>
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#02');?>">买一年送3个月</a>
-                            <a href="<?php echo U('Home/Index/YearMiddlePage#03');?>">买二年送6个月</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#01',array('s_type'=>0));?>" class="first">买一个月送5次转换</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#02',array('s_type'=>0));?>">买一年送3个月</a>
+                            <a href="<?php echo U('Home/Index/YearMiddlePage#03',array('s_type'=>0));?>">买二年送6个月</a>
                         </div>
                     </div>
                 </div><?php endif; ?>
-
             
 <div class="main_header">
                 <ul>
@@ -297,7 +296,7 @@
                 <div class="bottom">
                     <a href="#" class="btn btn_recharge">立即充值</a>
                 </div> 
-        </div>
+        </div> 
         <div class="content" name="content_split">
             <div class="icon close"></div>
                  <div class="txt">
@@ -320,13 +319,32 @@
                     <a href="####" class="btn btn_only_change">只转50页</a>
                     <a href="#" class="btn btn_recharge">立即充值</a>
                 </div> 
-        </div>          
+        </div>        
+        <div class="content" name="teachesDay">
+            <div class="icon close" itemid="1" ></div>
+            <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>1));?>" itemtype="1" itemid="1" class="ClickTheBanner" >
+                <img src="__IMAGES__images/x01.jpg"  alt="教师节抢购" />
+            </a>
+        </div>
+        <div class="content" name="freeContent">
+            <div class="icon close" itemid="2"></div>
+            <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>2));?>" itemtype="1" itemid="2" class="ClickTheBanner">
+                <img src="__IMAGES__images/x02.jpg"  alt="教师节抢购" />
+            </a>
+        </div>             
     </div>
-    <input type="hidden" id="year" value="<?php echo ($year); ?>" />
-    <input type="hidden" id="month" value="<?php echo ($month); ?>" />
-    <input type="hidden" id="day" value="<?php echo ($day); ?>" />
+<input type="hidden" id="year" value="<?php echo ($year); ?>" />
+<input type="hidden" id="month" value="<?php echo ($month); ?>" />
+<input type="hidden" id="day" value="<?php echo ($day); ?>" />
 <input type="hidden" id="start_time" value="<?php echo ($start_time); ?>" />
 <input type="hidden" id="halfMonther" value="<?php echo ($halfMonther); ?>" />
+<!--        <script src="__JS__jquery.js" type="text/javascript"></script>
+
+	<script src="__JS__fixBox.js" type="text/javascript"></script>-->
+        	<script>
+	//首页fix导航
+  
+	</script>
 <!--<script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>-->
 <script type="text/javascript" src="/Public/Tpl/v78/<?php echo ($view); ?>/js/require.js" data-main="/Public/Tpl/v78/<?php echo ($view); ?>/js/main"  defer async="true" ></script>
 

@@ -1729,6 +1729,7 @@ class UserAction extends HomeAction {
                     );
                     //更新用户购买时间及数量
                     if($result['ps_buy_type'] == 1){
+                         $result['ps_buy_nunmber'] = $result['ps_buy_nunmber'] + $ary_order['ps_buy_giving'];
                          $updata_data['number_buy']= $ary_member['number_buy'] + $result['ps_buy_nunmber'];
                          $updata_data['number_remaining']= $ary_member['number_remaining'] + $result['ps_buy_nunmber'];
                     }else if($result['ps_buy_type'] == 2){
@@ -1984,6 +1985,7 @@ class UserAction extends HomeAction {
                     $res_orders_log = D('OrdersLog')->add($ary_orders_log);
                                         //更新用户购买时间及数量
                     if($result['ps_buy_type'] == 1){
+                         $result['ps_buy_nunmber'] = $result['ps_buy_nunmber'] + $ary_order['ps_buy_giving'];
                          $updata_data['number_buy']= $ary_member['number_buy'] + $result['ps_buy_nunmber'];
                          $updata_data['number_remaining']= $ary_member['number_remaining'] + $result['ps_buy_nunmber'];
                     }else if($result['ps_buy_type'] == 2){
@@ -2448,8 +2450,11 @@ public function getRandChar($length=2)
             }
         }else{
             $name = $this->filter($ary_result['user_info']['nickname']);
-            $member->where(array('m_id'=>$ary_member['m_id'],'m_name'=>$name))->save(array('login_type'=>1));
+            $member->where(array('m_id'=>$ary_member['m_id'],'m_name'=>$name,'open_name'=>$name))->save(array('login_type'=>1));
             $ary_member['login_type'] = 1;
+            $ary_member['open_name'] = $name;
+            $ary_member['m_name'] = $name;
+            wcache($ary_member['m_id'], $ary_member, 'member');
         }
 //        $Select  = D("PdfList")->where(array('m_id'=>$ary_member['m_id'],'fstate'=>array('neq',99),'cstate'=>1))->select();
 //        if(!empty($Select)){
@@ -2517,7 +2522,7 @@ public function getRandChar($length=2)
                  $str_type = $source;
             }
             $source_id = M('source_platform',C('DB_PREFIX'),'DB_CUSTOM')->where(array('sp_code'=>$str_type,'sp_stauts'=>1))->getField('sp_id');
-            if(!D('RelatedMembersSourcePlatform')->where(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))->count()){
+            if(!D('RelatedMembersSourcePlatform')->where(array('m_id'=>$ary_member['m_id']))->count()){  //'sp_id'=>$source_id,
                 if(false == D('RelatedMembersSourcePlatform')->add(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))){
                     M('',C('DB_PREFIX'),'DB_CUSTOM')->rollback();
                     $this->error('平台不存在，请联系管理员');
@@ -2623,8 +2628,12 @@ public function getRandChar($length=2)
                 $ary_member = $member->getInfo('',$ary_result['open_id']);
             }
         }else{
-            $member->where(array('m_id'=>$ary_member['m_id']))->save(array('login_type'=>1));
+            $name = $this->filter($ary_result['user_info']['nickname']);
+            $member->where(array('m_id'=>$ary_member['m_id'],'m_name'=>$name,'open_name'=>$name))->save(array('login_type'=>1));
             $ary_member['login_type'] = 1;
+            $ary_member['open_name'] = $name;
+            $ary_member['m_name'] = $name;
+            wcache($ary_member['m_id'], $ary_member, 'member');
         }
         $token = $this->_get_token($ary_member['m_id'], $ary_member['m_name'], 'Client');
         $key = md5($ary_member['m_id'].time());
@@ -2676,7 +2685,7 @@ public function getRandChar($length=2)
                 $str_type = $source;
             }
             $source_id = M('source_platform',C('DB_PREFIX'),'DB_CUSTOM')->where(array('sp_code'=>$str_type,'sp_stauts'=>1))->getField('sp_id');
-            if(!D('RelatedMembersSourcePlatform')->where(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))->count()){
+            if(!D('RelatedMembersSourcePlatform')->where(array('m_id'=>$ary_member['m_id']))->count()){//'sp_id'=>$source_id,
                 if(false === D('RelatedMembersSourcePlatform')->add(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))){
                     M('',C('DB_PREFIX'),'DB_CUSTOM')->rollback();
                  //   $this->ajaxReturn(array('code'=>10001,'success'=>'failure','msg'=>'平台不存在，请联系管理员','result'=>FALSE));
@@ -2755,8 +2764,12 @@ public function getRandChar($length=2)
                 $ary_member = $member->getInfo('',$ary_result['open_id']);
             }
         }else{
-            $member->where(array('m_id'=>$ary_member['m_id']))->save(array('login_type'=>1));
+            $name = $this->filter($ary_result['user_info']['nickname']);
+            $member->where(array('m_id'=>$ary_member['m_id'],'m_name'=>$name,'open_name'=>$name))->save(array('login_type'=>1));
             $ary_member['login_type'] = 1;
+            $ary_member['open_name'] = $name;
+            $ary_member['m_name'] = $name;
+            wcache($ary_member['m_id'], $ary_member, 'member');
         }
         $token = $this->_get_token($ary_member['m_id'], $ary_member['m_name'], 'Client');
         $key = md5($ary_member['m_id'].time());
@@ -2807,7 +2820,7 @@ public function getRandChar($length=2)
                 $str_type = $source;
             }
             $source_id = M('source_platform',C('DB_PREFIX'),'DB_CUSTOM')->where(array('sp_code'=>$str_type,'sp_stauts'=>1))->getField('sp_id');
-            if(!D('RelatedMembersSourcePlatform')->where(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))->count()){
+            if(!D('RelatedMembersSourcePlatform')->where(array('m_id'=>$ary_member['m_id']))->count()){//'sp_id'=>$source_id,
                 if(false === D('RelatedMembersSourcePlatform')->add(array('sp_id'=>$source_id,'m_id'=>$ary_member['m_id']))){
                     M('',C('DB_PREFIX'),'DB_CUSTOM')->rollback();
                  //   $this->ajaxReturn(array('code'=>10001,'success'=>'failure','msg'=>'平台不存在，请联系管理员','result'=>FALSE));

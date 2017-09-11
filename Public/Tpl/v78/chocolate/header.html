@@ -28,13 +28,13 @@
                      </div>
                  </div>
                 </notempty>
-
                 <div class="recharge_box">&nbsp;&nbsp;│&nbsp;&nbsp;<a href="{:U('Home/Products/ConversionFeeDetail')}" class="recharge">充值</a></div>
                 <input type="hidden" value="{$Think.session.Members.m_id}" name ="gy_member_open" id="gy_member_open"/>
                 <input type="hidden" value="{$redirect}" name ="redirect" id="redirect"/>
                 <input type="hidden" id="Authorizationtype" value="{$ary_member.conversion_type}" />
                 <input type="hidden" id="Free_authorization" value="{$ary_member.Free_authorization}" />
                 <input type="hidden" id="ACTIVITY_OPEN" value="{$ACTIVITY_OPEN}" />
+                <input type="hidden" id="LoadDataType" value="{$Think.session.Members.LoadDataType}" />
             </div>
         </div>
     </div>

@@ -68,6 +68,7 @@ body{font:14px/1.4 '\5FAE\8F6F\96C5\9ED1',Tahoma,Arial,'\5B8B\4F53',sans-serif;o
 .pay .first_price{text-decoration:line-through;color:#b3b3b3;}
 .num_input[name="num_input"]:after{background:url(../images/icon.png) -145px -596px;width:52px;height:16px;position:absolute;top:-6px;left:6px;display:table;content:"";z-index: 10;}
 .package .item[name="tc_default"] em{background:url(../images/icon.png) -52px -794px;width:43px;height:16px;position:absolute;top:-6px;left:6px;display:table;content:"";z-index:10;}
+.getTimes .num_input[name="num_input"]:after{background:url(../images/icon.png) -98px -1200px;}
 .pay_method{margin-top:20px;}
 .pay_method >div{width:140px;line-height:42px;height:42px;display:inline-block;vertical-align:top;*display:inline;*zoom:1;text-align:center;color:#fff;font-size:16px;font-weight:500;transition:all 0.3s;-webkit-transition:all 0.3s;-moz-transition:all 0.3s;-ms-transition:all 0.3s;-o-transition:all 0.3s;cursor:pointer;}
 .pay_method .zfb_pay{background:#199bf8;margin-right:15px;}
