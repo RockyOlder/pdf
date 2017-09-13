@@ -719,7 +719,7 @@ abstract class AdminAction extends GyfxAction {
         $menus[9][1][10] = array('name' => L('MENU9_1_10'), 'url' => U('Admin/MembersDistributed/MemberDataFile'),'type'=>'1,2,3'); //文件分析
         $menus[9][1][20] = array('name' => L('MENU9_1_20'), 'url' => U('Admin/MembersDistributed/MemberDataAnalysis'),'type'=>'1,2,3'); //行为分析
         $menus[9][1][30] = array('name' => L('MENU9_1_30'), 'url' => U('Admin/MembersDistributed/SourceActivity'),'type'=>'1,2,3'); //活动分析
-        $menus[9][1][30] = array('name' => L('MENU9_1_40'), 'url' => U('Admin/MembersDistributed/SourceActivityPayCount'),'type'=>'1,2,3'); //活动支付分析
+        $menus[9][1][40] = array('name' => L('MENU9_1_40'), 'url' => U('Admin/MembersDistributed/SourceActivityPayCount'),'type'=>'1,2,3'); //活动支付分析
 	   // echo "<pre>";print_r($menus);exit;
         $menu = M('menus',C('DB_PREFIX'),'DB_CUSTOM');
         foreach($this->tops as $key_t=>$val_v){

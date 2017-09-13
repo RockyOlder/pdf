@@ -102,203 +102,207 @@
                 <?php if($is_user_access == '1'){ ?>
                 <div class="rightInners">
     <table width="100%" class="tbList">
-            <thead>
-                <tr class="title">
+        <thead>
+            <tr class="title">
                 <th colspan="<?php echo 14+count($fields); ?>">
                     <form id="searchForm" method="get" action="<?php echo U('Admin/MembersDistributed/SourceActivity');?>" style='width:55%;'>
-                    <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
-                         主题切换：<select id="theme-select" class="medium" ></select>
+                        <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
+                            主题切换：<select id="theme-select" class="medium" ></select>
                             时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="<?php echo ($ary_data["o_create_time_1"]); ?>"> -
-                           <input type="text" class="medium timer" name="o_create_time_2" value="<?php echo ($ary_data["o_create_time_2"]); ?>">
-                          <!--用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">-->
-                          <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
-                    </span>
+                            <input type="text" class="medium timer" name="o_create_time_2" value="<?php echo ($ary_data["o_create_time_2"]); ?>">
+                            <!--用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">-->
+                            <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
+                        </span>
                     </form>
-                  </th>
-                </tr>
-            </thead>
+                </th>
+            </tr>
+        </thead>
     </table>
 </div>
-<script src="__PUBLIC__/Admin/www/js/echarts.js"></script>
+<script src="__PUBLIC__/Admin/www/js/echarts_2.js"></script>
 <div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
 
-  <script type="text/javascript">
- /**
-  * @@author Rocky
-  * @type type
-  */
-var myChart;
-var theme = 'macarons';
-var labelFromatter = {
-    normal : {
-        label : {
-            formatter : function (params){
-                return 100 - params.value + '%'
-            },
-            textStyle: {
-                baseline : 'top'
-            }
-        }
-    },
-}
-
-var radius = [40, 55];
-    // Step:3 conifg ECharts's path, link to echarts.js from current page.
-    // Step:3 为模块加载器配置echarts的路径，从当前页面链接到echarts.js，定义所需图表路径
-    require.config({
-        paths: {
-            echarts: '/Public/Admin/www/js',
-            echart: '/Public/Admin/theme'
-        }
-    });
-   
-    // Step:4 require echarts and use it in the callback.
-    // Step:4 动态加载echarts然后在回调函数中开始使用，注意保持按需加载结构定义图表路径
-    require(
-        [
-            'echarts',
-            'echarts/chart/pie',
-            'echarts/chart/bar',          
-            'echarts/chart/funnel',
-            'echart/macarons'
-        ],
-        function (ec) {
-            //--- 折柱 ---
-             myChart = ec.init(document.getElementById('main'),theme);
-            // myChart.showLoading({
-            //     text: '正在努力的读取数据中...',    //loading话术
-            // });
-            // myChart.hideLoading();
-            myChart.setOption({
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-        orient : 'vertical',
-        x : 'left',
-        data:['微信','百度','客户端','横幅点击','登录弹窗点击','转换弹窗点击','ApiRight','ApiBrandClick','APIFiveClick','ApiSnapUpClick']
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {
-                show: true, 
-                type: ['pie', 'funnel']
-            },
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : false,
-    series : [
-        {
-            name:'访问来源',
-            type:'pie',
-            selectedMode: 'single',
-            radius : [0, 70],
-            
-            // for funnel
-            x: '20%',
-            width: '40%',
-            funnelAlign: 'right',
-            max: 1548,
-            itemStyle : {
-                normal : {
-                    label : {
-                        position : 'inner'
-                    },
-                    labelLine : {
-                        show : false
-                    }
-                }
-            },
-            data:<?php echo ($source); ?>
-        },
-        {
-            name:'点击来源入口',
-            type:'pie',
-            radius : [100, 140],
-            
-            // for funnel
-            x: '60%',
-            width: '35%',
-            funnelAlign: 'left',
-            max: 1048,
-            
-            data:<?php echo ($inlet); ?>
-        }
-    ]
-});
-        }
-    );
-    $(document).ready(function(){
-        var themeSelector = $('#theme-select');
-        var enVersion = location.hash.indexOf('-en') != -1;
-        var hash = location.hash.replace('-en','');
-        hash = hash.replace('#','') || (needMap() ? 'default' : 'macarons');
-        hash += enVersion ? '-en' : '';
-        if (themeSelector) {
-            themeSelector.html(
-                '<option selected="true" name="macarons">macarons</option>'
-                + '<option name="infographic">infographic</option>'
-                + '<option name="shine">shine</option>'
-                + '<option name="dark">dark</option>'
-                + '<option name="blue">blue</option>'
-                + '<option name="green">green</option>'
-                + '<option name="red">red</option>'
-                + '<option name="gray">gray</option>'
-                + '<option name="helianthus">helianthus</option>'
-                + '<option name="roma">roma</option>'
-                + '<option name="mint">mint</option>'
-                + '<option name="macarons2">macarons2</option>'
-                + '<option name="sakura">sakura</option>'
-                + '<option name="default">default</option>'
-            );
-            $(themeSelector).on('change', function(){
-                selectChange($(this).val());
-            });
-            function selectChange(value){
-                var theme = value;
-                myChart.showLoading();
-                $(themeSelector).val(theme);
-                if (theme != 'default') {
-                    window.location.hash = value + (enVersion ? '-en' : '');
-                    require(['/Public/Admin/theme/' + theme], function(tarTheme){
-                        console.log(tarTheme);
-                        curTheme = tarTheme;
-                        setTimeout(refreshTheme, 500);
-                    })
-                }
-                else {
-                    window.location.hash = enVersion ? '-en' : '';
-                    curTheme = {};
-                    setTimeout(refreshTheme, 500);
-                }
-            }
-            function refreshTheme(){
-                myChart.hideLoading();
-                myChart.setTheme(curTheme);
-            }
-            if ($(themeSelector).val(hash.replace('-en', '')).val() != hash.replace('-en', '')) {
-                $(themeSelector).val('macarons');
-                hash = 'macarons' + enVersion ? '-en' : '';
-                window.location.hash = hash;
-            }
-        }
-
-    })
-    function needMap() {
-        var href = location.href;
-        return href.indexOf('map') != -1
-               || href.indexOf('mix3') != -1
-               || href.indexOf('mix5') != -1
-               || href.indexOf('dataRange') != -1;
-
+<script type="text/javascript">
+    /**
+     * @@author Rocky
+     * @type type
+     */
+    var myChart;
+    var theme = 'macarons';
+    var radius = [40, 55];
+    var container = document.getElementById('main');
+    var resizeContainer = function () {
+            container.style.width = (window.innerWidth -400)+'px';
     }
-    </script>
+    resizeContainer();
+    var myChart = echarts.init(document.getElementById('main'), theme);
+    // myChart.showLoading({
+    //     text: '正在努力的读取数据中...',    //loading话术
+    // });
+    // myChart.hideLoading();
+    myChart.setOption({
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data: ['微信', '百度', '客户端', '横幅点击', '登录弹窗点击', '转换弹窗点击', 'ApiRight', 'ApiBrandClick', 'APIFiveClick', 'ApiSnapUpClick']
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {
+                    show: true,
+                    type: ['pie', 'funnel']
+                },
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: false,
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                selectedMode: 'single',
+                radius: [0, '30%'],
+                label: {
+                    normal: {
+                        position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: <?php echo ($source); ?>
+            },
+            {
+                name: '点击来源入口',
+                type:'pie',
+                radius: ['40%', '55%'],
+                label: {
+                    normal: {
+                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#eee',
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        // shadowBlur:3,
+                        // shadowOffsetX: 2,
+                        // shadowOffsetY: 2,
+                        // shadowColor: '#999',
+                        // padding: [0, 7],
+                        rich: {
+                            a: {
+                                color: '#999',
+                                lineHeight: 22,
+                                align: 'center'
+                            },
+                            // abg: {
+                            //     backgroundColor: '#333',
+                            //     width: '100%',
+                            //     align: 'right',
+                            //     height: 22,
+                            //     borderRadius: [4, 4, 0, 0]
+                            // },
+                            hr: {
+                                borderColor: '#aaa',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 0
+                            },
+                            b: {
+                                fontSize: 16,
+                                lineHeight: 33
+                            },
+                            per: {
+                                color: '#eee',
+                                backgroundColor: '#334455',
+                                padding: [2, 4],
+                                borderRadius: 2
+                            }
+                        }
+                    }
+                },
+                data: <?php echo ($inlet); ?>
+            }
+        ]
+    });
+    window.addEventListener('resize', function () {
+         resizeContainer();
+        myChart.resize();
+    })
+//    $(document).ready(function(){
+//        var themeSelector = $('#theme-select');
+//        var enVersion = location.hash.indexOf('-en') != -1;
+//        var hash = location.hash.replace('-en','');
+//        hash = hash.replace('#','') || (needMap() ? 'default' : 'macarons');
+//        hash += enVersion ? '-en' : '';
+//        if (themeSelector) {
+//            themeSelector.html(
+//                '<option selected="true" name="macarons">macarons</option>'
+//                + '<option name="infographic">infographic</option>'
+//                + '<option name="shine">shine</option>'
+//                + '<option name="dark">dark</option>'
+//                + '<option name="blue">blue</option>'
+//                + '<option name="green">green</option>'
+//                + '<option name="red">red</option>'
+//                + '<option name="gray">gray</option>'
+//                + '<option name="helianthus">helianthus</option>'
+//                + '<option name="roma">roma</option>'
+//                + '<option name="mint">mint</option>'
+//                + '<option name="macarons2">macarons2</option>'
+//                + '<option name="sakura">sakura</option>'
+//                + '<option name="default">default</option>'
+//            );
+//            $(themeSelector).on('change', function(){
+//                selectChange($(this).val());
+//            });
+//            function selectChange(value){
+//                var theme = value;
+//                myChart.showLoading();
+//                $(themeSelector).val(theme);
+//                if (theme != 'default') {
+//                    window.location.hash = value + (enVersion ? '-en' : '');
+//                    require(['/Public/Admin/theme/' + theme], function(tarTheme){
+//                        console.log(tarTheme);
+//                        curTheme = tarTheme;
+//                        setTimeout(refreshTheme, 500);
+//                    })
+//                }
+//                else {
+//                    window.location.hash = enVersion ? '-en' : '';
+//                    curTheme = {};
+//                    setTimeout(refreshTheme, 500);
+//                }
+//            }
+//            function refreshTheme(){
+//                myChart.hideLoading();
+//                myChart.setTheme(curTheme);
+//            }
+//            if ($(themeSelector).val(hash.replace('-en', '')).val() != hash.replace('-en', '')) {
+//                $(themeSelector).val('macarons');
+//                hash = 'macarons' + enVersion ? '-en' : '';
+//                window.location.hash = hash;
+//            }
+//        }
+//
+//    })
+//    function needMap() {
+//        var href = location.href;
+//        return href.indexOf('map') != -1
+//               || href.indexOf('mix3') != -1
+//               || href.indexOf('mix5') != -1
+//               || href.indexOf('dataRange') != -1;
+//
+//    }
+</script>
 
                 <?php } ?>
 

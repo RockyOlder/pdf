@@ -187,14 +187,14 @@ class EmailTemplatesModel extends GyfxModel {
 	  * @param ary $data 发送邮件模板信息
 	  * @date 2014-08-11
 	  */	
-	public function sendEmailFile($user_email,$file,$f_type,$c_type,$fileName){
+	public function sendEmailFile($user_email,$count,$table){
 		//生成邮件链接
                 $ary_email_cfg = D('SysConfig')->getEmailCfg();
                 $send_res = D('EmailTemplates')->getTemp(array('id' => 3));
-                		$params = array(
+                $params = array(
 			'{$time}' => date('H点i分'),
-			'{$ftype}' => $f_type,
-			'{$ctype}' => $c_type,
+			'{$count}' => $count,
+			'{$table}' => $table,
 		);
 		$send_content = $this->sendByTemplateData($params,$send_res['content']);
                 $ary_option = array(
@@ -208,8 +208,8 @@ class EmailTemplatesModel extends GyfxModel {
                     'smtpAuth' => $ary_email_cfg['GY_SMTP_AUTH'],
                     'username' => $ary_email_cfg['GY_SMTP_NAME'],
                     'password' => $ary_email_cfg['GY_SMTP_PASS'],
-                    'file_path'=>$file,
-                    'filename'=>$fileName,
+                   // 'file_path'=>$file,
+                    //'filename'=>$fileName,
                     'isHtml' => true
                 );
 		return $ary_option;

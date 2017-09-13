@@ -100,69 +100,57 @@
             </div>
             <div class="content">
                 <?php if($is_user_access == '1'){ ?>
-                <script type="text/javascript" charset="utf-8">
-    window.UEDITOR_HOME_URL = "__PUBLIC__/Lib/ueditor/";
-</script>
-<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Lib/ueditor/editor_config.js"></script>
-<script type="text/javascript" charset="utf-8" src="__PUBLIC__/Lib/ueditor/editor_all.js"></script>
-<div class="rightInner">
-<form id="noticeForm" method="post" action="/Admin/Sms/doEdit">
-	<table class="tbForm" width="100%">
-		<thead>
-			<tr class="title">
-				<th colspan="99">短信模板设置</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td class="first"><span class="red">*</span>短信模板：</td>
-				<td>
-					<select style="width: auto" class="small" name="temp_id" id="temp_id" onchange="changetemp()">
-						<option value="0">选择模板类型</option>
-						<option value="1">忘记密码发送验证码</option>
-						<option value="2">账号注册发送验证码</option>
-						<option value="3">忘记密码重置密码</option>
-						<option value="4">手机更换</option>
-						<option value="5">支付发送验证码</option>
-						<option value="6">提现发送验证码</option>
-						<option value="7">门店提货短信提示</option>
-					</select>
-				</td>
-			</tr>
-
-			<tr>
-				<td class="first">模板内容：</td>
-				<td><script id="editor" name="temp_content" type="text/plain"></script></td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td></td>
-				<td colspan="99">
-					<input type="submit" value="保 存" class="btnA" >
-					<input type="button" onclick="window.history.go(-1);" value="取 消" class="btnA" >
-				</td>
-			</tr>
-		</tfoot>
-	</table>
-</form>
-<div class="clear"></div>
+                <div class="rightInners">
+    <table width="100%" class="tbList">
+            <thead>
+                <tr class="title">
+                <th colspan="<?php echo 14+count($fields); ?>">
+                    <form id="searchForm" method="get" action="<?php echo U('Admin/MembersDistributed/SourceActivity');?>" style='width:55%;'>
+                    <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
+                         主题切换：<select id="theme-select" class="medium" ></select>
+                            时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="<?php echo ($ary_data["o_create_time_1"]); ?>"> -
+                           <input type="text" class="medium timer" name="o_create_time_2" value="<?php echo ($ary_data["o_create_time_2"]); ?>">
+                          <!--用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">-->
+                          <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
+                    </span>
+                    </form>
+                  </th>
+                </tr>
+            </thead>
+    </table>
 </div>
-<script type="text/javascript">
-   	//实例化编辑器
-	var editor = UE.getEditor('editor');
-	function changetemp(){
-		 var temp_id = $("#temp_id").val();
-		 var url = "/Admin/Sms/getTemp";
-		 $.post(url,{'temp_id':temp_id},function(data){
-			if(data.status==true){
-				editor.setContent(data.info);
-			}else {
-				editor.setContent('');
-			}
-		 });
-	}
-</script>
+<script src="__PUBLIC__/Admin/www/js/echarts_2.js"></script>
+<div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+
+  <script type="text/javascript">
+         // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'),'dark');
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+    </script>
+
                 <?php } ?>
 
                 <?php if($is_user_access != 1): ?>您无权限访问此页。<?php endif; ?>

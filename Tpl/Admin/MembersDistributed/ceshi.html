@@ -1,0 +1,50 @@
+<div class="rightInners">
+    <table width="100%" class="tbList">
+            <thead>
+                <tr class="title">
+                <th colspan="<php>echo 14+count($fields);</php>">
+                    <form id="searchForm" method="get" action="{:U('Admin/MembersDistributed/SourceActivity')}" style='width:55%;'>
+                    <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
+                         主题切换：<select id="theme-select" class="medium" ></select>
+                            时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="{$ary_data.o_create_time_1}"> -
+                           <input type="text" class="medium timer" name="o_create_time_2" value="{$ary_data.o_create_time_2}">
+                          <!--用户id：<input type="text" name="m_id" class="large" value="{$ary_data.m_id}" style="width: 145px;">-->
+                          <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
+                    </span>
+                    </form>
+                  </th>
+                </tr>
+            </thead>
+    </table>
+</div>
+<script src="__PUBLIC__/Admin/www/js/echarts_2.js"></script>
+<div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+
+  <script type="text/javascript">
+         // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'),'dark');
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+    </script>

@@ -89,7 +89,7 @@
             <?php if($ACTIVITY_OPEN != 1): ?><div class="activity_banner">
                     <img src="__IMAGES__images/1_03.jpg" alt="" />
                     <div class="content">
-                       <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>0));?>">
+                       <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>0));?>" class="Behavior_Statistics_Banner" >
                         <div class="left">
                             <img src="__IMAGES__images/txt.png" alt="" />                       
                         </div>
@@ -249,7 +249,16 @@
                 </div>                
             </div>
         </div>
+</div>
+<!-- 各种状态的弹窗 -->
+<div class="popup popup_other">
+    <div class="content" name="teachesDay">
+        <div class="icon close" itemid="1" ></div>
+        <a href="<?php echo U('Home/Index/YearMiddlePage',array('s_type'=>1));?>" itemtype="1" itemid="1" class="ClickTheBanner" >
+            <img src="__IMAGES__images/x01.jpg"  alt="教师节抢购" />
+        </a>
     </div>
+</div>
 
         <?php if(TPL!='sky'){ ?>
 	    <noempty name="ary_online">

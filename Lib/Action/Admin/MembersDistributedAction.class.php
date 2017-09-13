@@ -323,7 +323,9 @@ class MembersDistributedAction extends AdminAction{
         $this->assign('ary_data',$ary_data);
         $this->display();
     }
-
+    public function ceshi(){
+        $this->display();
+    }
     public function WeekArray($ary_data,$i=1,$int=0,$day=0,$week_time=array()){
         $weekarray=array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
         $key = date("w",strtotime($ary_data['o_create_time_1']));
@@ -351,8 +353,7 @@ class MembersDistributedAction extends AdminAction{
         $ary_where = array();
         $week = array();
         if (!empty($ary_data['o_create_time_1'])) {
-              
-               $week_time = $this->WeekArray($ary_data);
+                $week_time = $this->WeekArray($ary_data);
                 $ary_where['s_create_time']      =  array("BETWEEN", array($ary_data['o_create_time_1'], date('Y-m-d',strtotime($ary_data['o_create_time_1']." +7 day"))));
                 $date = $ary_data['o_create_time_1'];
         } else {
@@ -371,16 +372,16 @@ class MembersDistributedAction extends AdminAction{
         if (!empty($ary_data['s_type']) &&  $ary_data['s_type'] != 'all') {
             $ary_where['s_type'] = $ary_data['s_type'];
         }
-        foreach ($week_time as $key=>$data){
-            array_push($week, $key);
+        if (!empty($ary_data['sp_code'])) {
+            $ary_where['source'] = $ary_data['sp_code'];
         }
+        $week = array_keys($week_time);
         $this->assign('week', json_encode($week));
         
         $ary_platfrom = D('SourcePlatform')->where(array('sp_default'=>0,'sp_stauts'=>1))->select();
         $this->assign('platfrom',$ary_platfrom);
         
         $ary_where['s_status'] = array('in',array(2,3,4,5));
-
         $ary_members_office  =D('Source')->where($ary_where)->select();
         $ActivityPay = array();
         $ActivityPay_1 = array();
@@ -447,7 +448,7 @@ class MembersDistributedAction extends AdminAction{
                                     }
                             }
                     }
-                    
+              //  print_r($ActivityPay_2);exit;
             if (!empty($ary_data['s_type']) &&  $ary_data['s_type'] != 'all') {
                 $ActivityPay['name']   = '横幅点击';
                 $ActivityPay_1['name'] = '支付宝点击未支付';
@@ -457,7 +458,7 @@ class MembersDistributedAction extends AdminAction{
                 $ActivityApi_2['name'] = '点击取消';
                 $title = json_encode(array('横幅点击','支付宝点击未支付','支付宝点击已支付','微信点击未支付','微信点击已支付','点击取消'));
             } else {
-                $ActivityPay['name']   = '立即抢购点击';
+                $ActivityPay['name']   = '免费用户登录';
                 $ActivityPay_1['name'] = '免费用户转换';
                 $ActivityPay_2['name'] = '客户端右上角';
                 $ActivityApi['name']   = '客户端界面横幅';
@@ -472,13 +473,13 @@ class MembersDistributedAction extends AdminAction{
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityPay['Monday'])?$ActivityPay['Monday']:0,
-                                                isset($ActivityPay['Tuesday'])?$ActivityPay['Tuesday']:0,
-                                                isset($ActivityPay['Wednesday'])?$ActivityPay['Wednesday']:0,
-                                                isset($ActivityPay['Thursday'])?$ActivityPay['Thursday']:0,
-                                                isset($ActivityPay['Friday'])?$ActivityPay['Friday']:0,
-                                                isset($ActivityPay['Saturday'])?$ActivityPay['Saturday']:0,
-                                                isset($ActivityPay['Sunday'])?$ActivityPay['Sunday']:0
+                                                isset($ActivityPay[$week[0]])?$ActivityPay[$week[0]]:0,
+                                                isset($ActivityPay[$week[1]])?$ActivityPay[$week[1]]:0,
+                                                isset($ActivityPay[$week[2]])?$ActivityPay[$week[2]]:0,
+                                                isset($ActivityPay[$week[3]])?$ActivityPay[$week[3]]:0,
+                                                isset($ActivityPay[$week[4]])?$ActivityPay[$week[4]]:0,
+                                                isset($ActivityPay[$week[5]])?$ActivityPay[$week[5]]:0,
+                                                isset($ActivityPay[$week[6]])?$ActivityPay[$week[6]]:0
                                              )
                                     )
                             );
@@ -488,13 +489,13 @@ class MembersDistributedAction extends AdminAction{
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityPay_1['Monday'])?$ActivityPay_1['Monday']:0,
-                                                isset($ActivityPay_1['Tuesday'])?$ActivityPay_1['Tuesday']:0,
-                                                isset($ActivityPay_1['Wednesday'])?$ActivityPay_1['Wednesday']:0,
-                                                isset($ActivityPay_1['Thursday'])?$ActivityPay_1['Thursday']:0,
-                                                isset($ActivityPay_1['Friday'])?$ActivityPay_1['Friday']:0,
-                                                isset($ActivityPay_1['Saturday'])?$ActivityPay_1['Saturday']:0,
-                                                isset($ActivityPay_1['Sunday'])?$ActivityPay_1['Sunday']:0
+                                                isset($ActivityPay_1[$week[0]])?$ActivityPay_1[$week[0]]:0,
+                                                isset($ActivityPay_1[$week[1]])?$ActivityPay_1[$week[1]]:0,
+                                                isset($ActivityPay_1[$week[2]])?$ActivityPay_1[$week[2]]:0,
+                                                isset($ActivityPay_1[$week[3]])?$ActivityPay_1[$week[3]]:0,
+                                                isset($ActivityPay_1[$week[4]])?$ActivityPay_1[$week[4]]:0,
+                                                isset($ActivityPay_1[$week[5]])?$ActivityPay_1[$week[5]]:0,
+                                                isset($ActivityPay_1[$week[6]])?$ActivityPay_1[$week[6]]:0
                                             )
                                     )
                             );
@@ -504,13 +505,13 @@ class MembersDistributedAction extends AdminAction{
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityPay_2['Monday'])?$ActivityPay_2['Monday']:0,
-                                                isset($ActivityPay_2['Tuesday'])?$ActivityPay_2['Tuesday']:0,
-                                                isset($ActivityPay_2['Wednesday'])?$ActivityPay_2['Wednesday']:0,
-                                                isset($ActivityPay_2['Thursday'])?$ActivityPay_2['Thursday']:0,
-                                                isset($ActivityPay_2['Friday'])?$ActivityPay_2['Friday']:0,
-                                                isset($ActivityPay_2['Saturday'])?$ActivityPay_2['Saturday']:0,
-                                                isset($ActivityPay_2['Sunday'])?$ActivityPay_2['Sunday']:0
+                                                isset($ActivityPay_2[$week[0]])?$ActivityPay_2[$week[0]]:0,
+                                                isset($ActivityPay_2[$week[1]])?$ActivityPay_2[$week[1]]:0,
+                                                isset($ActivityPay_2[$week[2]])?$ActivityPay_2[$week[2]]:0,
+                                                isset($ActivityPay_2[$week[3]])?$ActivityPay_2[$week[3]]:0,
+                                                isset($ActivityPay_2[$week[4]])?$ActivityPay_2[$week[4]]:0,
+                                                isset($ActivityPay_2[$week[5]])?$ActivityPay_2[$week[5]]:0,
+                                                isset($ActivityPay_2[$week[6]])?$ActivityPay_2[$week[6]]:0
                                             )
                                     )
                             );
@@ -520,29 +521,30 @@ class MembersDistributedAction extends AdminAction{
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityApi['Monday'])?$ActivityApi['Monday']:0,
-                                                isset($ActivityApi['Tuesday'])?$ActivityApi['Tuesday']:0,
-                                                isset($ActivityApi['Wednesday'])?$ActivityApi['Wednesday']:0,
-                                                isset($ActivityApi['Thursday'])?$ActivityApi['Thursday']:0,
-                                                isset($ActivityApi['Friday'])?$ActivityApi['Friday']:0,
-                                                isset($ActivityApi['Saturday'])?$ActivityApi['Saturday']:0,
-                                                isset($ActivityApi['Sunday'])?$ActivityApi['Sunday']:0
+                                                isset($ActivityApi[$week[0]])?$ActivityApi[$week[0]]:0,
+                                                isset($ActivityApi[$week[1]])?$ActivityApi[$week[1]]:0,
+                                                isset($ActivityApi[$week[2]])?$ActivityApi[$week[2]]:0,
+                                                isset($ActivityApi[$week[3]])?$ActivityApi[$week[3]]:0,
+                                                isset($ActivityApi[$week[4]])?$ActivityApi[$week[4]]:0,
+                                                isset($ActivityApi[$week[5]])?$ActivityApi[$week[5]]:0,
+                                                isset($ActivityApi[$week[6]])?$ActivityApi[$week[6]]:0
                                             )
                                     )
                             );
+
             $json_pay_5 = json_encode(array(
                                             'name'=>$ActivityApi_1['name'],
                                             'type'=>'line',
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityApi_1['Monday'])?$ActivityApi_1['Monday']:0,
-                                                isset($ActivityApi_1['Tuesday'])?$ActivityApi_1['Tuesday']:0,
-                                                isset($ActivityApi_1['Wednesday'])?$ActivityApi_1['Wednesday']:0,
-                                                isset($ActivityApi_1['Thursday'])?$ActivityApi_1['Thursday']:0,
-                                                isset($ActivityApi_1['Friday'])?$ActivityApi_1['Friday']:0,
-                                                isset($ActivityApi_1['Saturday'])?$ActivityApi_1['Saturday']:0,
-                                                isset($ActivityApi_1['Sunday'])?$ActivityApi_1['Sunday']:0
+                                                isset($ActivityApi_1[$week[0]])?$ActivityApi_1[$week[0]]:0,
+                                                isset($ActivityApi_1[$week[1]])?$ActivityApi_1[$week[1]]:0,
+                                                isset($ActivityApi_1[$week[2]])?$ActivityApi_1[$week[2]]:0,
+                                                isset($ActivityApi_1[$week[3]])?$ActivityApi_1[$week[3]]:0,
+                                                isset($ActivityApi_1[$week[4]])?$ActivityApi_1[$week[4]]:0,
+                                                isset($ActivityApi_1[$week[5]])?$ActivityApi_1[$week[5]]:0,
+                                                isset($ActivityApi_1[$week[6]])?$ActivityApi_1[$week[6]]:0
                                             )   
                                     )
                             );
@@ -552,13 +554,13 @@ class MembersDistributedAction extends AdminAction{
                                             'stack'=>'总量',
                                             'itemStyle'=>array('normal'=>array('areaStyle'=>array('type'=>'default'))),
                                             'data'=>array(
-                                                isset($ActivityApi_2['Monday'])?$ActivityApi_2['Monday']:0,
-                                                isset($ActivityApi_2['Tuesday'])?$ActivityApi_2['Tuesday']:0,
-                                                isset($ActivityApi_2['Wednesday'])?$ActivityApi_2['Wednesday']:0,
-                                                isset($ActivityApi_2['Thursday'])?$ActivityApi_2['Thursday']:0,
-                                                isset($ActivityApi_2['Friday'])?$ActivityApi_2['Friday']:0,
-                                                isset($ActivityApi_2['Saturday'])?$ActivityApi_2['Saturday']:0,
-                                                isset($ActivityApi_2['Sunday'])?$ActivityApi_2['Sunday']:0
+                                                isset($ActivityApi_2[$week[0]])?$ActivityApi_2[$week[0]]:0,
+                                                isset($ActivityApi_2[$week[1]])?$ActivityApi_2[$week[1]]:0,
+                                                isset($ActivityApi_2[$week[2]])?$ActivityApi_2[$week[2]]:0,
+                                                isset($ActivityApi_2[$week[3]])?$ActivityApi_2[$week[3]]:0,
+                                                isset($ActivityApi_2[$week[4]])?$ActivityApi_2[$week[4]]:0,
+                                                isset($ActivityApi_2[$week[5]])?$ActivityApi_2[$week[5]]:0,
+                                                isset($ActivityApi_2[$week[6]])?$ActivityApi_2[$week[6]]:0
                                             )
                                     )
                             );

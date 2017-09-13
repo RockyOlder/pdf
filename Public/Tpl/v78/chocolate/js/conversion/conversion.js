@@ -731,7 +731,7 @@ define(['tool'], function(tool){
                                     if (emial_type_click == 1) {
                                         var email =  $("#email").val();
                                     }
-                                    fileJson.push({"fileName": fileName, "fileType": fileTypeS, "fileSize": fileSize, "suffix": filesuffix, "fileTime": fileTime, "id": id,"email":email});
+                                    fileJson.push({"fileName": fileName, "fileType": fileTypeS, "fileSize": fileSize, "suffix": filesuffix, "fileTime": fileTime, "id": id,"email":email,"batchEmail":2});
                                 });
                                 if (fileJson.length > 0) {
                                     $.ajax({

@@ -98,7 +98,7 @@ public function send($ary_option) {
         ////发件人用户名：通常就是发送人的邮件地址
         $this->mailer->Username = $ary_option['username'];
         //发送附件
-        $this->mailer->AddAttachment($ary_option['file_path'],$ary_option['filename']); 
+      //  $this->mailer->AddAttachment($ary_option['file_path'],$ary_option['filename']); 
         ////正文是否以html格式发送，true可以加超链接和图片之类的
         $this->mailer->IsHTML($ary_option['isHtml']);
         ////发件人邮箱用户密码

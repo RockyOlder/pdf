@@ -102,187 +102,99 @@
                 <?php if($is_user_access == '1'){ ?>
                 <div class="rightInners">
     <table width="100%" class="tbList">
-            <thead>
-                <tr class="title">
+        <thead>
+            <tr class="title">
                 <th colspan="<?php echo 14+count($fields); ?>">
                     <form id="searchForm" method="get" action="<?php echo U('Admin/MembersDistributed/SourceActivityPayCount');?>" style='width:55%;'>
-                    <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
-                         主题切换：<select id="theme-select" class="medium" ></select>
+                        <span   style="margin-left:40px;float:left;text-align:right;font-size:12px;">
                             时间筛选:<input type="text" class="medium timer" name="o_create_time_1" value="<?php echo ($ary_data["o_create_time_1"]); ?>"> 
                             点击类型：<select id="" class="medium" name="s_type">
-                             <option value="all" <?php if($ary_data['s_type'] == 'all'){ ?>selected="selected"<?php } ?>>所有</option>
-                             <option value="1" <?php if($ary_data['s_type'] == 1){ ?>selected="selected"<?php } ?>>免费用户登录</option>
-                             <option value="2" <?php if($ary_data['s_type'] == 2){ ?>selected="selected"<?php } ?>>免费用户转换</option>
-                             <option value="3" <?php if($ary_data['s_type'] == 3){ ?>selected="selected"<?php } ?>>客户端右上角</option>
-                             <option value="4" <?php if($ary_data['s_type'] == 4){ ?>selected="selected"<?php } ?>>客户端界面横幅</option>
-                             <option value="5" <?php if($ary_data['s_type'] == 5){ ?>selected="selected"<?php } ?>>只转5页图片点击</option>
-                             <option value="6" <?php if($ary_data['s_type'] == 6){ ?>selected="selected"<?php } ?>>立即抢购点击</option>
-                        </select>
-                          <!--用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">-->
-                          <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
-                    </span>
+                                <option value="all" <?php if($ary_data['s_type'] == 'all'){ ?>selected="selected"<?php } ?>>所有</option>
+                                <option value="1" <?php if($ary_data['s_type'] == 1){ ?>selected="selected"<?php } ?>>免费用户登录</option>
+                                <option value="2" <?php if($ary_data['s_type'] == 2){ ?>selected="selected"<?php } ?>>免费用户转换</option>
+                                <option value="3" <?php if($ary_data['s_type'] == 3){ ?>selected="selected"<?php } ?>>客户端右上角</option>
+                                <option value="4" <?php if($ary_data['s_type'] == 4){ ?>selected="selected"<?php } ?>>客户端界面横幅</option>
+                                <option value="5" <?php if($ary_data['s_type'] == 5){ ?>selected="selected"<?php } ?>>只转5页图片点击</option>
+                                <option value="6" <?php if($ary_data['s_type'] == 6){ ?>selected="selected"<?php } ?>>立即抢购点击</option>
+                            </select>
+                            来源：<select id="" class="medium" name="sp_code">
+                                <option value="0" <?php if($ary_data['sp_code'] == '0'){ ?>selected="selected"<?php } ?>>请选择</option>
+                                <?php if(is_array($platfrom)): $i = 0; $__LIST__ = $platfrom;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$platform): $mod = ($i % 2 );++$i;?><option value="<?php echo ($platform["sp_code"]); ?>" <?php if($platform['sp_code'] == $ary_data['sp_code']){ ?>selected="selected"<?php } ?>><?php echo ($platform["sp_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+
+                            </select>
+                            <!--用户id：<input type="text" name="m_id" class="large" value="<?php echo ($ary_data["m_id"]); ?>" style="width: 145px;">-->
+                            <input type="submit" name="search" value="搜 索" class="btnHeader inpButton">
+                        </span>
                     </form>
-                  </th>
-                </tr>
-            </thead>
+                </th>
+            </tr>
+        </thead>
     </table>
 </div>
-<script src="__PUBLIC__/Admin/www/js/echarts.js"></script>
-<div id="main" style="height:500px;border:1px solid #ccc;padding:10px;"></div>
+<script src="__PUBLIC__/Admin/www/js/echarts_2.js"></script>
+<!--<script src="__PUBLIC__/Admin/theme/vintage.js"></script>-->
 
-  <script type="text/javascript">
- /**
-  * @@author Rocky
-  * @type type
-  */
-var myChart;
-var theme = 'macarons';
-var labelFromatter = {
-    normal : {
-        label : {
-            formatter : function (params){
-                return 100 - params.value + '%'
-            },
-            textStyle: {
-                baseline : 'top'
-            }
-        }
-    },
-}
+<div id="main" style=" height:500px;border:1px solid #ccc;padding:10px;"></div>
 
-var radius = [40, 55];
-    // Step:3 conifg ECharts's path, link to echarts.js from current page.
-    // Step:3 为模块加载器配置echarts的路径，从当前页面链接到echarts.js，定义所需图表路径
-    require.config({
-        paths: {
-            echarts: '/Public/Admin/www/js',
-            echart: '/Public/Admin/theme'
-        }
-    });
-   
-    // Step:4 require echarts and use it in the callback.
-    // Step:4 动态加载echarts然后在回调函数中开始使用，注意保持按需加载结构定义图表路径
-    require(
-        [
-            'echarts',
-            'echarts/chart/line',
-            'echarts/chart/pie',
-            'echarts/chart/bar',          
-            'echart/macarons'
-        ],
-        function (ec) {
-            //--- 折柱 ---
-             myChart = ec.init(document.getElementById('main'),theme);
-            // myChart.showLoading({
-            //     text: '正在努力的读取数据中...',    //loading话术
-            // });
-            // myChart.hideLoading();
-            myChart.setOption({
-    tooltip : {
-        trigger: 'axis'
-    },
-    legend: {
-        data:<?php echo ($title); ?>
-    },
-    toolbox: {
-        show : true,
-        feature : {
-            mark : {show: true},
-            dataView : {show: true, readOnly: false},
-            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-            restore : {show: true},
-            saveAsImage : {show: true}
-        }
-    },
-    calculable : true,
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            data : <?php echo ($week); ?>
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value'
-        }
-    ],
-    series : [
-        <?php echo ($json_pay_1); ?>,
-        <?php echo ($json_pay_2); ?>,
-        <?php echo ($json_pay_3); ?>,
-        <?php echo ($json_pay_4); ?>,
-        <?php echo ($json_pay_5); ?>,
-        <?php echo ($json_pay_6); ?>
-    ]
-});
-        }
-    );
-    $(document).ready(function(){
-        var themeSelector = $('#theme-select');
-        var enVersion = location.hash.indexOf('-en') != -1;
-        var hash = location.hash.replace('-en','');
-        hash = hash.replace('#','') || (needMap() ? 'default' : 'macarons');
-        hash += enVersion ? '-en' : '';
-        if (themeSelector) {
-            themeSelector.html(
-                '<option selected="true" name="macarons">macarons</option>'
-                + '<option name="infographic">infographic</option>'
-                + '<option name="shine">shine</option>'
-                + '<option name="dark">dark</option>'
-                + '<option name="blue">blue</option>'
-                + '<option name="green">green</option>'
-                + '<option name="red">red</option>'
-                + '<option name="gray">gray</option>'
-                + '<option name="helianthus">helianthus</option>'
-                + '<option name="roma">roma</option>'
-                + '<option name="mint">mint</option>'
-                + '<option name="macarons2">macarons2</option>'
-                + '<option name="sakura">sakura</option>'
-                + '<option name="default">default</option>'
-            );
-            $(themeSelector).on('change', function(){
-                selectChange($(this).val());
-            });
-            function selectChange(value){
-                var theme = value;
-                myChart.showLoading();
-                $(themeSelector).val(theme);
-                if (theme != 'default') {
-                    window.location.hash = value + (enVersion ? '-en' : '');
-                    require(['/Public/Admin/theme/' + theme], function(tarTheme){
-                        console.log(tarTheme);
-                        curTheme = tarTheme;
-                        setTimeout(refreshTheme, 500);
-                    })
-                }
-                else {
-                    window.location.hash = enVersion ? '-en' : '';
-                    curTheme = {};
-                    setTimeout(refreshTheme, 500);
-                }
-            }
-            function refreshTheme(){
-                myChart.hideLoading();
-                myChart.setTheme(curTheme);
-            }
-            if ($(themeSelector).val(hash.replace('-en', '')).val() != hash.replace('-en', '')) {
-                $(themeSelector).val('macarons');
-                hash = 'macarons' + enVersion ? '-en' : '';
-                window.location.hash = hash;
-            }
-        }
-
-    })
-    function needMap() {
-        var href = location.href;
-        return href.indexOf('map') != -1
-               || href.indexOf('mix3') != -1
-               || href.indexOf('mix5') != -1
-               || href.indexOf('dataRange') != -1;
-
+<script type="text/javascript">
+    /**
+     * @@author Rocky
+     * @type type
+     */
+    var theme = 'macarons';
+    var themeValue;
+    var container = document.getElementById('main');
+    var resizeContainer = function () {
+            container.style.width = (window.innerWidth -400)+'px';
     }
-    </script>
+    resizeContainer();
+    var myChart = echarts.init(document.getElementById('main'), theme);
+    myChart.setOption({
+        tooltip: {
+            trigger: 'axis',
+            
+        },
+        legend: {
+            data: <?php echo ($title); ?>
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                mark: {show: true},
+                dataView: {show: true, readOnly: false},
+                magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore: {show: true},
+                saveAsImage: {show: true}
+            }
+        },
+        calculable: true,
+        xAxis: [
+            {
+                type: 'category',
+                boundaryGap: false,
+                data: <?php echo ($week); ?>
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            <?php echo ($json_pay_1); ?>,
+            <?php echo ($json_pay_2); ?>,
+            <?php echo ($json_pay_3); ?>,
+            <?php echo ($json_pay_4); ?>,
+            <?php echo ($json_pay_5); ?>,
+            <?php echo ($json_pay_6); ?>
+        ]
+    });
+    window.addEventListener('resize', function () {
+         resizeContainer();
+        myChart.resize();
+    })
+    //  echarts.registerTheme(themeValue,curTheme);
+</script>
 
                 <?php } ?>
 

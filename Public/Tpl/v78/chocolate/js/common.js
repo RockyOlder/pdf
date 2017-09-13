@@ -379,6 +379,16 @@ $('.popup .close').click(function(){
           $('.weixin_pay').attr('onclick','sendWXorder('+details+')');
           changeInfo();    
       }
+      else if(href[hrefIndex] =='04'){
+          imgSrc = $('.gettimes img').attr('setsrc');
+          dataPay = $('.gettimes .btn').data('pay');
+          var details = $('.gettimes .btn').data('details');
+          generateOrder(details)
+          $('.zfb_pay').attr('onclick','generaAlypay('+details+')');
+          $('.weixin_pay').attr('onclick','sendWXorder('+details+')');
+          changeInfo();    
+      }
+
       $('.popup_actpay .imgtype').attr('src',imgSrc);
    }else{
        $('.act_promet').show();

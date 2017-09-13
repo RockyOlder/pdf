@@ -201,7 +201,117 @@ class BatchAction extends GyfxAction{
         }
         $pscws->close();
     }
+    
+    public function SendTimingEmail(){
+        set_time_limit(0);
+        $members = $this->_post();
+        //$check_result = D("Members")->where(array('open_id'=>$members['open_id']))->getField("m_email");
+        writeLog($members['open_id'],date('Y-m-d')."send_email_post.log");
+        $email = new Mail();
+        if(!empty($members['emailAll'])){
+            $table = '<table style="border-collapse:collapse;width:900px;text-align:center;font-size:14px;color:#444;" cellspacing="0" cellpadding="0">';
+            $table .= '
+                     <thead>
+                        <tr>
+                           <th style="border:1px solid #caddea;padding:6px 10px;">文档名称</th>
+                           <th style="border:1px solid #caddea;padding:6px 10px;">下载截止时间</th>
+                           <th style="border:1px solid #caddea;padding:6px 10px;">操作</th>
+                       </tr>
+                    </thead>
+            <tbody>';
+            $all_data_email = cls_redis::get(md5('SendEmailAll:'.$members['open_id']));
+                $all_data_email_array = json_decode($all_data_email,true);
 
+                foreach($all_data_email_array as $value){
+                        $email = $value['email'];
+                         $table .='<tr><td style="border:1px solid #caddea;padding:6px 10px;"></td> </tr>';
+                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;">'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;"><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
+                }
+                $table .="</tbody></table>";
+                $ary_option = D('EmailTemplates')->sendEmailFile($email, count($all_data_email_array), $table);
+                if ($email->send($ary_option)) {
+                $ary_data = array();
+                $ary_data['email_type'] = 1;
+                $ary_data['email'] = $email;
+                $ary_data['content'] = $ary_option['message'];
+                $sms_res = D('EmailLog')->addEmail($ary_data);
+                if (!$sms_res) {
+                    writeLog(json_encode($ary_data), date('Y-m-d') . "send_email.log");
+                }
+            }
+            //cls_redis::del(md5('SendEmailAll:'.$members['open_id']));
+        } else {
+                while( $queue_lsize = $this->queue_lsize($members['open_id'],'SendEmail:') )
+                { 
+                    $data = $this->queue_rpop($members['open_id'],'SendEmail:');
+                    $EmailLogTime = D('EmailLog')->where(array('status'=>1,'email'=>$data['email']))->order('create_time desc')->getField("create_time");
+                    writeLog(json_encode($data),date('Y-m-d')."send_email_data.log");
+                    if((strtotime($EmailLogTime)+60) > time()){
+                        sleep(60);
+                    }
+                    $table = '<table> <tr><th>文档名称</th><th>下载截止时间</th><th>操作</th><tr>';
+                    $table .='<tr><td>'.$data['fileName'].'</td><td>'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
+                    $table .="</table>";
+                    $ary_option = D('EmailTemplates')->sendEmailFile($data['email'], 1, $table);
+                    if ($email->send($ary_option)) {
+                        $ary_data = array();
+                        $ary_data['email_type'] = 1;
+                        $ary_data['email'] = $data['email'];
+                        $ary_data['content'] = $ary_option['message'];
+                        $sms_res = D('EmailLog')->addEmail($ary_data);
+                        if (!$sms_res) {
+                            writeLog(json_encode($ary_data), date('Y-m-d') . "send_email.log");
+                        }
+                    }
+                  //  sleep(60);
+                }
+                cls_redis::del(md5('SendEmail:'.$members['open_id']));
+        }
+
+    }
+        /**
+     * 队列长度
+     * 
+     * @return void
+     * @author seatle <seatle@foxmail.com> 
+     * @created time :2016-09-23 17:13
+     */
+    public function queue_lsize($key,$allowed_repeat = "collect_queue:")
+    {
+        $lsize = cls_redis::lsize($allowed_repeat.$key); 
+     
+        return $lsize;
+    }
+    /**
+     * 从队列右边取出
+     * 
+     * @return void
+     * @author seatle <seatle@foxmail.com> 
+     * @created time :2016-09-23 17:13
+     */
+    public function queue_rpop($key,$allowed_repeat = "collect_queue:")
+    {
+            $link = cls_redis::rpop($allowed_repeat.$key); 
+            $link = json_decode($link, true);
+        return $link;
+    }
+    /**
+     * 从队列左边插入
+     * 
+     * @return void
+     * @author seatle <seatle@foxmail.com> 
+     * @created time :2016-09-23 17:13
+     */
+    public function queue_lpush($link = array(), $allowed_repeat = "collect_queue:")
+    {
+        $status = false;
+        $key = $allowed_repeat.$_SESSION['Members']['open_id'];
+        $link = json_encode($link);
+        cls_redis::lpush($key, $link); 
+        $status = true;
+       
+        return $status;
+    }
 
     /**
 	 * 售后状态接口(退款退货的  进ERP后  ERP有没有审核)
