@@ -2486,7 +2486,7 @@ public function getRandChar($length=2)
                 $save_member_cookie['login_click'] = $SelectTokenDataFind['login_click'] +1;
                 $memberCookie->where(array('m_id'=>$ary_member['m_id']))->save($save_member_cookie);
         }
-        
+        cls_redis::del(md5('SendEmail:'.$ary_member['open_id']));
         $ary_member['m_name'] = $ary_member['open_name'];
         session('Members', $ary_member);
         cls_redis::set($ary_member['open_id'],json_encode($ary_member));

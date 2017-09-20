@@ -255,6 +255,7 @@ class MembersDistributedAction extends AdminAction{
                 $ary_Order_select_count_where['s_create_time']      =  $ary_where_time['m_create_time'];
 
         }
+        $ary_Order_select_count_where['m_id'] = array('not in',array(25551,6017,6014,193,7339,3));
         $ary_source_data =   D("Source")->where($ary_Order_select_count_where)->field('COUNT(*) AS total,source')->order('total desc')->group('source')->select();
         $source = array();
         foreach ($ary_source_data as $key=>$value){
@@ -380,7 +381,7 @@ class MembersDistributedAction extends AdminAction{
         
         $ary_platfrom = D('SourcePlatform')->where(array('sp_default'=>0,'sp_stauts'=>1))->select();
         $this->assign('platfrom',$ary_platfrom);
-        
+        $ary_where['m_id'] = array('not in',array(25551,6017,6014,193,7339,3));
         $ary_where['s_status'] = array('in',array(2,3,4,5));
         $ary_members_office  =D('Source')->where($ary_where)->select();
         $ActivityPay = array();

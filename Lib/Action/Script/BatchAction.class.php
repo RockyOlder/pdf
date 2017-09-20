@@ -106,7 +106,7 @@ class BatchAction extends GyfxAction{
 		}
 	}
     /**
-	 * 订单状态同步（定时作废）
+     * 订单状态同步（定时作废）
      * @author zhangjiasuo <zhangjiasuo@guanyisoft.com>
      * @date 2013-03-20
 	 */
@@ -128,6 +128,12 @@ class BatchAction extends GyfxAction{
                 D('ScriptInfo')->UpdateStatus($code,$result);
             }
         }
+    }
+    
+    public function doOrderAdd(){
+        
+        print_r($_REQUEST);exit;
+        
     }
     /**
 	 * 发货状态同步
@@ -201,21 +207,22 @@ class BatchAction extends GyfxAction{
         }
         $pscws->close();
     }
-    
+
     public function SendTimingEmail(){
         set_time_limit(0);
         $members = $this->_post();
         //$check_result = D("Members")->where(array('open_id'=>$members['open_id']))->getField("m_email");
         writeLog($members['open_id'],date('Y-m-d')."send_email_post.log");
-        $email = new Mail();
+        
         if(!empty($members['emailAll'])){
+            $Mail = new Mail();
             $table = '<table style="border-collapse:collapse;width:900px;text-align:center;font-size:14px;color:#444;" cellspacing="0" cellpadding="0">';
             $table .= '
                      <thead>
                         <tr>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">文档名称</th>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">下载截止时间</th>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">操作</th>
+                           <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">文档名称</th>
+                           <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">下载截止时间</th>
+                           <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">操作</th>
                        </tr>
                     </thead>
             <tbody>';
@@ -224,12 +231,11 @@ class BatchAction extends GyfxAction{
 
                 foreach($all_data_email_array as $value){
                         $email = $value['email'];
-                         $table .='<tr><td style="border:1px solid #caddea;padding:6px 10px;"></td> </tr>';
-                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;">'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;"><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
+                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($value['time'].'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.encrypt2(json_encode(array('id'=>$value['id'],'open_id'=>$members['m_id'],'time'=>date('Y-m-d H:i:s',strtotime($value['time'].'+3 day'))))).'">下载</a></td></tr>';
                 }
                 $table .="</tbody></table>";
                 $ary_option = D('EmailTemplates')->sendEmailFile($email, count($all_data_email_array), $table);
-                if ($email->send($ary_option)) {
+                if ($Mail->send($ary_option)) {
                 $ary_data = array();
                 $ary_data['email_type'] = 1;
                 $ary_data['email'] = $email;
@@ -239,19 +245,29 @@ class BatchAction extends GyfxAction{
                     writeLog(json_encode($ary_data), date('Y-m-d') . "send_email.log");
                 }
             }
-            //cls_redis::del(md5('SendEmailAll:'.$members['open_id']));
+            cls_redis::del(md5('SendEmailAll:'.$members['open_id']));
         } else {
                 while( $queue_lsize = $this->queue_lsize($members['open_id'],'SendEmail:') )
                 { 
                     $data = $this->queue_rpop($members['open_id'],'SendEmail:');
                     $EmailLogTime = D('EmailLog')->where(array('status'=>1,'email'=>$data['email']))->order('create_time desc')->getField("create_time");
                     writeLog(json_encode($data),date('Y-m-d')."send_email_data.log");
-                    if((strtotime($EmailLogTime)+60) > time()){
-                        sleep(60);
+                    if((strtotime($EmailLogTime)+180) > time()){
+                        sleep((strtotime($EmailLogTime)+180) - time());
                     }
-                    $table = '<table> <tr><th>文档名称</th><th>下载截止时间</th><th>操作</th><tr>';
-                    $table .='<tr><td>'.$data['fileName'].'</td><td>'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
-                    $table .="</table>";
+                    $table = '<table style="border-collapse:collapse;width:900px;text-align:center;font-size:14px;color:#444;" cellspacing="0" cellpadding="0">';
+                    $table .= '
+                             <thead>
+                                <tr>
+                                   <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">文档名称</th>
+                                   <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">下载截止时间</th>
+                                   <th style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">操作</th>
+                               </tr>
+                            </thead>
+                    <tbody>';
+                    $table .='<tr><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$data['fileName'].'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($data['time'].'+3 day')).'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.encrypt2(json_encode(array('id'=>$data['id'],'open_id'=>$members['m_id'],'time'=>date('Y-m-d H:i:s',strtotime($value['time'].'+3 day'))))).'">下载</a></td></tr>';
+                    $table .="</tbody></table>";
+                    $email = new Mail();
                     $ary_option = D('EmailTemplates')->sendEmailFile($data['email'], 1, $table);
                     if ($email->send($ary_option)) {
                         $ary_data = array();

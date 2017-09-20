@@ -44,7 +44,7 @@
                 <td>
                     <select class="medium" name="gs_gcid" id="gs_gcid">
                         <option value="0"> - 全部分类 - </option>
-                        <?php if(is_array($search["cates"])): $i = 0; $__LIST__ = $search["cates"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$cate): $mod = ($i % 2 );++$i;?><option value="<?php echo ($cate["gc_id"]); ?>" <?php if(($chose["gcid"]) == $cate[gc_id]): ?>selected="selected"<?php endif; ?> ><?php $__FOR_START_4754__=0;$__FOR_END_4754__=$cate[gc_level];for($i=$__FOR_START_4754__;$i < $__FOR_END_4754__;$i+=1){ ?>&nbsp;&nbsp;<?php } echo ($cate["gc_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+                        <?php if(is_array($search["cates"])): $i = 0; $__LIST__ = $search["cates"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$cate): $mod = ($i % 2 );++$i;?><option value="<?php echo ($cate["gc_id"]); ?>" <?php if(($chose["gcid"]) == $cate[gc_id]): ?>selected="selected"<?php endif; ?> ><?php $__FOR_START_16987__=0;$__FOR_END_16987__=$cate[gc_level];for($i=$__FOR_START_16987__;$i < $__FOR_END_16987__;$i+=1){ ?>&nbsp;&nbsp;<?php } echo ($cate["gc_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
                     </select>
                 </td>
                 <input type="checkbox" name="g_gifts" id="g_gifts" value="1" checked="checked" disabled="disabled"  >赠品

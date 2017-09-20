@@ -448,7 +448,7 @@ abstract class AdminAction extends GyfxAction {
         $menus[4][2][30] = array('name' => L('MENU3_2_30'), 'url' => U('Admin/Orders/pageOrdersDeliverList'),'type'=>'1,2,3'); //发货单
         $menus[4][2][40] = array('name' => L('MENU3_2_40'), 'url' => U('Admin/Orders/pageOrdersReturnList'),'type'=>'1,2,3'); //退货单
         $menus[4][2][50] = array('name' => L('MENU3_2_50'), 'url' => U('Admin/Orders/pageOrdersRefundDeliverList'),'type'=>'1,2,3');
-		$menus[4][2][60] = array('name' => L('MENU3_2_60'), 'url' => U('Admin/Orders/pageAdminOrdersPay'),'type'=>'1,2,3');
+        $menus[4][2][60] = array('name' => L('MENU3_2_60'), 'url' => U('Admin/Orders/pageAdminOrdersPay'),'type'=>'1,2,3');
 		//退运费单
         $menus[4][3][0] = array('name' => L('MENU3_3'), 'url' => '#');
         $menus[4][3][10] = array('name' => L('MENU3_3_10'), 'url' => U('Admin//')); //销售额总览
@@ -463,16 +463,19 @@ abstract class AdminAction extends GyfxAction {
         $menus[4][4][20] = array('name' => L('MENU3_4_20'), 'url' => U('Admin/Delivery/pageAdd'),'type'=>'1,2,3'); //配送公司添加
         $menus[4][4][30] = array('name' => L('MENU3_4_30'), 'url' => U('Admin/Delivery/pageAddress'),'type'=>'1,2,3'); //地址库管理
         //$menus[4][4][40] = array('name' => L('MENU3_4_40'), 'url' => U('Admin/Delivery/pageAddArea'),'type'=>'1,2,3'); //配送区域添加
-		//销售统计
-		$menus[4][5][0] = array('name' => L('MENU3_5'), 'url' => U('Admin/SalesStatistics/index'),'type'=>'1,2,3');//销售统计
-		$menus[4][5][10] = array('name' => L('MENU3_5_10'), 'url' => U('Admin/SalesStatistics/SalesRanking'),'type'=>'1,2,3'); //销售量排名
+        //销售统计
+        $menus[4][5][0] = array('name' => L('MENU3_5'), 'url' => U('Admin/SalesStatistics/index'),'type'=>'1,2,3');//销售统计
+        $menus[4][5][10] = array('name' => L('MENU3_5_10'), 'url' => U('Admin/SalesStatistics/SalesRanking'),'type'=>'1,2,3'); //销售量排名
         $menus[4][5][20] = array('name' => L('MENU3_5_20'), 'url' => U('Admin/SalesStatistics/MembersRanking'),'type'=>'1,2,3'); //购买量排名
 
-		$menus[4][6][0] = array('name' => L('MENU6_2'), 'url' => '#','type'=>'1,2,3'); //发票设置
+        $menus[4][6][0] = array('name' => L('MENU6_2'), 'url' => '#','type'=>'1,2,3'); //发票设置
         $menus[4][6][10] = array('name' => L('MENU6_2_10'), 'url' => U('Admin/Invoice/pageSet'),'type'=>'1,2,3'); //发票设置
         $menus[4][6][20] = array('name' => L('MENU6_2_20'), 'url' => U('Admin/IncreaseInvoice/pageList'),'type'=>'1,2,3'); //增值税发票管理
         //$menus[7][1][30] = array('name' => L('MENU6_1_30'), 'url' => U('Admin//')); //货到付款设置
-
+        
+        $menus[4][7][0] = array('name' => L('MENU6_3'), 'url' => U('Admin/ArtificialService/index'),'type'=>'1,2,3');
+        $menus[4][7][10] = array('name' => L('MENU6_3_10'), 'url' => U('Admin/ArtificialService/pageList'),'type'=>'1,2,3');
+        $menus[4][7][20] = array('name' => L('MENU6_3_20'), 'url' => U('Admin/ArtificialService/ArtificialOrderAdd'),'type'=>'1,2,3');
         //促销活动 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         $menus[5][0][0] = array('name' => L('MENU4_0'), 'url' => U('Admin/Promotions/index'),'type'=>'1,2,3');
 //        $menus[5][0][10] = array('name' => L('MENU4_0_10'), 'url' => U('Admin/Promotions/pageList'),'type'=>'1,2,3'); //促销活动列表

@@ -1,0 +1,275 @@
+<div class="rightInner">
+    <form id="promotion_add" name="promotion_add" method="post" action="{:U('Admin/ArtificialService/doArtificialadd')}">
+        <table class="tbForm" width="100%">
+            <thead>
+                <tr class="title">
+                    <th colspan="99">新建人工订单</th>
+                </tr>
+            </thead>
+            <tbody class="tab">
+                <tr>
+                    <th colspan="99">订单基本信息</th>
+                </tr>
+                <tr>
+                    <td class="first"><span class="red">*</span> 文件名</td>
+                    <td>
+                        <input type="text" name="f_name" value="" class="large" validate="{ required:true,maxlength:100}" />
+                    </td>
+                    <td class="last">建议不超过100个字</td>
+                </tr>
+                <tr>
+                    <td class="first"><span class="red">*</span> 文档页数</td>
+                    <td>
+                        <input type="text" name="document_pages" value="" class="small" validate="{ required:true,min:0,number:true}" />
+                    </td>
+                    <td class="last">请输入数字</td>
+                </tr>
+                <tr>
+                    <td class="first"><span class="red">*</span> 权限密码</td>
+                    <td>
+                        <input type="radio" name="permissions_ps" value="0" /> 有
+                        <input type="radio" name="permissions_ps" value="1" checked="checked" /> 无  </td>
+                    <td class="last"></td>
+                </tr>
+                <tr>
+                    <td class="first"><span class="red">*</span> 文档损坏</td>
+                    <td>
+                        <input type="radio" name="documents_badness" value="0" /> 有 
+                        <input type="radio" name="documents_badness" value="1" checked="checked" /> 无  </td>
+                    <td class="last"></td>
+                </tr>
+                <tr>
+                    <td class="first"><span class="red">*</span> 服务类型</td>
+                    <td>
+                        <select id="pmn_rule" name="service_type" class="medium" validate="{ selected:true}" style="width:200px;" onchange="change_rule(this.value);">
+                            <option value="0">请选择</option>
+                                <option value="1">疑难件转换</option>
+                                <option value="2">权限密码</option>
+                                <option value="3">损坏修复</option>
+                        </select>
+                    </td>
+                    <td class="last"></td>
+                </tr>
+                <tr>
+                    <td class="first">单价</td>
+                    <td class="last"> <span id="price_data" style="color:red;"></span>元/页</td>
+                    <td class="last"></td>
+                </tr>
+                <tr id='rule_box'></tr>
+<!--                <tr>
+                    <td class="first"><span class="red">*</span> 转换页数</td>
+                    <td>
+                        <input type="text" name="conversions_pages" value="" id="conversions_pages" class="small" validate="{ required:true,min:0,number:true}" />
+                    </td>
+                    <td class="last">请输入数字</td>
+                </tr>-->
+                <tr>
+                    <td class="first">预计金额</td>
+                    <td><span id="price_total" style="color:red;"></span>元</td>
+                </tr>
+                <tr class="last">
+                    <td colspan="99">
+                        <input type="button" value="提 交" class="btnA" onclick="javascrpt:save();"/>&nbsp;
+                        <input type="button" value="取 消" class="btnA back" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <div class="clear"></div>
+</div>
+<link href="__PUBLIC__/Admin/css/condition.css" rel="stylesheet">
+<script type="text/javascript">
+/**
+ * 提交表单
+ * @author zhangjiasuo <zhangjiasuo@guanyisoft.com>
+ * @date 2013-05-29
+ */
+function save(){
+    var res = $('#promotion_add').valid();
+    //定义一个判断标示
+    if(res){
+        document.promotion_add.submit();
+    }
+} 
+
+//修改促销规则
+function change_rule(selectVal){
+    //判断是否为真正的onchange事件
+    if(selectVal != $('#rule_box').data('index')){
+        $('#rule_box').data('index',selectVal);
+    }else{
+        return;
+    }
+              
+    var html = '';
+    switch(selectVal){
+        case "1":
+            html = "<td class='first' colspan='3'>"
+                 + "<div style='margin-left: 110px;'>"
+                 + "<table><tr class='load'>"
+                 + "<td class='first'><span class='red'>*</span> 文档难度</td><td style='text-align:left;width:630px;'> <input type='radio' name='documents_difficulty' value='1' /> 普通件 <input type='radio' name='documents_difficulty' value='2' /> 疑难件 </td></td>"
+                 + "</tr>"
+                 + "<tr class='load'>"
+                 + "<td class='first'><span class='red'>*</span> 文档类型</td><td style='text-align:left;width:630px;'> <input type='radio' name='documents_type' value='1' /> 文本 <input type='radio' name='documents_type' value='2' />扫描/图片</td>"
+                 + "<tr class='load'>"
+                 + "<td class='first'><span class='red'>*</span> 转换页数</td><td style='text-align:left;width:630px;'><input type='text' name='conversions_pages' value='' id='conversions_pages' onblur='NumberTotalPrice(this)' class='small' validate='{ required:true,min:0,number:true}'/></td>"
+                 + "</tr></table>";
+                
+        break;
+        case "2":
+             $("#price_total").text(parseFloat(1).toFixed(2));
+        break;
+        case "3":
+            html = "<td class='first' colspan='3'>"
+                 + "<div style='margin-left: 110px;'>"
+                 + "<table>"
+                 + "<tr class='load'>"
+                 + "<td class='first'><span class='red'>*</span> 文档类型</td><td style='text-align:left;width:630px;'> <input type='radio' name='documents_type' value='1' /> 文本 <input type='radio' name='documents_type' value='2' />扫描/图片</td>"
+                 + "<tr class='load'>"
+                 + "<td class='first'><span class='red'>*</span> 转换页数</td><td style='text-align:left;width:630px;'><input type='text' name='conversions_pages' value='' id='conversions_pages' onblur='NumberTotalPrice(this)' class='small' validate='{ required:true,min:0,number:true}'/></td>"
+                 + "</tr></table>";
+        break;
+    }
+    if(selectVal == 'PYIKOUJIA'){
+        $("#group").hide();
+		$("#category").hide();
+		$("#brand").hide();
+    }else{
+        $("#group").show();
+		$("#category").show();
+		$("#brand").show();
+    }
+    
+    $('#rule_box').html(html);
+    //alert(selectVal);return false;
+}
+
+function NumberTotalPrice(_this){
+        if(_this.value >100 && $("#pmn_rule").val() == 1 ){
+            
+            if($("input[name='documents_difficulty']:checked").val() == 1 && $("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text('0.03');
+                $("#price_total").text(parseFloat(_this.value * 0.03).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 2 && $("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text('0.05');
+                $("#price_total").text(parseFloat(_this.value * 0.05).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 1 && $("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text('0.1');
+                $("#price_total").text(parseFloat(_this.value * 0.1).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 2 && $("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text('0.2');
+                $("#price_total").text(parseFloat(_this.value * 0.2).toFixed(2));
+            }
+        } else if(_this.value <=100 && $("#pmn_rule").val() == 1) {
+            
+            if($("input[name='documents_difficulty']:checked").val() == 1 && $("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text(3);
+                $("#price_total").text(parseFloat(3).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 2 && $("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text(5);
+                $("#price_total").text(parseFloat(5).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 1 && $("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text(10);
+                $("#price_total").text(parseFloat(10).toFixed(2));
+            }
+            if($("input[name='documents_difficulty']:checked").val() == 2 && $("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text(20);
+                $("#price_total").text(parseFloat(20).toFixed(2));
+            }
+        } else if(_this.value <= 20 && $("#pmn_rule").val() == 3) {
+            if($("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text(1);
+                $("#price_total").text(parseFloat(1).toFixed(2));
+            }
+            if($("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text(2);
+                $("#price_total").text(parseFloat(2).toFixed(2));
+            }
+        } else if(_this.value > 20 && $("#pmn_rule").val() == 3) {
+            if($("input[name='documents_type']:checked").val() == 1){
+                $("#price_data").text('0.05');
+                $("#price_total").text(parseFloat(_this.value * 0.05).toFixed(2));
+            }
+            if($("input[name='documents_type']:checked").val() == 2){
+                $("#price_data").text('0.1');
+                $("#price_total").text(parseFloat(_this.value * 0.1).toFixed(2));
+            }
+        }
+
+}
+$(document).ready(function(){
+    /*显示和隐藏已经被占用的优先级*/
+    $('#showDisableOrder').click(function(){
+        if($(this).attr('checked')=='checked'){
+            $("#pmn_order option:disabled").show();
+        }else{
+            $("#pmn_order option:disabled").hide();
+        }
+    });
+    //刷新页面后 自动调用被选的 促销规则
+    change_rule($("#pmn_rule option:selected").val());
+	
+	//类目选择
+	$(".rule-chooser-trigger").click(function(){
+		if($("#shopMulti_cat").css('display') == 'block'){
+			$("#shopMulti_cat").css("display","none");
+		}else{
+			$("#shopMulti_cat").css("display","block");
+		}
+	});
+
+	 
+	 $(".cat-checkbox").click(function(){
+		var selValue = '';
+		var now_id = $(this).attr("ref");
+		if($(this).attr('checked') == 'checked'){
+			$(".cat-checkbox").each(function(){
+				if($(this).attr("pid") == now_id){
+					$(this).attr("checked","checked");
+				}
+			});
+		}else{
+			$(".cat-checkbox").each(function(){
+				if($(this).attr("pid") == now_id){
+					$(this).attr("checked",false);
+				}
+			});
+		}
+		$(".cat-checkbox:checked").each(function(){
+			selValue += $(this).attr("ref") + ',';
+		});
+		if(selValue.length>0){
+			selValue = selValue.substr(0,selValue.length-1);
+		}
+		$("#cat_selValue").val(selValue);
+	});
+
+	//品牌选择
+	$(".rule-chooser-trigger1").click(function(){
+		if($("#shopMulti_brand").css('display') == 'block'){
+			$("#shopMulti_brand").css("display","none");
+		}else{
+			$("#shopMulti_brand").css("display","block");
+		}
+	});  
+	
+	 $(".brand-checkbox").click(function(){
+		var selValue = '';
+		$(".brand-checkbox:checked").each(function(){
+			selValue += $(this).attr("ref") + ',';
+		});
+		if(selValue.length>0){
+			selValue = selValue.substr(0,selValue.length-1);
+		}
+		 
+		$("#brand_selValue").val(selValue);
+	}); 
+	
+});
+</script>

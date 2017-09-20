@@ -89,7 +89,7 @@
             <div class="img_promet"></div>
             <div class="content">
                 <div class="left">
-                    <a href="<?php echo U('Home/Index/CoreBusiness');?>" class="btn2 star_transformation">开始转换</a>
+                    <a href="<?php echo U('Home/Index/CoreBusiness');?>" class="btn2 star_transformation" >开始转换</a>
                     <p>每日赠送PDF文档转换</p>
                 </div>
                 <!-- <div class="right">

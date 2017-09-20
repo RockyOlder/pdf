@@ -1,0 +1,11 @@
+[ 2017-09-19T10:16:30+08:00 ] ERR: (ThinkException) 404
+[ 2017-09-19T10:16:30+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:53:13+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:56:12+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:56:34+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:56:42+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:56:50+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T13:56:59+08:00 ] ERR: (ThinkException) 模板不存在[./Public/Tpl/v78/chocolate/404.html]
+[ 2017-09-19T15:37:36+08:00 ] ERR: (ThinkException) Action:pageGoods您所请求的方法不存在！
+[ 2017-09-19T17:07:37+08:00 ] ERR: (ThinkException) Action:get_cate您所请求的方法不存在！
+[ 2017-09-19T17:08:37+08:00 ] ERR: (ThinkException) Action:get_brand您所请求的方法不存在！

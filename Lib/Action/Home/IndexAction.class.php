@@ -131,6 +131,7 @@ class IndexAction extends HomeAction {
 
 
     public function _initialize() {
+          //return throw_exception("404");
         parent::_initialize();
         static::$ary_member =  D('Members')->getMemberInfo(array('m_id'=>$_SESSION['Members']['m_id']),'m_id,m_email,m_name,Free_authorization,Free_obtain_time,end_time,number_remaining,conversion_type,open_source,open_id');
         $this->assign('ary_member', static::$ary_member);
@@ -140,130 +141,56 @@ class IndexAction extends HomeAction {
     public function getHeaderData(){
         $this->display();
     }
-    public function ceshi(){
-        set_time_limit(0);
-         $members = session('Members');
-          $email = new Mail();
-          //echo $queue_lsize = $this->queue_lsize($members['open_id'],'SendEmail:');exit;
-    //  $all_data_email = cls_redis::get(md5('SendEmailAll:'.$members['open_id']));
-             $table = '<table style="border-collapse:collapse;width:900px;text-align:center;font-size:14px;color:#444;" cellspacing="0" cellpadding="0">';
-            $table .= '
-                     <thead>
-                        <tr>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">文档名称</th>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">下载截止时间</th>
-                           <th style="border:1px solid #caddea;padding:6px 10px;">操作</th>
-                       </tr>
-                    </thead>
-            <tbody>';
-            $all_data_email = cls_redis::get(md5('SendEmailAll:'.$members['open_id']));
-                $all_data_email_array = json_decode($all_data_email,true);
-
-                foreach($all_data_email_array as $value){
-                        $Useremail = $value['email'];
-                         
-                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;">'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;"><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
-                }
-                $table .="</tbody></table>";
-                $ary_option = D('EmailTemplates')->sendEmailFile($Useremail, count($all_data_email_array), $table);
-                if ($email->send($ary_option)) {
-                $ary_data = array();
-                $ary_data['email_type'] = 1;
-                $ary_data['email'] = $Useremail;
-                $ary_data['content'] = $ary_option['message'];
-                $sms_res = D('EmailLog')->addEmail($ary_data);
-                if (!$sms_res) {
-                    writeLog(json_encode($ary_data), date('Y-m-d') . "send_email.log");
-                }
-            }
-        echo 1;exit;
-    //  print_r($all_data_email);exit;
-//         $table = '<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0">';
-//    $table .='<thead>
-//            <tr>
-//                <th style="border:1px solid #caddea;">文档名称</th>
-//                <th style="border:1px solid #caddea;">下载截止时间</th>
-//                <th style="border:1px solid #caddea;">操作</th>
-//            </tr>
-//        </thead>
-//        <tbody>
-//            <tr>
-//                <td style="border:1px solid #caddea;">xxx</td>
-//                <td style="border:1px solid #caddea;">xxx</td>
-//                <td style="border:1px solid #caddea;">xxx</td>
-//            </tr>
-//        </tbody>';
-//    $table .="</table>";
-//    echo $table;exit;
-//           echo $queue_lsize = $this->queue_lsize($members['open_id'],'SendEmail:');exit;
-//          make_fsockopen('/Script/Batch/SendTimingEmail',array('open_id'=> self::$ary_member['open_id']));
-//          exit;
+    public function file_time_down(){
        
-      //  $EmailTemplates = D('EmailTemplates');
-     
-             //writeLog(111111,date('Y-m-d')."send_email_time_1.log");
-        //$queue_lsize = 1;
-        while( $queue_lsize=  $this->queue_lsize($members['open_id'],'SendEmail:'))
-        { 
-          $data = $this->queue_rpop($members['open_id'],'SendEmail:');
-            $EmailLogTime = D('EmailLog')->where(array('status'=>1,'email'=>'574920453@qq.com'))->order('create_time desc')->getField("create_time");
-//            //   writeLog(json_encode($data),date('Y-m-d')."send_email_data.log");
-//            if((strtotime($EmailLogTime)+30) > time()){
-//                 writeLog(111111,date('Y-m-d')."send_email_time_1.log");
-//                sleep(30);
-//            }
-            $table = '<table> <tr><th>文档名称</th><th>下载截止时间</th><th>操作</th><tr>';
-            $table .='<tr><td>'.$data['fileName'].'</td><td>'. date('Y-m-d H:i:s',strtotime(date('Y-m-d H:i:s').'+3 day')).'</td><td><a href="http://www.baidu.com" target="_blank">下载</a></td></tr>';
-            $table .="</table>";
-            print_r($table);exit;
-            $ary_option = D('EmailTemplates')->sendEmailFile($data['email'], 1, $table);
-            print_r($ary_option);exit;
-            if ($email->send($ary_option)) {
-                $ary_data = array();
-                $ary_data['email_type'] = 1;
-                $ary_data['email'] = '574920453@qq.com';
-                $ary_data['content'] = 'xxxx';
-                $sms_res = D('EmailLog')->addEmail($ary_data);
-                if (!$sms_res) {
-                    writeLog(json_encode($ary_data), date('Y-m-d') . "send_email.log");
-                }
-                //$queue_lsize++ ;
-              //  sleep(30);
-            }
+        $ary_get = $this->_get();
+        if(empty($ary_get['token'])){
+            exit('错误访问');
         }
-         echo 1;exit;
-         
-         
-//        $aa = D("Members")->where(array('m_id'=>4))->getField("m_email");
-//        print_r($aa);exit;
-//        $EmailLog = D('EmailLog')->field('create_time,id')->where(array('status'=>1,'email'=>'574920453@qq.com'))->order('create_time desc')->find();
-//        print_r($EmailLog);exit;
-//        $data_1 = strtotime('2017-08-18 16:50:17');
-//        $data_2 = strtotime('2017-08-18 16:49:17');
-     //   echo $data_1- $data_2;exit;
-                   $EmailLogTime = D('EmailLog')->where(array('status'=>1,'email'=>'574920453@qq.com'))->order('create_time desc')->getField("create_time");
-                   if((strtotime($EmailLogTime)+30) > time()){
-                echo (strtotime($EmailLogTime)+30) - time();exit;
-                sleep((strtotime($EmailLogTime)+30) - time());
-            }
-        $data = $this->queue_lsize($members['open_id'],'SendEmail:');
-        print_r($data);exit;
-        $this->redirect('http://ucenter.wiserar.com/uploadFile/currentfile/20170912/4/pdf/%E5%A4%A7%E5%90%8C%E4%BC%98%E8%BD%A6%E6%B1%BD%E8%BD%A6%E9%94%80%E5%94%AE%E6%9C%8D%E5%8A%A1%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%B9%BF%E5%91%8A%E6%8A%95%E6%94%BE%E7%AD%96%E5%88%92%E6%A1%881505145600_1505145600.pdf');exit;
-       // $count =  $ary_member = D("Members")->where(array('m_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-31 23:59:59'))))->count();
-        //echo $count;exit;
-        $select =  $ary_member = D("Members")->field('m_id')->where(array('m_create_time'=>array('BETWEEN',array('2017-07-10 00:00:00','2017-08-10 23:59:59'))))->select();
-        //$count  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-07-10 00:00:00','2017-08-10 23:59:59')),'ps_status'=>1))->group('m_id')->count();
-        
-      //  $select  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-10 23:59:59'))))->group('m_id')->select();
-        $i = 0;
-        foreach($select as $value){
-           $data =  D('PaymentSerial')->where(array('m_id'=>$value['m_id'],'ps_status'=>1))->count();
-            if($data >= 1){
-                $i ++;
-            }
+        $ary_json = decrypt2($ary_get['token']);
+        if(empty($ary_json)){
+            exit('未知token');
         }
-        echo $i;exit;
-      
+        $aryObjectData = json_decode($ary_json);
+        //print_r($aryObjectData);exit;
+        if(strtotime($aryObjectData->time) < time()){
+            exit('链接已过期');
+        }
+        if(empty(static::$ary_member)){
+            static::$ary_member =  D('Members')->getMemberInfo(array('m_id'=>$aryObjectData->open_id),'m_id,m_email,m_name,Free_authorization,Free_obtain_time,end_time,number_remaining,conversion_type,open_source,open_id');
+        }
+        $File_download_find = D("PdfList")->where(array('m_id'=> self::$ary_member['m_id'],'id'=>$aryObjectData->id))->find();
+        $application = applicationType($File_download_find['ctype']);
+        $downLoad = $File_download_find['cpath'];
+        $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => $downLoad,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            if ($err) {
+                     echo "cURL Error #:" . $err;exit;
+            } 
+        if (is_utf8($File_download_find["cname"])) {
+            $File_download_find["cname"] = iconv('utf-8', 'gbk//IGNORE', $File_download_find["cname"]);
+        } 
+        header('Pragma: public');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Cache-Control: pre-check=0, post-check=0, max-age=0');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Encoding: none');
+        header('Content-type: '.$application);
+        header('Content-Disposition: attachment; filename="'.$File_download_find['cname'].'"');
+        header('Content-length: '.strlen($response));
+        echo $response;
     }
     /**
      * 客户模版默认首页
@@ -767,10 +694,12 @@ class IndexAction extends HomeAction {
                                 $conversion  = self::USER_PRISSIONS_STATUS_1;
                                 cls_redis::del($md5Data);
                                  if(empty(cls_redis::get(md5('SendEmail:'.self::$ary_member['open_id']))) && empty($fileData->batchEmail)){
-                                      make_fsockopen('/Script/Batch/SendTimingEmail',array('open_id'=> self::$ary_member['open_id']));
-                                      cls_redis::set(md5('SendEmail:'.self::$ary_member['open_id']), self::USER_PRISSIONS_STATUS_1);
+                                      make_fsockopen('/Script/Batch/SendTimingEmail',array('open_id'=> self::$ary_member['open_id'],'m_id'=> self::$ary_member['m_id']));
+                                      cls_redis::set(md5('SendEmail:'.self::$ary_member['open_id']), self::USER_PRISSIONS_STATUS_1,1800);
                                  }
-                               
+                                if(count($fileJsonCode) == 1){
+                                     make_fsockopen('/Script/Batch/SendTimingEmail',array('open_id'=> self::$ary_member['open_id'],'m_id'=> self::$ary_member['m_id'],'emailAll'=>1));
+                                }
                         } else {
                                 if(empty(cls_redis::get($md5Data_time))){
                                     $this->status  = self::USER_PRISSIONS_STATUS_5;   //这个暂定为时间过期
@@ -780,9 +709,7 @@ class IndexAction extends HomeAction {
                         }
                         $json[] = array('m_id'=>$member['m_id'],'fileType'=>$fileData->fileType,'fileName'=>$reqFile,'downIp'=>$ip,'fileSize'=>$fileData->fileSize,'fileState'=>$this->status,'conversion'=>$conversion);
                 }
-                if(count($fileJsonCode) == 1){
-                     make_fsockopen('/Script/Batch/SendTimingEmail',array('open_id'=> self::$ary_member['open_id'],'emailAll'=>1));
-                }
+
                 $this->ajaxReturn(array('action'=>1,'conversion'=>$conversion,'success'=>$json));
         }
         
@@ -843,6 +770,9 @@ class IndexAction extends HomeAction {
             $fileInfo    = $this->_get();
             $member  =  session('Members');
             $File_download_find = D("PdfList")->where(array('m_id'=>$member['m_id'],'id'=>$fileInfo['id']))->find();
+            if(time()  >  strtotime(date('Y-m-d H:i:s',$File_download_find['crate_time']) .'+3 day')){
+                exit('下载已过期');
+            }
             $fileInfo['url'] = urldecode($fileInfo['url']);
             $application = applicationType($File_download_find['ctype']);
             $downLoad = $File_download_find['cpath'];
@@ -893,6 +823,9 @@ class IndexAction extends HomeAction {
             $members = session("Members");
             $fileInfo    = $_GET;
             $File_download_find = D("PdfList")->where(array('m_id'=>$members['m_id'],'id'=>$fileInfo['id']))->find();
+                if(time()  >  strtotime(date('Y-m-d H:i:s',$File_download_find['crate_time']) .'+3 day')){
+                    exit('下载已过期');
+                }
             $application = applicationType($fileInfo['downType']);
             $downLoad = $File_download_find['cpath'];
             $curl = curl_init();
@@ -981,6 +914,7 @@ class IndexAction extends HomeAction {
                                         } else {
                                             if (($member_data['number_remaining'] - 1) == 0) {
                                                 D('Members')->where(array('m_id' => $member_data['m_id']))->data(array('number_remaining' => $member_data['number_remaining'] - 1, 'conversion_type' => 0, 'number_use' => $member_data['number_use'] + 1))->save();
+                                                writeLog(json_encode(array('m_id'=>$member_data['m_id'],'number_remaining'=>$member_data['number_remaining'],'conversion_type'=>$member_data['conversion_type'],'update_conversion_type'=>0,'time'=>time(),'end_time'=>$member_data['end_time'])),date('Y-m-d')."update_conversion_type.log");
                                             } else {
                                                 D('Members')->where(array('m_id' => $member_data['m_id']))->data(array('number_remaining' => $member_data['number_remaining'] - 1, 'number_use' => $member_data['number_use'] + 1))->save();
                                             }
@@ -991,9 +925,12 @@ class IndexAction extends HomeAction {
                                     $conversion_type = self::USER_PRISSIONS_STATUS_2;
                                     if (time() > strtotime($member_data['end_time'])) {
                                         if ($member_data['number_remaining'] > 0) {
+                                            $conversion_type = self::USER_PRISSIONS_STATUS_1;
                                             D('Members')->where(array('m_id' => $member_data['m_id']))->data(array('number_remaining' => $member_data['number_remaining'] - 1, 'number_use' => $member_data['number_use'] + 1, 'conversion_type' => 1))->save();
+                                            writeLog(json_encode(array('m_id'=>$member_data['m_id'],'number_remaining'=>$member_data['number_remaining'],'conversion_type'=>$member_data['conversion_type'],'update_conversion_type'=>1,'time'=>time(),'end_time'=>$member_data['end_time'])),date('Y-m-d')."update_conversion_type.log");
                                         } else {
                                             D('Members')->where(array('m_id' => $member_data['m_id']))->data(array('conversion_type' => 0))->save();
+                                             writeLog(json_encode(array('m_id'=>$member_data['m_id'],'number_remaining'=>$member_data['number_remaining'],'conversion_type'=>$member_data['conversion_type'],'update_conversion_type'=>0,'time'=>time(),'end_time'=>$member_data['end_time'])),date('Y-m-d')."update_conversion_type.log");
                                             cls_redis::set($md5Data, self::USER_PRISSIONS_STATUS_2);
                                             return FALSE;
                                         }
@@ -1011,6 +948,7 @@ class IndexAction extends HomeAction {
                                                 'conversion_type' => $conversion_type,
                                                 'fstate'=>$this->resState,
                                                 'cname' => $fileName,
+                                         //       'bath_time'=>time(),
                                                 'fdown' => self::USER_PRISSIONS_STATUS_1,
                                                 'ctype' => $this->suffix_file_postfix,
                                                 'cstyle' => self::USER_PRISSIONS_STATUS_1)
@@ -1049,15 +987,7 @@ class IndexAction extends HomeAction {
                     $add_aray_authorization = array();
                     $add_aray_authorization['m_id']  = $member_data['m_id'];
                     $add_aray_authorization['creation_time']  = date('Y-m-d H:i:s');
-                    $add_aray_authorization['type']  = $member_data['conversion_type'];
-//                    $response_data = array();
-//                    $response_data['conversion_type'] = (int)$member_data['conversion_type'];
-//                    $response_data['number_remaining'] = (int)$member_data['number_remaining'];
-//                    if(time() > strtotime($member_data['end_time'])){
-//                            $response_data['end_time']  = 0;
-//                    } else {
-//                            $response_data['end_time']  = count_days(strtotime(date('Y-m-d')),strtotime($member_data['end_time']));
-//                    }
+                    $add_aray_authorization['type']  =$conversion_type;
                     $MemberAuthorization->add($add_aray_authorization);
                     cls_redis::set($md5Data, self::USER_PRISSIONS_STATUS_1);
                     } else {
@@ -1098,7 +1028,7 @@ class IndexAction extends HomeAction {
         $pdfconversion =  $localHost . '/conversion/CallConvert.exe'; //pdf转换软件路径
         $members = session('Members');
         $data = $this->queue_rpop($members['open_id']);
-        $member_data = D('Members')->where(array('m_id' => $members['m_id']))->find();
+        $member_data = self::$ary_member;
         if (!empty($data)) {
             $File__find = D("PdfList")->where(array('m_id' => $members['m_id'], 'id' => $data['id']))->field('cname,fname,number_page')->find();
             $fileName = $File__find['cname'];
@@ -1115,6 +1045,13 @@ class IndexAction extends HomeAction {
             $this->resState = ''; //word转pdf的状态
             $rsa_public_encrypt  = base64_encode(json_encode($data));
             $md5Data  = md5(json_encode($data));
+            if($member_data['Free_authorization'] == 0) {
+                if(($member_data['number_remaining'] == 0 && $member_data['conversion_type'] == 0) || ($member_data['conversion_type'] == 2 && time() > strtotime($member_data['end_time']))){
+                    D("PdfList")->where(array('m_id'=>$member_data['m_id'],'id'=>$data['id']))->data(array('fstate'=>6))->save();
+                    cls_redis::set($md5Data, self::USER_PRISSIONS_STATUS_6);
+                    return false;
+                }
+            }
             $md5Data_time = $md5Data."_time";
             cls_redis::set($md5Data_time,microtime(true),3000);
             if ($this->suffix_file_postfix == 'pdf') {
@@ -1474,7 +1411,7 @@ header("Location: $wxurl");
                  $pdf_page = $obj_page_PdfList->show();
                 $PdfListSelect  = D("PdfList")->where(array('m_id'=>$_SESSION['Members']['m_id'],'fsize'=>array('neq',0),'cstate'=>array('neq',0)))->limit($obj_page_PdfList->firstRow . ',' . $obj_page_PdfList->listRows)->order('id desc')->select();//,'fstate'=>array('neq',99)
                 foreach( $PdfListSelect as $key=>$value){
-                       if(time()  >  strtotime(date('Y-m-d H:i:s',$value['crate_time']) .'+1 day')){
+                       if(time()  >  strtotime(date('Y-m-d H:i:s',$value['crate_time']) .'+3 day')){
                             $PdfListSelect[$key]['lastDown']  = 1;
                        }
                        $PdfListSelect[$key]['crate_time'] = date('Y-m-d H:i:s',$value['crate_time']);

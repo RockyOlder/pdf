@@ -17,9 +17,9 @@
                         </div>
                         </a>
                         <div class="linkbox">
+                            <a href="{:U('Home/Index/YearMiddlePage#04',array('s_type'=>0))}" class="first">次数套餐买1送1</a>
                             <a href="{:U('Home/Index/YearMiddlePage#01',array('s_type'=>0))}" class="first">买一个月送5次转换</a>
                             <a href="{:U('Home/Index/YearMiddlePage#02',array('s_type'=>0))}">买一年送3个月</a>
-                            <a href="{:U('Home/Index/YearMiddlePage#03',array('s_type'=>0))}">买二年送6个月</a>
                         </div>
                     </div>
                 </div>
@@ -91,19 +91,15 @@
             </a>
         </div>
     </div>
-<script language="javascript"> 
-function setIframeHeight(iframe) {
-if (iframe) {
-var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
-if (iframeWin.document.body) {
-iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
-}
-}
-};
-
-//window.onload = function () {
-//setIframeHeight(document.getElementById('external-frame'));
-//};
+    <!--<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:574920453:53" alt="点这里给我发消息" /></a>-->
+<script> var online = new Array();</script>
+  <script type= "text/javascript" src="http://webpresence.qq.com/getonline?Type=1&3004137938:3004137938:" ></script>
+<!--<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=574920453&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:574920453:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>-->
+<script>
+      if (online[0]==0)
+            document.write( "<a target='blank' href='http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes' title='请留言'><img src='__IMAGES__offline.gif' border=0/></a>");
+       else
+            document.write("<a target='blank'  href='http://wpa.qq.com/msgrd?v=3&uin=3004137938&site=qq&menu=yes' title='在线咨询'><img src='http://wpa.qq.com/pa?p=2:574920453:53' border=0 /></a>");
 </script>
 <input type="hidden" id="year" value="{$year}" />
 <input type="hidden" id="month" value="{$month}" />
@@ -111,5 +107,4 @@ iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.doc
 <input type="hidden" id="start_time" value="{$start_time}" />
 <input type="hidden" id="halfMonther" value="{$halfMonther}" />
  <div class="popup popup_weixin" >
-
 </div>

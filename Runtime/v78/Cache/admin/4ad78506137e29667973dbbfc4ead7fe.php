@@ -390,7 +390,7 @@
 	<div id="con_addGoods_3" class="adCon" style="display:none;"><!--商品图片  开始-->
 		<div class="goodsPic"><!--goodsPic  start-->
 			<ul>
-				<?php $__FOR_START_17886__=0;$__FOR_END_17886__=10;for($i=$__FOR_START_17886__;$i < $__FOR_END_17886__;$i+=1){ ?><li num_id="<?php echo ($id); ?>">
+				<?php $__FOR_START_10306__=0;$__FOR_END_10306__=10;for($i=$__FOR_START_10306__;$i < $__FOR_END_10306__;$i+=1){ ?><li num_id="<?php echo ($id); ?>">
 					<div class="imagebox_li_classname imagebox">
 						<?php if($i == 0): ?><img src="__PUBLIC__/Admin/images/product_image_index.png" id="pic_img_src_<?php echo ($i); ?>" style="width:120px;height:120px;" />
 						<?php else: ?>
