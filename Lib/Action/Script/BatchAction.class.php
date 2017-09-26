@@ -212,7 +212,7 @@ class BatchAction extends GyfxAction{
         set_time_limit(0);
         $members = $this->_post();
         //$check_result = D("Members")->where(array('open_id'=>$members['open_id']))->getField("m_email");
-        writeLog($members['open_id'],date('Y-m-d')."send_email_post.log");
+        writeLog(json_encode($members),date('Y-m-d')."send_email_post.log");
         
         if(!empty($members['emailAll'])){
             $Mail = new Mail();
@@ -231,7 +231,7 @@ class BatchAction extends GyfxAction{
 
                 foreach($all_data_email_array as $value){
                         $email = $value['email'];
-                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($value['time'].'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.encrypt2(json_encode(array('id'=>$value['id'],'open_id'=>$members['m_id'],'time'=>date('Y-m-d H:i:s',strtotime($value['time'].'+3 day'))))).'">下载</a></td></tr>';
+                        $table .='<tr><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$value['fileName'].'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($value['time'].'+3 day')).'</td><td  style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.authcode(json_encode(array('id'=>$value['id'],'open_id'=>$members['m_id'],'time'=>strtotime($value['time'].'+3 day'))),'ENCODE', 'key').'">下载</a></td></tr>';
                 }
                 $table .="</tbody></table>";
                 $ary_option = D('EmailTemplates')->sendEmailFile($email, count($all_data_email_array), $table);
@@ -265,10 +265,12 @@ class BatchAction extends GyfxAction{
                                </tr>
                             </thead>
                     <tbody>';
-                    $table .='<tr><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$data['fileName'].'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($data['time'].'+3 day')).'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.encrypt2(json_encode(array('id'=>$data['id'],'open_id'=>$members['m_id'],'time'=>date('Y-m-d H:i:s',strtotime($value['time'].'+3 day'))))).'">下载</a></td></tr>';
+                    $table .='<tr><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'.$data['fileName'].'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;">'. date('Y-m-d H:i:s',strtotime($data['time'].'+3 day')).'</td><td style="border:1px solid #caddea;padding:6px 10px;font-family:微软雅黑;"><a href="'.C("HOST_DOWNLOAD").'/Home/Index/file_time_down/token/'.authcode(json_encode(array('id'=>$data['id'],'open_id'=>$members['m_id'],'time'=>strtotime($value['time'].'+3 day'))),'ENCODE', 'key').'">下载</a></td></tr>';
                     $table .="</tbody></table>";
+					writeLog($table,date('Y-m-d')."email_table.log");
                     $email = new Mail();
                     $ary_option = D('EmailTemplates')->sendEmailFile($data['email'], 1, $table);
+					writeLog(json_encode($ary_option),date('Y-m-d')."send_email_table.log");
                     if ($email->send($ary_option)) {
                         $ary_data = array();
                         $ary_data['email_type'] = 1;

@@ -131,8 +131,11 @@ class IndexAction extends HomeAction {
 
 
     public function _initialize() {
-          //return throw_exception("404");
+
         parent::_initialize();
+//   $a = authcode('abc', 'ENCODE', 'key');
+//   $b = authcode($a, 'DECODE', 'key'); // $b(abc)
+//   echo $a;exit;
         static::$ary_member =  D('Members')->getMemberInfo(array('m_id'=>$_SESSION['Members']['m_id']),'m_id,m_email,m_name,Free_authorization,Free_obtain_time,end_time,number_remaining,conversion_type,open_source,open_id');
         $this->assign('ary_member', static::$ary_member);
       // $Member_object = D('Members')->where(array('m_id'=>4))->find();
@@ -147,13 +150,22 @@ class IndexAction extends HomeAction {
         if(empty($ary_get['token'])){
             exit('错误访问');
         }
-        $ary_json = decrypt2($ary_get['token']);
+        unset($ary_get['_URL_'][0]);
+        unset($ary_get['_URL_'][1]);
+        unset($ary_get['_URL_'][2]);
+        unset($ary_get['_URL_'][3]);
+        $token = '';
+        foreach ($ary_get['_URL_'] as $value){
+                $token .= $value .'/';
+        }
+        $token_data =  substr($token,0,strlen($token)-1); 
+        $ary_json =  authcode($token_data, 'DECODE', 'key');
         if(empty($ary_json)){
             exit('未知token');
         }
         $aryObjectData = json_decode($ary_json);
         //print_r($aryObjectData);exit;
-        if(strtotime($aryObjectData->time) < time()){
+        if($aryObjectData->time < time()){
             exit('链接已过期');
         }
         if(empty(static::$ary_member)){
@@ -198,12 +210,12 @@ class IndexAction extends HomeAction {
      * @date
      */
     public function index() {
-        //C("LAYOUT_ON",false);
         if( !empty($this->_get('token'))){
             $mb_user_token_info = D('MbUserToken')->getMbUserTokenInfoByToken($this->_get('token'));
             if(!empty($mb_user_token_info)){
                      $members = D('Members')->getMemberInfoByID($mb_user_token_info['m_id']);
                      D('MemberCookie')->DataMemberSave($members);
+                     session('Members', $members);
             }
         }
         if(empty(session('Members'))){
@@ -231,6 +243,23 @@ class IndexAction extends HomeAction {
         $tpl ='./Public/Tpl/' . CI_SN . '/' . TPL . '/index.html';
         $this->display($tpl); 
     }
+    public function ceshi(){
+       // $count =  $ary_member = D("Members")->where(array('m_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-31 23:59:59'))))->count();
+        //echo $count;exit;
+        $select =  $ary_member = D("Members")->field('m_id')->where(array('m_create_time'=>array('BETWEEN',array('2017-07-01 00:00:00','2017-08-01 23:59:59'))))->select();
+        //$count  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-07-10 00:00:00','2017-08-10 23:59:59')),'ps_status'=>1))->group('m_id')->count();
+        
+      //  $select  = D('PaymentSerial')->where(array('ps_create_time'=>array('BETWEEN',array('2017-08-11 00:00:00','2017-08-10 23:59:59'))))->group('m_id')->select();
+        $i = 0;
+        foreach($select as $value){
+           $data =  D('PaymentSerial')->where(array('m_id'=>$value['m_id'],'ps_status'=>1))->count();
+            if($data >= 1){
+                $i ++;
+            }
+        }
+        echo $i;exit;
+      
+    }
     private static function getActivitp(){
             $ary_data = D('SysConfig')->getCfgByModule('GY_SHOP');
             if($ary_data['ACTIVITY_OPEN'] ==true) {
@@ -254,7 +283,8 @@ class IndexAction extends HomeAction {
             $mb_user_token_info = D('MbUserToken')->getMbUserTokenInfoByToken($this->_get('token'));
             if(!empty($mb_user_token_info)){
                     $members = D('Members')->getMemberInfoByID($mb_user_token_info['m_id']);
-                     D('MemberCookie')->DataMemberSave($members);
+                    session('Members', $members);
+                    D('MemberCookie')->DataMemberSave($members);
             }
         }
         $halfMonther = self::getActivitp();

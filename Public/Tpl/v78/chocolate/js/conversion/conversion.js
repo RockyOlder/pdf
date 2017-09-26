@@ -939,7 +939,6 @@ define(['tool'], function(tool){
                             $(".upload_file .label").eq(i).addClass('checked');
                         }
                     };
-
                 })
                 if($('#Authorizationtype').val() ==""){
                    $('.btn_file').css({'background':'#d2d2d2','color':'#fff','cursor':'not-allowed'}).find('.bubble_promet').show().siblings('#fileupload').hide();          

@@ -6,7 +6,7 @@ return array(
     'TMPL_ACTION_ERROR' => 'Home:Common:jump',
     'TMPL_ACTION_SUCCESS' => 'Home:Common:jump',
 	'TMPL_EXCEPTION_FILE'=>'./Tpl/404.html',
-	'HTML_CACHE_ON'=>true,//是否启用静态缓存
+	'HTML_CACHE_ON'=>FALSE,//是否启用静态缓存
 	'HTML_CACHE_TIME'=>60,
 	'HTML_CACHE_RULES'=> array(
 		'Index:index'=>array('{|setHtmlRule}',600,md5),//首页

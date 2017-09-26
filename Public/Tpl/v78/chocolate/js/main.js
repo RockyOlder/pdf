@@ -16,7 +16,7 @@ require(['jquery','conversion','jquery.ui.widget','jquery.iframe-transport','jqu
 //    if(tool.checkNotEmpty($("#gy_member_open").val()) == true){
 //        tool.fixedBox($("#appendHtml"),{'setEvent':'scroll','id':2,'left':0,boxT:$(".main_header").offset().top,top:0,zIndex:9});
 //    }
-    if(tool.checkNotEmpty($("#LoadDataType").val()) == false && tool.checkNotEmpty($("#gy_member_open").val()) == true && $("#Authorizationtype").val() == 0){
+    if(tool.checkNotEmpty($("#LoadDataType").val()) == false && tool.checkNotEmpty($("#gy_member_open").val()) == true && $("#Authorizationtype").val() == 0 && $("#ACTIVITY_OPEN").val() == false){
             tool.rsdConfirm('teachesDay',null,tool);
     }
     var $list = $(".list");
